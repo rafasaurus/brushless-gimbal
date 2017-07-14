@@ -14,20 +14,8 @@
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
 
-/*
-void setup_timer2();
-void setup_timer1();
-void setup_timer0();
-
-void init_gpio();
-void Enable_timer2_interrupt();
-void Enable_timer0_interrupt();
-void PWM_update();
-*/
-//void PWM_update();
-void setup_timer3();
-void Enable_timer3_interrupt();
 int timer=0;
+void PWM_update();
 uint8_t currentEnableA=0;
 uint8_t currentEnableB=85;
 uint8_t currentEnableC=170;
@@ -67,44 +55,43 @@ int main(void)
 
 ISR(TIMER3_OVF_vect)//
 {
-		if(timer++>10)
-			{
-				timer=0;
-				PORTG^=(1<<5);		
-			}
+				PWM_update();
+
 }
-/*
+
 void PWM_update()
 {
 	//PWM2->HS_U=11 pin OC2A
 	//PWM4->HS_V=6	pin OC0A
 	//PWM6->HS_W=5	pin OC0B
 	
-	if(++state_counter>5)
-	{
-		state_counter=0;
+	//if(++state_counter>5)
+	//{
+	//	state_counter=0;
 		switch(phase_state)
 		{
 			case 1:
 				//110
-				HS_U=0;
-				HS_V=sin_Drv[currentStepB];
-				HS_W=0;
+				//HS_U_LOW;
+				HS_V_HIGH;
+				HS_W_LOW;
+				
 				LS_U_LOW;
-				LS_V_LOW;
+				LS_V_HIGH;
 				LS_W_HIGH;
-				currentStepA++;
-				currentStepB++;
-				currentStepC++;
+				//currentStepA++;
+				//currentStepB++;
+				//currentStepC++;
 				phase_state++;
 			break;
 
 			case 2:
 				//100
-				HS_U=sin_Drv[currentStepA];
-				HS_V=0;
-				HS_W=0;
-				LS_U_LOW;
+				//HS_U=sin_Drv[currentStepA];
+				HS_U_HIGH;
+				//HS_V_LOW;
+				HS_W_LOW;
+				LS_U_HIGH;
 				LS_V_LOW;
 				LS_W_HIGH;
 				phase_state++;
@@ -115,26 +102,27 @@ void PWM_update()
 
 			case 3:
 				//101
-				HS_U=sin_Drv[currentStepA];
-				HS_V=0;
-				HS_W=0;
-				LS_U_LOW;
+				//HS_U=sin_Drv[currentStepA];
+				HS_U_HIGH;
+				HS_V_LOW;
+				//HS_W_LOW;
+				LS_U_HIGH;
 				LS_V_HIGH;
 				LS_W_LOW;
-				currentStepA++;
-				currentStepB++;
-				currentStepC++;
+				//currentStepA++;
+				//currentStepB++;
+				//currentStepC++;
 				phase_state++;
 			break;
 
 			case 4:
 				//001
-				HS_U=0;
-				HS_V=0;
-				HS_W=sin_Drv[currentStepC];
+				//HS_U_LOW;
+				HS_V_LOW;
+				HS_W_HIGH;
 				LS_U_LOW;
 				LS_V_HIGH;
-				LS_W_LOW;
+				LS_W_HIGH;
 				phase_state++;
 				//currentStepA++;
 				//currentStepB++;
@@ -143,25 +131,25 @@ void PWM_update()
 
 			case 5:
 				//011
-				HS_U=0;
-				HS_V=0;
-				HS_W=sin_Drv[currentStepC];
+				HS_U_LOW;
+				//HS_V_LOW;
+				HS_W_HIGH;
 				LS_U_HIGH;
 				LS_V_LOW;
-				LS_W_LOW;
-				currentStepA++;
-				currentStepB++;
-				currentStepC++;
+				LS_W_HIGH;
+				//currentStepA++;
+				//currentStepB++;
+				//currentStepC++;
 				phase_state++;
 			break;
 
 			case 6:
 				//010
-				HS_U=0;
-				HS_V=sin_Drv[currentStepB];
-				HS_W=0;
+				HS_U_LOW;
+				HS_V_HIGH;
+				//HS_W_LOW
 				LS_U_HIGH;
-				LS_V_LOW;
+				LS_V_HIGH;
 				LS_W_LOW;
 				phase_state=1;
 				//currentStepA++;
@@ -170,8 +158,8 @@ void PWM_update()
 			break;
 		}
 
-	}
+	
 }
 
-*/
+
 

@@ -19,9 +19,9 @@ void setup_timer3(void)
 	sbi (TCCR3B, CS31);	
 	//sbi (TCCR3B, CS32);
 	
-	sbi (TCCR3A, COM3A1);
-	sbi (TCCR3A, COM3B1);
-	sbi (TCCR3A, COM3C1);
+	//sbi (TCCR3A, COM3A1);
+	//sbi (TCCR3A, COM3B1);
+	//sbi (TCCR3A, COM3C1);
 	sbi (TCCR3A, WGM30);//8bit
 	//sbi (TCCR3A, WGM31); // Mode 1 / Phase Correct PWM
 	//sbi (TCCR3B, WGM33);
@@ -46,9 +46,12 @@ void init_gpio()
 	DDRD|=(1<<PD2);//enable 3 DIGITAL 2
 	*/
 	//DDRB|=(1<<PB5);//LED13
-	sbi(DDRE,PE5);//digital 3
-	sbi(DDRE,PE4);//digital 4
-	sbi(DDRE,PE3);//digital 5
+	sbi(DDRB,4);//digital 10
+	sbi(DDRB,5);//digital 11
+	sbi(DDRB,6);//digital 12
+	sbi(DDRH,4);//digital 7
+	sbi(DDRH,5);//digital 8
+	sbi(DDRH,6);//digital 9
 }
 
 
