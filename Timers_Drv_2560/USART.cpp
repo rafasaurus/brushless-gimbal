@@ -9,9 +9,9 @@
 void USART_Init(unsigned int ubrr)
 {
 	/* Set baud rate */
-	UBRR1H = (unsigned char)(ubrr>>8);
-	UBRR1L = (unsigned char)ubrr;
+	UBRR0H = (unsigned char)(ubrr>>8);
+	UBRR0L = (unsigned char)ubrr;
 	
-	UCSR1B = (1<<TXEN1) | (1<<TXCIE1);
-	UCSR1C = (1<<USBS1) | (3<<UCSZ10);//2 stop bit 8 bit
+	UCSR0B = (1<<TXEN0) | (1<<TXCIE0);
+	UCSR0C = (1<<USBS0) | (3<<UCSZ00);//2 stop bit 8 bit
 }

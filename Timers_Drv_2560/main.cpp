@@ -25,6 +25,9 @@ uint8_t currentStepA=0;
 uint8_t currentStepB=0;
 uint8_t currentStepC=0;
 
+uint8_t lowByte=0;
+uint16_t value=0;
+
 uint8_t sin_Drv[] {
 	127,130,133,136,139,143,146,149,152,155,158,161,164,167,170,173,176,178,181,184,187,190,192,195,198,200,203,205,208,210,212,215,217,219,221,223,225,227,229,231,233,234,236,238,239,240,
 	242,243,244,245,247,248,249,249,250,251,252,252,253,253,253,254,254,254,254,254,254,254,253,253,253,252,252,251,250,249,249,248,247,245,244,243,242,240,239,238,236,234,233,231,229,227,225,223,
@@ -63,11 +66,11 @@ ISR(TIMER3_OVF_vect)//Timer interrupt routine
 
 ISR(ADC_vect)//ADC interrupt routine
 {
-	uint8_t lowByte=ADCL;
-	uint16_t value=ADCH<<2 | lowByte >> 6;
+	lowByte=ADCL;
+	value=ADCH<<2 | lowByte >> 6;
 }
 
-ISR (USART1_TX_vect)//USART interrupt routine
+ISR (USART0_TX_vect)//USART interrupt routine
 {
 	
 }
