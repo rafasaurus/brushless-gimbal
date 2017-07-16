@@ -3,29 +3,29 @@ Timers_Drv_2560.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000002  00800200  000002ea  0000035e  2**0
+  0 .data         00000002  00800200  0000031e  00000392  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000002ea  00000000  00000000  00000074  2**1
+  1 .text         0000031e  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000360  2**0
+  2 .comment      00000030  00000000  00000000  00000394  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000390  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000003c4  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000060  00000000  00000000  000003d0  2**0
+  4 .debug_aranges 00000070  00000000  00000000  00000404  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00000297  00000000  00000000  00000430  2**0
+  5 .debug_info   000002e8  00000000  00000000  00000474  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000116  00000000  00000000  000006c7  2**0
+  6 .debug_abbrev 00000151  00000000  00000000  0000075c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000312  00000000  00000000  000007dd  2**0
+  7 .debug_line   0000034d  00000000  00000000  000008ad  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000000d0  00000000  00000000  00000af0  2**2
+  8 .debug_frame  0000010c  00000000  00000000  00000bfc  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    0000029f  00000000  00000000  00000bc0  2**0
+  9 .debug_str    000002c5  00000000  00000000  00000d08  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    000000cb  00000000  00000000  00000e5f  2**0
+ 10 .debug_loc    00000136  00000000  00000000  00000fcd  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000040  00000000  00000000  00000f2a  2**0
+ 11 .debug_ranges 00000050  00000000  00000000  00001103  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -89,7 +89,7 @@ Disassembly of section .text:
   6e:	00 00       	nop
   70:	58 c0       	rjmp	.+176    	; 0x122 <__bad_interrupt>
   72:	00 00       	nop
-  74:	56 c0       	rjmp	.+172    	; 0x122 <__bad_interrupt>
+  74:	8f c0       	rjmp	.+286    	; 0x194 <__vector_29>
   76:	00 00       	nop
   78:	54 c0       	rjmp	.+168    	; 0x122 <__bad_interrupt>
   7a:	00 00       	nop
@@ -101,13 +101,13 @@ Disassembly of section .text:
   86:	00 00       	nop
   88:	4c c0       	rjmp	.+152    	; 0x122 <__bad_interrupt>
   8a:	00 00       	nop
-  8c:	05 c1       	rjmp	.+522    	; 0x298 <__vector_35>
+  8c:	1f c1       	rjmp	.+574    	; 0x2cc <__vector_35>
   8e:	00 00       	nop
   90:	48 c0       	rjmp	.+144    	; 0x122 <__bad_interrupt>
   92:	00 00       	nop
   94:	46 c0       	rjmp	.+140    	; 0x122 <__bad_interrupt>
   96:	00 00       	nop
-  98:	44 c0       	rjmp	.+136    	; 0x122 <__bad_interrupt>
+  98:	8d c0       	rjmp	.+282    	; 0x1b4 <__vector_38>
   9a:	00 00       	nop
   9c:	42 c0       	rjmp	.+132    	; 0x122 <__bad_interrupt>
   9e:	00 00       	nop
@@ -160,8 +160,8 @@ Disassembly of section .text:
   f4:	12 e0       	ldi	r17, 0x02	; 2
   f6:	a0 e0       	ldi	r26, 0x00	; 0
   f8:	b2 e0       	ldi	r27, 0x02	; 2
-  fa:	ea ee       	ldi	r30, 0xEA	; 234
-  fc:	f2 e0       	ldi	r31, 0x02	; 2
+  fa:	ee e1       	ldi	r30, 0x1E	; 30
+  fc:	f3 e0       	ldi	r31, 0x03	; 3
   fe:	00 e0       	ldi	r16, 0x00	; 0
  100:	0b bf       	out	0x3b, r16	; 59
  102:	02 c0       	rjmp	.+4      	; 0x108 <__do_copy_data+0x14>
@@ -185,7 +185,7 @@ Disassembly of section .text:
  11a:	b2 07       	cpc	r27, r18
  11c:	e1 f7       	brne	.-8      	; 0x116 <.do_clear_bss_loop>
  11e:	26 d0       	rcall	.+76     	; 0x16c <main>
- 120:	e2 c0       	rjmp	.+452    	; 0x2e6 <_exit>
+ 120:	fc c0       	rjmp	.+504    	; 0x31a <_exit>
 
 00000122 <__bad_interrupt>:
  122:	6e cf       	rjmp	.-292    	; 0x0 <__vectors>
@@ -300,267 +300,309 @@ uint8_t phase_state=1;//global state 1,2,3,4,5,6
 int main(void)
  192:	ff cf       	rjmp	.-2      	; 0x192 <main+0x26>
 
-00000194 <_Z10PWM_updatev>:
+00000194 <__vector_29>:
+				PWM_update();
+
+}
+
+ISR(ADC_vect)//ADC interrupt routine
+{
+ 194:	1f 92       	push	r1
+ 196:	0f 92       	push	r0
+ 198:	0f b6       	in	r0, 0x3f	; 63
+ 19a:	0f 92       	push	r0
+ 19c:	11 24       	eor	r1, r1
+ 19e:	8f 93       	push	r24
+	uint8_t lowByte=ADCL;
+ 1a0:	80 91 78 00 	lds	r24, 0x0078	; 0x800078 <__TEXT_REGION_LENGTH__+0x700078>
+	uint16_t value=ADCH<<2 | lowByte >> 6;
+ 1a4:	80 91 79 00 	lds	r24, 0x0079	; 0x800079 <__TEXT_REGION_LENGTH__+0x700079>
+}
+ 1a8:	8f 91       	pop	r24
+ 1aa:	0f 90       	pop	r0
+ 1ac:	0f be       	out	0x3f, r0	; 63
+ 1ae:	0f 90       	pop	r0
+ 1b0:	1f 90       	pop	r1
+ 1b2:	18 95       	reti
+
+000001b4 <__vector_38>:
+
+ISR (USART1_TX_vect)//USART interrupt routine
+{
+ 1b4:	1f 92       	push	r1
+ 1b6:	0f 92       	push	r0
+ 1b8:	0f b6       	in	r0, 0x3f	; 63
+ 1ba:	0f 92       	push	r0
+ 1bc:	11 24       	eor	r1, r1
+	
+}
+ 1be:	0f 90       	pop	r0
+ 1c0:	0f be       	out	0x3f, r0	; 63
+ 1c2:	0f 90       	pop	r0
+ 1c4:	1f 90       	pop	r1
+ 1c6:	18 95       	reti
+
+000001c8 <_Z10PWM_updatev>:
 	//PWM6->HS_W=5	pin OC0B
 	
 	//if(++state_counter>5)
 	//{
 	//	state_counter=0;
 		switch(phase_state)
- 194:	80 91 00 02 	lds	r24, 0x0200	; 0x800200 <__data_start>
- 198:	83 30       	cpi	r24, 0x03	; 3
- 19a:	a1 f1       	breq	.+104    	; 0x204 <_Z10PWM_updatev+0x70>
- 19c:	28 f4       	brcc	.+10     	; 0x1a8 <_Z10PWM_updatev+0x14>
- 19e:	81 30       	cpi	r24, 0x01	; 1
- 1a0:	59 f0       	breq	.+22     	; 0x1b8 <_Z10PWM_updatev+0x24>
- 1a2:	82 30       	cpi	r24, 0x02	; 2
- 1a4:	e1 f0       	breq	.+56     	; 0x1de <_Z10PWM_updatev+0x4a>
- 1a6:	08 95       	ret
- 1a8:	85 30       	cpi	r24, 0x05	; 5
- 1aa:	09 f4       	brne	.+2      	; 0x1ae <_Z10PWM_updatev+0x1a>
- 1ac:	51 c0       	rjmp	.+162    	; 0x250 <_Z10PWM_updatev+0xbc>
- 1ae:	e8 f1       	brcs	.+122    	; 0x22a <_Z10PWM_updatev+0x96>
- 1b0:	86 30       	cpi	r24, 0x06	; 6
- 1b2:	09 f4       	brne	.+2      	; 0x1b6 <_Z10PWM_updatev+0x22>
- 1b4:	60 c0       	rjmp	.+192    	; 0x276 <_Z10PWM_updatev+0xe2>
- 1b6:	08 95       	ret
+ 1c8:	80 91 00 02 	lds	r24, 0x0200	; 0x800200 <__data_start>
+ 1cc:	83 30       	cpi	r24, 0x03	; 3
+ 1ce:	a1 f1       	breq	.+104    	; 0x238 <_Z10PWM_updatev+0x70>
+ 1d0:	28 f4       	brcc	.+10     	; 0x1dc <_Z10PWM_updatev+0x14>
+ 1d2:	81 30       	cpi	r24, 0x01	; 1
+ 1d4:	59 f0       	breq	.+22     	; 0x1ec <_Z10PWM_updatev+0x24>
+ 1d6:	82 30       	cpi	r24, 0x02	; 2
+ 1d8:	e1 f0       	breq	.+56     	; 0x212 <_Z10PWM_updatev+0x4a>
+ 1da:	08 95       	ret
+ 1dc:	85 30       	cpi	r24, 0x05	; 5
+ 1de:	09 f4       	brne	.+2      	; 0x1e2 <_Z10PWM_updatev+0x1a>
+ 1e0:	51 c0       	rjmp	.+162    	; 0x284 <_Z10PWM_updatev+0xbc>
+ 1e2:	e8 f1       	brcs	.+122    	; 0x25e <_Z10PWM_updatev+0x96>
+ 1e4:	86 30       	cpi	r24, 0x06	; 6
+ 1e6:	09 f4       	brne	.+2      	; 0x1ea <_Z10PWM_updatev+0x22>
+ 1e8:	60 c0       	rjmp	.+192    	; 0x2aa <_Z10PWM_updatev+0xe2>
+ 1ea:	08 95       	ret
 		{
 			case 1:
 				//110
 				//HS_U_LOW;
 				HS_V_HIGH;
- 1b8:	2d 9a       	sbi	0x05, 5	; 5
+ 1ec:	2d 9a       	sbi	0x05, 5	; 5
 				HS_W_LOW;
- 1ba:	2e 98       	cbi	0x05, 6	; 5
+ 1ee:	2e 98       	cbi	0x05, 6	; 5
 				
 				LS_U_LOW;
- 1bc:	e2 e0       	ldi	r30, 0x02	; 2
- 1be:	f1 e0       	ldi	r31, 0x01	; 1
- 1c0:	80 81       	ld	r24, Z
- 1c2:	8f 7e       	andi	r24, 0xEF	; 239
- 1c4:	80 83       	st	Z, r24
+ 1f0:	e2 e0       	ldi	r30, 0x02	; 2
+ 1f2:	f1 e0       	ldi	r31, 0x01	; 1
+ 1f4:	80 81       	ld	r24, Z
+ 1f6:	8f 7e       	andi	r24, 0xEF	; 239
+ 1f8:	80 83       	st	Z, r24
 				LS_V_HIGH;
- 1c6:	80 81       	ld	r24, Z
- 1c8:	80 62       	ori	r24, 0x20	; 32
- 1ca:	80 83       	st	Z, r24
+ 1fa:	80 81       	ld	r24, Z
+ 1fc:	80 62       	ori	r24, 0x20	; 32
+ 1fe:	80 83       	st	Z, r24
 				LS_W_HIGH;
- 1cc:	80 81       	ld	r24, Z
- 1ce:	80 64       	ori	r24, 0x40	; 64
- 1d0:	80 83       	st	Z, r24
+ 200:	80 81       	ld	r24, Z
+ 202:	80 64       	ori	r24, 0x40	; 64
+ 204:	80 83       	st	Z, r24
 				//currentStepA++;
 				//currentStepB++;
 				//currentStepC++;
 				phase_state++;
- 1d2:	80 91 00 02 	lds	r24, 0x0200	; 0x800200 <__data_start>
- 1d6:	8f 5f       	subi	r24, 0xFF	; 255
- 1d8:	80 93 00 02 	sts	0x0200, r24	; 0x800200 <__data_start>
+ 206:	80 91 00 02 	lds	r24, 0x0200	; 0x800200 <__data_start>
+ 20a:	8f 5f       	subi	r24, 0xFF	; 255
+ 20c:	80 93 00 02 	sts	0x0200, r24	; 0x800200 <__data_start>
 			break;
- 1dc:	08 95       	ret
+ 210:	08 95       	ret
 
 			case 2:
 				//100
 				//HS_U=sin_Drv[currentStepA];
 				HS_U_HIGH;
- 1de:	2c 9a       	sbi	0x05, 4	; 5
+ 212:	2c 9a       	sbi	0x05, 4	; 5
 				//HS_V_LOW;
 				HS_W_LOW;
- 1e0:	2e 98       	cbi	0x05, 6	; 5
+ 214:	2e 98       	cbi	0x05, 6	; 5
 				LS_U_HIGH;
- 1e2:	e2 e0       	ldi	r30, 0x02	; 2
- 1e4:	f1 e0       	ldi	r31, 0x01	; 1
- 1e6:	80 81       	ld	r24, Z
- 1e8:	80 61       	ori	r24, 0x10	; 16
- 1ea:	80 83       	st	Z, r24
+ 216:	e2 e0       	ldi	r30, 0x02	; 2
+ 218:	f1 e0       	ldi	r31, 0x01	; 1
+ 21a:	80 81       	ld	r24, Z
+ 21c:	80 61       	ori	r24, 0x10	; 16
+ 21e:	80 83       	st	Z, r24
 				LS_V_LOW;
- 1ec:	80 81       	ld	r24, Z
- 1ee:	8f 7d       	andi	r24, 0xDF	; 223
- 1f0:	80 83       	st	Z, r24
+ 220:	80 81       	ld	r24, Z
+ 222:	8f 7d       	andi	r24, 0xDF	; 223
+ 224:	80 83       	st	Z, r24
 				LS_W_HIGH;
- 1f2:	80 81       	ld	r24, Z
- 1f4:	80 64       	ori	r24, 0x40	; 64
- 1f6:	80 83       	st	Z, r24
+ 226:	80 81       	ld	r24, Z
+ 228:	80 64       	ori	r24, 0x40	; 64
+ 22a:	80 83       	st	Z, r24
 				phase_state++;
- 1f8:	80 91 00 02 	lds	r24, 0x0200	; 0x800200 <__data_start>
- 1fc:	8f 5f       	subi	r24, 0xFF	; 255
- 1fe:	80 93 00 02 	sts	0x0200, r24	; 0x800200 <__data_start>
+ 22c:	80 91 00 02 	lds	r24, 0x0200	; 0x800200 <__data_start>
+ 230:	8f 5f       	subi	r24, 0xFF	; 255
+ 232:	80 93 00 02 	sts	0x0200, r24	; 0x800200 <__data_start>
 				//currentStepA++;
 				//currentStepB++;
 				//currentStepC++;
 			break;
- 202:	08 95       	ret
+ 236:	08 95       	ret
 
 			case 3:
 				//101
 				//HS_U=sin_Drv[currentStepA];
 				HS_U_HIGH;
- 204:	2c 9a       	sbi	0x05, 4	; 5
+ 238:	2c 9a       	sbi	0x05, 4	; 5
 				HS_V_LOW;
- 206:	2d 98       	cbi	0x05, 5	; 5
+ 23a:	2d 98       	cbi	0x05, 5	; 5
 				//HS_W_LOW;
 				LS_U_HIGH;
- 208:	e2 e0       	ldi	r30, 0x02	; 2
- 20a:	f1 e0       	ldi	r31, 0x01	; 1
- 20c:	80 81       	ld	r24, Z
- 20e:	80 61       	ori	r24, 0x10	; 16
- 210:	80 83       	st	Z, r24
+ 23c:	e2 e0       	ldi	r30, 0x02	; 2
+ 23e:	f1 e0       	ldi	r31, 0x01	; 1
+ 240:	80 81       	ld	r24, Z
+ 242:	80 61       	ori	r24, 0x10	; 16
+ 244:	80 83       	st	Z, r24
 				LS_V_HIGH;
- 212:	80 81       	ld	r24, Z
- 214:	80 62       	ori	r24, 0x20	; 32
- 216:	80 83       	st	Z, r24
+ 246:	80 81       	ld	r24, Z
+ 248:	80 62       	ori	r24, 0x20	; 32
+ 24a:	80 83       	st	Z, r24
 				LS_W_LOW;
- 218:	80 81       	ld	r24, Z
- 21a:	8f 7b       	andi	r24, 0xBF	; 191
- 21c:	80 83       	st	Z, r24
+ 24c:	80 81       	ld	r24, Z
+ 24e:	8f 7b       	andi	r24, 0xBF	; 191
+ 250:	80 83       	st	Z, r24
 				//currentStepA++;
 				//currentStepB++;
 				//currentStepC++;
 				phase_state++;
- 21e:	80 91 00 02 	lds	r24, 0x0200	; 0x800200 <__data_start>
- 222:	8f 5f       	subi	r24, 0xFF	; 255
- 224:	80 93 00 02 	sts	0x0200, r24	; 0x800200 <__data_start>
+ 252:	80 91 00 02 	lds	r24, 0x0200	; 0x800200 <__data_start>
+ 256:	8f 5f       	subi	r24, 0xFF	; 255
+ 258:	80 93 00 02 	sts	0x0200, r24	; 0x800200 <__data_start>
 			break;
- 228:	08 95       	ret
+ 25c:	08 95       	ret
 
 			case 4:
 				//001
 				//HS_U_LOW;
 				HS_V_LOW;
- 22a:	2d 98       	cbi	0x05, 5	; 5
+ 25e:	2d 98       	cbi	0x05, 5	; 5
 				HS_W_HIGH;
- 22c:	2e 9a       	sbi	0x05, 6	; 5
+ 260:	2e 9a       	sbi	0x05, 6	; 5
 				LS_U_LOW;
- 22e:	e2 e0       	ldi	r30, 0x02	; 2
- 230:	f1 e0       	ldi	r31, 0x01	; 1
- 232:	80 81       	ld	r24, Z
- 234:	8f 7e       	andi	r24, 0xEF	; 239
- 236:	80 83       	st	Z, r24
+ 262:	e2 e0       	ldi	r30, 0x02	; 2
+ 264:	f1 e0       	ldi	r31, 0x01	; 1
+ 266:	80 81       	ld	r24, Z
+ 268:	8f 7e       	andi	r24, 0xEF	; 239
+ 26a:	80 83       	st	Z, r24
 				LS_V_HIGH;
- 238:	80 81       	ld	r24, Z
- 23a:	80 62       	ori	r24, 0x20	; 32
- 23c:	80 83       	st	Z, r24
+ 26c:	80 81       	ld	r24, Z
+ 26e:	80 62       	ori	r24, 0x20	; 32
+ 270:	80 83       	st	Z, r24
 				LS_W_HIGH;
- 23e:	80 81       	ld	r24, Z
- 240:	80 64       	ori	r24, 0x40	; 64
- 242:	80 83       	st	Z, r24
+ 272:	80 81       	ld	r24, Z
+ 274:	80 64       	ori	r24, 0x40	; 64
+ 276:	80 83       	st	Z, r24
 				phase_state++;
- 244:	80 91 00 02 	lds	r24, 0x0200	; 0x800200 <__data_start>
- 248:	8f 5f       	subi	r24, 0xFF	; 255
- 24a:	80 93 00 02 	sts	0x0200, r24	; 0x800200 <__data_start>
+ 278:	80 91 00 02 	lds	r24, 0x0200	; 0x800200 <__data_start>
+ 27c:	8f 5f       	subi	r24, 0xFF	; 255
+ 27e:	80 93 00 02 	sts	0x0200, r24	; 0x800200 <__data_start>
 				//currentStepA++;
 				//currentStepB++;
 				//currentStepC++;
 			break;
- 24e:	08 95       	ret
+ 282:	08 95       	ret
 
 			case 5:
 				//011
 				HS_U_LOW;
- 250:	2c 98       	cbi	0x05, 4	; 5
+ 284:	2c 98       	cbi	0x05, 4	; 5
 				//HS_V_LOW;
 				HS_W_HIGH;
- 252:	2e 9a       	sbi	0x05, 6	; 5
+ 286:	2e 9a       	sbi	0x05, 6	; 5
 				LS_U_HIGH;
- 254:	e2 e0       	ldi	r30, 0x02	; 2
- 256:	f1 e0       	ldi	r31, 0x01	; 1
- 258:	80 81       	ld	r24, Z
- 25a:	80 61       	ori	r24, 0x10	; 16
- 25c:	80 83       	st	Z, r24
+ 288:	e2 e0       	ldi	r30, 0x02	; 2
+ 28a:	f1 e0       	ldi	r31, 0x01	; 1
+ 28c:	80 81       	ld	r24, Z
+ 28e:	80 61       	ori	r24, 0x10	; 16
+ 290:	80 83       	st	Z, r24
 				LS_V_LOW;
- 25e:	80 81       	ld	r24, Z
- 260:	8f 7d       	andi	r24, 0xDF	; 223
- 262:	80 83       	st	Z, r24
+ 292:	80 81       	ld	r24, Z
+ 294:	8f 7d       	andi	r24, 0xDF	; 223
+ 296:	80 83       	st	Z, r24
 				LS_W_HIGH;
- 264:	80 81       	ld	r24, Z
- 266:	80 64       	ori	r24, 0x40	; 64
- 268:	80 83       	st	Z, r24
+ 298:	80 81       	ld	r24, Z
+ 29a:	80 64       	ori	r24, 0x40	; 64
+ 29c:	80 83       	st	Z, r24
 				//currentStepA++;
 				//currentStepB++;
 				//currentStepC++;
 				phase_state++;
- 26a:	80 91 00 02 	lds	r24, 0x0200	; 0x800200 <__data_start>
- 26e:	8f 5f       	subi	r24, 0xFF	; 255
- 270:	80 93 00 02 	sts	0x0200, r24	; 0x800200 <__data_start>
+ 29e:	80 91 00 02 	lds	r24, 0x0200	; 0x800200 <__data_start>
+ 2a2:	8f 5f       	subi	r24, 0xFF	; 255
+ 2a4:	80 93 00 02 	sts	0x0200, r24	; 0x800200 <__data_start>
 			break;
- 274:	08 95       	ret
+ 2a8:	08 95       	ret
 
 			case 6:
 				//010
 				HS_U_LOW;
- 276:	2c 98       	cbi	0x05, 4	; 5
+ 2aa:	2c 98       	cbi	0x05, 4	; 5
 				HS_V_HIGH;
- 278:	2d 9a       	sbi	0x05, 5	; 5
+ 2ac:	2d 9a       	sbi	0x05, 5	; 5
 				//HS_W_LOW
 				LS_U_HIGH;
- 27a:	e2 e0       	ldi	r30, 0x02	; 2
- 27c:	f1 e0       	ldi	r31, 0x01	; 1
- 27e:	80 81       	ld	r24, Z
- 280:	80 61       	ori	r24, 0x10	; 16
- 282:	80 83       	st	Z, r24
+ 2ae:	e2 e0       	ldi	r30, 0x02	; 2
+ 2b0:	f1 e0       	ldi	r31, 0x01	; 1
+ 2b2:	80 81       	ld	r24, Z
+ 2b4:	80 61       	ori	r24, 0x10	; 16
+ 2b6:	80 83       	st	Z, r24
 				LS_V_HIGH;
- 284:	80 81       	ld	r24, Z
- 286:	80 62       	ori	r24, 0x20	; 32
- 288:	80 83       	st	Z, r24
+ 2b8:	80 81       	ld	r24, Z
+ 2ba:	80 62       	ori	r24, 0x20	; 32
+ 2bc:	80 83       	st	Z, r24
 				LS_W_LOW;
- 28a:	80 81       	ld	r24, Z
- 28c:	8f 7b       	andi	r24, 0xBF	; 191
- 28e:	80 83       	st	Z, r24
+ 2be:	80 81       	ld	r24, Z
+ 2c0:	8f 7b       	andi	r24, 0xBF	; 191
+ 2c2:	80 83       	st	Z, r24
 				phase_state=1;
- 290:	81 e0       	ldi	r24, 0x01	; 1
- 292:	80 93 00 02 	sts	0x0200, r24	; 0x800200 <__data_start>
- 296:	08 95       	ret
+ 2c4:	81 e0       	ldi	r24, 0x01	; 1
+ 2c6:	80 93 00 02 	sts	0x0200, r24	; 0x800200 <__data_start>
+ 2ca:	08 95       	ret
 
-00000298 <__vector_35>:
+000002cc <__vector_35>:
 	    //PORTB^=(1<<6);   
     }
 }
 
-ISR(TIMER3_OVF_vect)//
+ISR(TIMER3_OVF_vect)//Timer interrupt routine
 {
- 298:	1f 92       	push	r1
- 29a:	0f 92       	push	r0
- 29c:	0f b6       	in	r0, 0x3f	; 63
- 29e:	0f 92       	push	r0
- 2a0:	11 24       	eor	r1, r1
- 2a2:	0b b6       	in	r0, 0x3b	; 59
- 2a4:	0f 92       	push	r0
- 2a6:	2f 93       	push	r18
- 2a8:	3f 93       	push	r19
- 2aa:	4f 93       	push	r20
- 2ac:	5f 93       	push	r21
- 2ae:	6f 93       	push	r22
- 2b0:	7f 93       	push	r23
- 2b2:	8f 93       	push	r24
- 2b4:	9f 93       	push	r25
- 2b6:	af 93       	push	r26
- 2b8:	bf 93       	push	r27
- 2ba:	ef 93       	push	r30
- 2bc:	ff 93       	push	r31
+ 2cc:	1f 92       	push	r1
+ 2ce:	0f 92       	push	r0
+ 2d0:	0f b6       	in	r0, 0x3f	; 63
+ 2d2:	0f 92       	push	r0
+ 2d4:	11 24       	eor	r1, r1
+ 2d6:	0b b6       	in	r0, 0x3b	; 59
+ 2d8:	0f 92       	push	r0
+ 2da:	2f 93       	push	r18
+ 2dc:	3f 93       	push	r19
+ 2de:	4f 93       	push	r20
+ 2e0:	5f 93       	push	r21
+ 2e2:	6f 93       	push	r22
+ 2e4:	7f 93       	push	r23
+ 2e6:	8f 93       	push	r24
+ 2e8:	9f 93       	push	r25
+ 2ea:	af 93       	push	r26
+ 2ec:	bf 93       	push	r27
+ 2ee:	ef 93       	push	r30
+ 2f0:	ff 93       	push	r31
 				PWM_update();
- 2be:	6a df       	rcall	.-300    	; 0x194 <_Z10PWM_updatev>
+ 2f2:	6a df       	rcall	.-300    	; 0x1c8 <_Z10PWM_updatev>
 
 }
- 2c0:	ff 91       	pop	r31
- 2c2:	ef 91       	pop	r30
- 2c4:	bf 91       	pop	r27
- 2c6:	af 91       	pop	r26
- 2c8:	9f 91       	pop	r25
- 2ca:	8f 91       	pop	r24
- 2cc:	7f 91       	pop	r23
- 2ce:	6f 91       	pop	r22
- 2d0:	5f 91       	pop	r21
- 2d2:	4f 91       	pop	r20
- 2d4:	3f 91       	pop	r19
- 2d6:	2f 91       	pop	r18
- 2d8:	0f 90       	pop	r0
- 2da:	0b be       	out	0x3b, r0	; 59
- 2dc:	0f 90       	pop	r0
- 2de:	0f be       	out	0x3f, r0	; 63
- 2e0:	0f 90       	pop	r0
- 2e2:	1f 90       	pop	r1
- 2e4:	18 95       	reti
+ 2f4:	ff 91       	pop	r31
+ 2f6:	ef 91       	pop	r30
+ 2f8:	bf 91       	pop	r27
+ 2fa:	af 91       	pop	r26
+ 2fc:	9f 91       	pop	r25
+ 2fe:	8f 91       	pop	r24
+ 300:	7f 91       	pop	r23
+ 302:	6f 91       	pop	r22
+ 304:	5f 91       	pop	r21
+ 306:	4f 91       	pop	r20
+ 308:	3f 91       	pop	r19
+ 30a:	2f 91       	pop	r18
+ 30c:	0f 90       	pop	r0
+ 30e:	0b be       	out	0x3b, r0	; 59
+ 310:	0f 90       	pop	r0
+ 312:	0f be       	out	0x3f, r0	; 63
+ 314:	0f 90       	pop	r0
+ 316:	1f 90       	pop	r1
+ 318:	18 95       	reti
 
-000002e6 <_exit>:
- 2e6:	f8 94       	cli
+0000031a <_exit>:
+ 31a:	f8 94       	cli
 
-000002e8 <__stop_program>:
- 2e8:	ff cf       	rjmp	.-2      	; 0x2e8 <__stop_program>
+0000031c <__stop_program>:
+ 31c:	ff cf       	rjmp	.-2      	; 0x31c <__stop_program>

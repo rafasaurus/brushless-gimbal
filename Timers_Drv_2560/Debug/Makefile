@@ -37,8 +37,10 @@ SUBDIRS :=
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
+../ADC.cpp \
 ../functions.cpp \
-../main.cpp
+../main.cpp \
+../USART.cpp
 
 
 PREPROCESSING_SRCS += 
@@ -48,20 +50,28 @@ ASM_SRCS +=
 
 
 OBJS +=  \
+ADC.o \
 functions.o \
-main.o
+main.o \
+USART.o
 
 OBJS_AS_ARGS +=  \
+ADC.o \
 functions.o \
-main.o
+main.o \
+USART.o
 
 C_DEPS +=  \
+ADC.d \
 functions.d \
-main.d
+main.d \
+USART.d
 
 C_DEPS_AS_ARGS +=  \
+ADC.d \
 functions.d \
-main.d
+main.d \
+USART.d
 
 OUTPUT_FILE_PATH +=Timers_Drv_2560.elf
 
@@ -77,6 +87,10 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
 
 
 

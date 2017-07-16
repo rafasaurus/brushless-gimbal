@@ -8,6 +8,8 @@
 //#include "Init.h"
 #include "defines.h"
 #include "functions.h"
+#include "USART.h"
+#include "ADC.h"
 
 #include <avr/io.h>
 #include <util/delay.h>
@@ -53,11 +55,23 @@ int main(void)
     }
 }
 
-ISR(TIMER3_OVF_vect)//
+ISR(TIMER3_OVF_vect)//Timer interrupt routine
 {
 				PWM_update();
 
 }
+
+ISR(ADC_vect)//ADC interrupt routine
+{
+	uint8_t lowByte=ADCL;
+	uint16_t value=ADCH<<2 | lowByte >> 6;
+}
+
+ISR (USART1_TX_vect)//USART interrupt routine
+{
+	
+}
+
 
 void PWM_update()
 {
