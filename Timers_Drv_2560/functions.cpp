@@ -117,7 +117,78 @@ void SWITCH_PHASE_STATE(uint8_t &phase_state)
 
 }
 
+void PWM_update(uint8_t &phase_state)
+{
+	switch(phase_state)
+	{
+		case 1:
+		//110
+		//HS_U_LOW;
+		HS_V_HIGH;
+		HS_W_LOW;
+		
+		LS_U_LOW;
+		LS_V_HIGH;
+		LS_W_HIGH;
 
+		break;
+
+		case 2:
+		//100
+		HS_U_HIGH;
+		//HS_V_LOW;
+		HS_W_LOW;
+		LS_U_HIGH;
+		LS_V_LOW;
+		LS_W_HIGH;
+
+		break;
+
+		case 3:
+		//101
+		HS_U_HIGH;
+		HS_V_LOW;
+		//HS_W_LOW;
+		LS_U_HIGH;
+		LS_V_HIGH;
+		LS_W_LOW;
+
+		break;
+
+		case 4:
+		//001
+		//HS_U_LOW;
+		HS_V_LOW;
+		HS_W_HIGH;
+		LS_U_LOW;
+		LS_V_HIGH;
+		LS_W_HIGH;
+
+		break;
+
+		case 5:
+		//011
+		HS_U_LOW;
+		//HS_V_LOW;
+		HS_W_HIGH;
+		LS_U_HIGH;
+		LS_V_LOW;
+		LS_W_HIGH;
+
+		break;
+
+		case 6:
+		//010
+		HS_U_LOW;
+		HS_V_HIGH;
+		//HS_W_LOW
+		LS_U_HIGH;
+		LS_V_HIGH;
+		LS_W_LOW;
+
+		break;
+	}
+}
 
 
 

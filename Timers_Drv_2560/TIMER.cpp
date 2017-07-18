@@ -31,5 +31,5 @@ void setup_timer4(void)
 
 void Enable_timer4_compare_interrupt()
 {
-	sbi (TIMSK4, OCIE4B);
+	sbi (TIMSK4, OCIE4A);
 }

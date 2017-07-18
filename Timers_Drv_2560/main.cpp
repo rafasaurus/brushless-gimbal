@@ -43,11 +43,11 @@ int main(void)
 {	
 	
 	OCR4B=0x255;//Counter top value. Freq = 8 MHz/prescaler/(OCR0A + 1)
-	ADC_Init();
+	//ADC_Init();
 	USART_Init(MY_UBRR);
-	setup_timer3();
+	//setup_timer3();
 	setup_timer4();
-	Enable_timer3_interrupt();
+	//Enable_timer3_interrupt();
 	Enable_timer4_compare_interrupt();
 	init_gpio();
 	//GTCCR = 0;//release all timers
@@ -60,96 +60,23 @@ int main(void)
 
 //ISR(TIMER3_OVF_vect)//Timer interrupt routine
 //{
-//	PWM_update(phase_state);
-//	SWITCH_PHASE_STATE(phase_state);
-//	UDR0=0x15;
+//	//PWM_update(phase_state);
+//	//SWITCH_PHASE_STATE(phase_state);
+//	//UDR0=0x15;
 //}
 
-ISR(TIMER4_COMPB_vect)
+ISR(TIMER4_COMPA_vect)
 {
 	PWM_update(phase_state);
 	SWITCH_PHASE_STATE(phase_state);
 	UDR0=0x15;
 }
 
-ISR(ADC_vect)//ADC interrupt routine
-{
-		ADCSRA |= (1<<ADSC);//start ADC conversion 
-		//UDR0=ADC;
-}
-
-void PWM_update(uint8_t &phase_state)
-{
-		switch(phase_state)
-		{
-			case 1:
-				//110
-				//HS_U_LOW;
-				HS_V_HIGH;
-				HS_W_LOW;
-				
-				LS_U_LOW;
-				LS_V_HIGH;
-				LS_W_HIGH;
-
-			break;
-
-			case 2:
-				//100
-				HS_U_HIGH;
-				//HS_V_LOW;
-				HS_W_LOW;
-				LS_U_HIGH;
-				LS_V_LOW;
-				LS_W_HIGH;
-
-			break;
-
-			case 3:
-				//101
-				HS_U_HIGH;
-				HS_V_LOW;
-				//HS_W_LOW;
-				LS_U_HIGH;
-				LS_V_HIGH;
-				LS_W_LOW;
-
-			break;
-
-			case 4:
-				//001
-				//HS_U_LOW;
-				HS_V_LOW;
-				HS_W_HIGH;
-				LS_U_LOW;
-				LS_V_HIGH;
-				LS_W_HIGH;
-
-			break;
-
-			case 5:
-				//011
-				HS_U_LOW;
-				//HS_V_LOW;
-				HS_W_HIGH;
-				LS_U_HIGH;
-				LS_V_LOW;
-				LS_W_HIGH;
-
-			break;
-
-			case 6:
-				//010
-				HS_U_LOW;
-				HS_V_HIGH;
-				//HS_W_LOW
-				LS_U_HIGH;
-				LS_V_HIGH;
-				LS_W_LOW;
-
-			break;
-		}	
-}
+//ISR(ADC_vect)//ADC interrupt routine
+//{
+//		ADCSRA |= (1<<ADSC);//start ADC conversion 
+//		//UDR0=ADC;
+//}
 
 
 
