@@ -36,18 +36,23 @@ uint8_t reverse=0;
 int main(void)
 {	
 	
-	OCR0A=0xFF;//Counter top value. Freq = 8 MHz/prescaler/(OCR0A + 1)
+	OCR0A=10;//Counter top value. Freq = 16 MHz/prescaler/(OCR0A + 1)
 	ADC_Init();
 	USART_Init(MY_UBRR);
-	//setup_timer3();
+	setup_timer3();
 	setup_timer0();
-	//Enable_timer3_interrupt();
+	Enable_timer3_interrupt();
 	Enable_timer0_compare_interrupt();
 	init_gpio();
 	//GTCCR = 0;//release all timers
 	sei();
     while (1) 
     {
+	//for (int i=0;i<256;i++)
+	//{
+	//	OCR0A=i;
+	//	_delay_ms(500);
+	//}
 	
     }
 }
@@ -58,22 +63,22 @@ ISR(TIMER0_COMPA_vect)
 {
 	PWM_update(phase_state);
 	SWITCH_PHASE_STATE(phase_state);
-	//UDR0=0x15;
+	UDR0=OCR0A;
 }
 
 ISR(ADC_vect)//ADC interrupt routine
 {
 		ADCSRA |= (1<<ADSC);//start ADC conversion 
 		ADC_value=ADC;
-		UDR0=ADC_value;
+		//UDR0=ADC_value;
 		//OCR0A=ADC_value;
 }
 
-//ISR(TIMER3_OVF_vect)//Timer interrupt routine
-//{
-//	//PWM_update(phase_state);
-//	//SWITCH_PHASE_STATE(phase_state);
-//	//UDR0=0x15;
-//}
+ISR(TIMER3_OVF_vect)//Timer interrupt routine
+{
+	//PWM_update(phase_state);
+	//SWITCH_PHASE_STATE(phase_state);
+	//UDR0=0x15;
+}
 
 

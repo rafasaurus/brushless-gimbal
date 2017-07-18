@@ -24,8 +24,10 @@ void Enable_timer3_interrupt()
 void setup_timer0(void)
 {
 	//64 pres, 250.000 hz 0.000004s
-	sbi (TCCR0B, CS00);
+	
+	//sbi (TCCR0B, CS00);
 	sbi (TCCR0B, CS01);
+	//sbi (TCCR3B, CS02);
 	sbi (TCCR0A, WGM02);//OCR4A compare interrupt
 }
 
