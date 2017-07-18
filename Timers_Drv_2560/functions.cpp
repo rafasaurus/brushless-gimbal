@@ -58,7 +58,7 @@ void init_gpio()
 void Enable_timer3_interrupt()
 {
 	sbi (TIMSK3, TOIE3);
-	sei();
+	//sei();
 }
 
 

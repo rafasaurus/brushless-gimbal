@@ -15,9 +15,11 @@
 #include <util/delay.h>
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
+#include <stdlib.h>
 
 int timer=0;
 void PWM_update();
+
 uint8_t currentEnableA=0;
 uint8_t currentEnableB=85;
 uint8_t currentEnableC=170;
@@ -28,17 +30,12 @@ uint8_t currentStepC=0;
 uint8_t lowByte=0;
 uint16_t value=0;
 
-uint8_t sin_Drv[] {
-	127,130,133,136,139,143,146,149,152,155,158,161,164,167,170,173,176,178,181,184,187,190,192,195,198,200,203,205,208,210,212,215,217,219,221,223,225,227,229,231,233,234,236,238,239,240,
-	242,243,244,245,247,248,249,249,250,251,252,252,253,253,253,254,254,254,254,254,254,254,253,253,253,252,252,251,250,249,249,248,247,245,244,243,242,240,239,238,236,234,233,231,229,227,225,223,
-	221,219,217,215,212,210,208,205,203,200,198,195,192,190,187,184,181,178,176,173,170,167,164,161,158,155,152,149,146,143,139,136,133,130,127,124,121,118,115,111,108,105,102,99,96,93,90,87,84,81,78,
-	76,73,70,67,64,62,59,56,54,51,49,46,44,42,39,37,35,33,31,29,27,25,23,21,20,18,16,15,14,12,11,10,9,7,6,5,5,4,3,2,2,1,1,1,0,0,0,0,0,0,0,1,1,1,2,2,3,4,5,5,6,7,9,10,11,12,14,15,16,18,20,21,23,25,27,29,31,
-	33,35,37,39,42,44,46,49,51,54,56,59,62,64,67,70,73,76,78,81,84,87,90,93,96,99,102,105,108,111,115,118,121,124
-};
 uint8_t state_counter=0;
 uint8_t phase_state=1;//global state 1,2,3,4,5,6
 int main(void)
 {	
+	ADC_Init();
+	USART_Init(MY_UBRR);
 	Enable_timer3_interrupt();
 	init_gpio();
 	OCR3A=127;
@@ -49,31 +46,67 @@ int main(void)
 	setup_timer3();
 	DDRB|=(1<<7);
 	DDRG|=(1<<5);
-	
+	UDR0=0;
+	sei();
     while (1) 
     {
+		//for(int i=0x00;i<0xFF;i++)
+		//UDR0='A';
+		//_delay_ms(1000);
+		//while ((UCSR0A & (1 << TXC0)) == 0) ;
 		
 		//PORTB^=(1<<5);
-	    //PORTB^=(1<<6);   
+	    //PORTB^=(1<<6); 
+		//UDR0=0x01;  
+		//ADMUX|=(1<<MUX0);
+		//ADCSRA |= (1<<ADSC);
+		//// wait until ADC conversion is complete
+		//while( ADCSRA & (1<<ADSC) );
+		//value=ADCH;
+		
+		
     }
-}
-
-ISR(TIMER3_OVF_vect)//Timer interrupt routine
-{
-				PWM_update();
-
-}
-
-ISR(ADC_vect)//ADC interrupt routine
-{
-	lowByte=ADCL;
-	value=ADCH<<2 | lowByte >> 6;
 }
 
 ISR (USART0_TX_vect)//USART interrupt routine
 {
+	char p;
+	for(int i=0x41;i<0x46;i++)
+	{
+		itoa(i, &p, 10);
+		UDR0=p;
+	}
+	_delay_ms(1000);
+	
 	
 }
+
+ISR(TIMER3_OVF_vect)//Timer interrupt routine
+{
+	PWM_update();
+}
+
+//ISR(ADC_vect)//ADC interrupt routine
+//{
+//	ADMUX|=(1<<MUX0);
+//	ADCSRA |= 1<<ADSC;//start conversion
+//	value=ADCH;
+//	
+//	//PORTF = ADCH;			// Output ADCH to PortD
+//	
+//	//char p;
+//	
+//	//lowByte=ADCL;
+//	//value=ADCH<<2 | lowByte >> 6;	
+//	
+//	
+//	
+//	//char c;
+//	//itoa (ADCH, &c,10);
+//	//UDR0=c;
+//}
+
+
 
 
 void PWM_update()
