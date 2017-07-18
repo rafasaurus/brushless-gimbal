@@ -3,29 +3,31 @@ Timers_Drv_2560.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000002  00800200  0000030c  00000380  2**0
+  0 .data         00000002  00800200  00000362  000003f6  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         0000030c  00000000  00000000  00000074  2**1
+  1 .text         00000362  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000382  2**0
+  2 .bss          00000001  00800202  00800202  000003f8  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  000003f8  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000003b4  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000428  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 000000b8  00000000  00000000  000003f4  2**0
+  5 .debug_aranges 000000f0  00000000  00000000  00000468  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   0000051e  00000000  00000000  000004ac  2**0
+  6 .debug_info   0000111e  00000000  00000000  00000558  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000234  00000000  00000000  000009ca  2**0
+  7 .debug_abbrev 00000dcb  00000000  00000000  00001676  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000525  00000000  00000000  00000bfe  2**0
+  8 .debug_line   00000670  00000000  00000000  00002441  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000148  00000000  00000000  00001124  2**2
+  9 .debug_frame  000001bc  00000000  00000000  00002ab4  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000399  00000000  00000000  0000126c  2**0
+ 10 .debug_str    00000764  00000000  00000000  00002c70  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    000002ad  00000000  00000000  00001605  2**0
+ 11 .debug_loc    00000331  00000000  00000000  000033d4  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000078  00000000  00000000  000018b2  2**0
+ 12 .debug_ranges 000000a0  00000000  00000000  00003705  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -73,7 +75,7 @@ Disassembly of section .text:
   4e:	00 00       	nop
   50:	68 c0       	rjmp	.+208    	; 0x122 <__bad_interrupt>
   52:	00 00       	nop
-  54:	66 c0       	rjmp	.+204    	; 0x122 <__bad_interrupt>
+  54:	1a c1       	rjmp	.+564    	; 0x28a <__vector_21>
   56:	00 00       	nop
   58:	64 c0       	rjmp	.+200    	; 0x122 <__bad_interrupt>
   5a:	00 00       	nop
@@ -89,7 +91,7 @@ Disassembly of section .text:
   6e:	00 00       	nop
   70:	58 c0       	rjmp	.+176    	; 0x122 <__bad_interrupt>
   72:	00 00       	nop
-  74:	56 c0       	rjmp	.+172    	; 0x122 <__bad_interrupt>
+  74:	36 c1       	rjmp	.+620    	; 0x2e2 <__vector_29>
   76:	00 00       	nop
   78:	54 c0       	rjmp	.+168    	; 0x122 <__bad_interrupt>
   7a:	00 00       	nop
@@ -115,7 +117,7 @@ Disassembly of section .text:
   a2:	00 00       	nop
   a4:	3e c0       	rjmp	.+124    	; 0x122 <__bad_interrupt>
   a6:	00 00       	nop
-  a8:	e1 c0       	rjmp	.+450    	; 0x26c <__vector_42>
+  a8:	3c c0       	rjmp	.+120    	; 0x122 <__bad_interrupt>
   aa:	00 00       	nop
   ac:	3a c0       	rjmp	.+116    	; 0x122 <__bad_interrupt>
   ae:	00 00       	nop
@@ -160,7 +162,7 @@ Disassembly of section .text:
   f4:	12 e0       	ldi	r17, 0x02	; 2
   f6:	a0 e0       	ldi	r26, 0x00	; 0
   f8:	b2 e0       	ldi	r27, 0x02	; 2
-  fa:	ec e0       	ldi	r30, 0x0C	; 12
+  fa:	e2 e6       	ldi	r30, 0x62	; 98
   fc:	f3 e0       	ldi	r31, 0x03	; 3
   fe:	00 e0       	ldi	r16, 0x00	; 0
  100:	0b bf       	out	0x3b, r16	; 59
@@ -181,423 +183,479 @@ Disassembly of section .text:
  116:	1d 92       	st	X+, r1
 
 00000118 <.do_clear_bss_start>:
- 118:	a2 30       	cpi	r26, 0x02	; 2
+ 118:	a3 30       	cpi	r26, 0x03	; 3
  11a:	b2 07       	cpc	r27, r18
  11c:	e1 f7       	brne	.-8      	; 0x116 <.do_clear_bss_loop>
- 11e:	98 d0       	rcall	.+304    	; 0x250 <main>
- 120:	f3 c0       	rjmp	.+486    	; 0x308 <_exit>
+ 11e:	aa d0       	rcall	.+340    	; 0x274 <main>
+ 120:	1e c1       	rjmp	.+572    	; 0x35e <_exit>
 
 00000122 <__bad_interrupt>:
  122:	6e cf       	rjmp	.-292    	; 0x0 <__vectors>
 
-00000124 <_Z9init_gpiov>:
+00000124 <_Z8ADC_Initv>:
+	
+	//start the first conversion
+	//enable the global interrupts
+	
+	//ADMUX  =(1<<ADLAR);//adlar is direction bit for ADCL , ADCH distribution 
+	ADMUX |= (1<<REFS0);
+ 124:	ec e7       	ldi	r30, 0x7C	; 124
+ 126:	f0 e0       	ldi	r31, 0x00	; 0
+ 128:	80 81       	ld	r24, Z
+ 12a:	80 64       	ori	r24, 0x40	; 64
+ 12c:	80 83       	st	Z, r24
+	//ADMUX |= (1<<MUX4);
+	ADCSRA = (1<<ADEN) | (1<<ADSC) | (1<<ADIE) | (1<<ADPS2) | (1<<ADPS1) | (1<<ADPS0);//control and status register
+ 12e:	8f ec       	ldi	r24, 0xCF	; 207
+ 130:	80 93 7a 00 	sts	0x007A, r24	; 0x80007a <__TEXT_REGION_LENGTH__+0x70007a>
+	//ADSC is ADC start register maybe after sei() ????
+	ADCSRB = (1<<ADTS0) | (1<<ADTS1);//Timer/Counter0 Compare Match A
+ 134:	83 e0       	ldi	r24, 0x03	; 3
+ 136:	80 93 7b 00 	sts	0x007B, r24	; 0x80007b <__TEXT_REGION_LENGTH__+0x70007b>
+	DIDR0 = 0xFE;
+ 13a:	8e ef       	ldi	r24, 0xFE	; 254
+ 13c:	80 93 7e 00 	sts	0x007E, r24	; 0x80007e <__TEXT_REGION_LENGTH__+0x70007e>
+	DIDR2 = 0xFF;
+ 140:	8f ef       	ldi	r24, 0xFF	; 255
+ 142:	80 93 7d 00 	sts	0x007D, r24	; 0x80007d <__TEXT_REGION_LENGTH__+0x70007d>
+ 146:	08 95       	ret
+
+00000148 <_Z9init_gpiov>:
 			break;
 			case 6:
 			phase_state--;
 			break;
 		}
 		reverse++;
- 124:	24 9a       	sbi	0x04, 4	; 4
- 126:	25 9a       	sbi	0x04, 5	; 4
- 128:	26 9a       	sbi	0x04, 6	; 4
- 12a:	e1 e0       	ldi	r30, 0x01	; 1
- 12c:	f1 e0       	ldi	r31, 0x01	; 1
- 12e:	80 81       	ld	r24, Z
- 130:	80 61       	ori	r24, 0x10	; 16
- 132:	80 83       	st	Z, r24
- 134:	80 81       	ld	r24, Z
- 136:	80 62       	ori	r24, 0x20	; 32
- 138:	80 83       	st	Z, r24
- 13a:	80 81       	ld	r24, Z
- 13c:	80 64       	ori	r24, 0x40	; 64
- 13e:	80 83       	st	Z, r24
- 140:	08 95       	ret
+ 148:	24 9a       	sbi	0x04, 4	; 4
+ 14a:	25 9a       	sbi	0x04, 5	; 4
+ 14c:	26 9a       	sbi	0x04, 6	; 4
+ 14e:	e1 e0       	ldi	r30, 0x01	; 1
+ 150:	f1 e0       	ldi	r31, 0x01	; 1
+ 152:	80 81       	ld	r24, Z
+ 154:	80 61       	ori	r24, 0x10	; 16
+ 156:	80 83       	st	Z, r24
+ 158:	80 81       	ld	r24, Z
+ 15a:	80 62       	ori	r24, 0x20	; 32
+ 15c:	80 83       	st	Z, r24
+ 15e:	80 81       	ld	r24, Z
+ 160:	80 64       	ori	r24, 0x40	; 64
+ 162:	80 83       	st	Z, r24
+ 164:	08 95       	ret
 
-00000142 <_Z18SWITCH_PHASE_STATERh>:
+00000166 <_Z18SWITCH_PHASE_STATERh>:
 	}
 }
 
 void SWITCH_PHASE_STATE(uint8_t &phase_state)
 {
- 142:	fc 01       	movw	r30, r24
+ 166:	fc 01       	movw	r30, r24
 	switch(phase_state)
- 144:	90 81       	ld	r25, Z
- 146:	93 30       	cpi	r25, 0x03	; 3
- 148:	91 f0       	breq	.+36     	; 0x16e <_Z18SWITCH_PHASE_STATERh+0x2c>
- 14a:	28 f4       	brcc	.+10     	; 0x156 <_Z18SWITCH_PHASE_STATERh+0x14>
- 14c:	91 30       	cpi	r25, 0x01	; 1
- 14e:	49 f0       	breq	.+18     	; 0x162 <_Z18SWITCH_PHASE_STATERh+0x20>
- 150:	92 30       	cpi	r25, 0x02	; 2
- 152:	51 f0       	breq	.+20     	; 0x168 <_Z18SWITCH_PHASE_STATERh+0x26>
- 154:	08 95       	ret
- 156:	95 30       	cpi	r25, 0x05	; 5
- 158:	81 f0       	breq	.+32     	; 0x17a <_Z18SWITCH_PHASE_STATERh+0x38>
- 15a:	60 f0       	brcs	.+24     	; 0x174 <_Z18SWITCH_PHASE_STATERh+0x32>
- 15c:	96 30       	cpi	r25, 0x06	; 6
- 15e:	81 f0       	breq	.+32     	; 0x180 <_Z18SWITCH_PHASE_STATERh+0x3e>
- 160:	08 95       	ret
+ 168:	90 81       	ld	r25, Z
+ 16a:	93 30       	cpi	r25, 0x03	; 3
+ 16c:	91 f0       	breq	.+36     	; 0x192 <_Z18SWITCH_PHASE_STATERh+0x2c>
+ 16e:	28 f4       	brcc	.+10     	; 0x17a <_Z18SWITCH_PHASE_STATERh+0x14>
+ 170:	91 30       	cpi	r25, 0x01	; 1
+ 172:	49 f0       	breq	.+18     	; 0x186 <_Z18SWITCH_PHASE_STATERh+0x20>
+ 174:	92 30       	cpi	r25, 0x02	; 2
+ 176:	51 f0       	breq	.+20     	; 0x18c <_Z18SWITCH_PHASE_STATERh+0x26>
+ 178:	08 95       	ret
+ 17a:	95 30       	cpi	r25, 0x05	; 5
+ 17c:	81 f0       	breq	.+32     	; 0x19e <_Z18SWITCH_PHASE_STATERh+0x38>
+ 17e:	60 f0       	brcs	.+24     	; 0x198 <_Z18SWITCH_PHASE_STATERh+0x32>
+ 180:	96 30       	cpi	r25, 0x06	; 6
+ 182:	81 f0       	breq	.+32     	; 0x1a4 <_Z18SWITCH_PHASE_STATERh+0x3e>
+ 184:	08 95       	ret
 	{
 		case 1:
 		phase_state++;
- 162:	82 e0       	ldi	r24, 0x02	; 2
- 164:	80 83       	st	Z, r24
+ 186:	82 e0       	ldi	r24, 0x02	; 2
+ 188:	80 83       	st	Z, r24
 		break;
- 166:	08 95       	ret
+ 18a:	08 95       	ret
 		case 2:
 		phase_state++;
- 168:	83 e0       	ldi	r24, 0x03	; 3
- 16a:	80 83       	st	Z, r24
+ 18c:	83 e0       	ldi	r24, 0x03	; 3
+ 18e:	80 83       	st	Z, r24
 		break;
- 16c:	08 95       	ret
+ 190:	08 95       	ret
 		case 3:
 		phase_state++;
- 16e:	84 e0       	ldi	r24, 0x04	; 4
- 170:	80 83       	st	Z, r24
+ 192:	84 e0       	ldi	r24, 0x04	; 4
+ 194:	80 83       	st	Z, r24
 		break;
- 172:	08 95       	ret
+ 196:	08 95       	ret
 		case 4:
 		phase_state++;
- 174:	85 e0       	ldi	r24, 0x05	; 5
- 176:	80 83       	st	Z, r24
+ 198:	85 e0       	ldi	r24, 0x05	; 5
+ 19a:	80 83       	st	Z, r24
 		break;
- 178:	08 95       	ret
+ 19c:	08 95       	ret
 		case 5:
 		phase_state++;
- 17a:	86 e0       	ldi	r24, 0x06	; 6
- 17c:	80 83       	st	Z, r24
+ 19e:	86 e0       	ldi	r24, 0x06	; 6
+ 1a0:	80 83       	st	Z, r24
 		break;
- 17e:	08 95       	ret
+ 1a2:	08 95       	ret
 		case 6:
 		phase_state=1;
- 180:	81 e0       	ldi	r24, 0x01	; 1
- 182:	80 83       	st	Z, r24
- 184:	08 95       	ret
+ 1a4:	81 e0       	ldi	r24, 0x01	; 1
+ 1a6:	80 83       	st	Z, r24
+ 1a8:	08 95       	ret
 
-00000186 <_Z10PWM_updateRh>:
+000001aa <_Z10PWM_updateRh>:
 
 }
 
 void PWM_update(uint8_t &phase_state)
 {
 	switch(phase_state)
- 186:	fc 01       	movw	r30, r24
- 188:	80 81       	ld	r24, Z
- 18a:	83 30       	cpi	r24, 0x03	; 3
- 18c:	49 f1       	breq	.+82     	; 0x1e0 <_Z10PWM_updateRh+0x5a>
- 18e:	28 f4       	brcc	.+10     	; 0x19a <_Z10PWM_updateRh+0x14>
- 190:	81 30       	cpi	r24, 0x01	; 1
- 192:	51 f0       	breq	.+20     	; 0x1a8 <_Z10PWM_updateRh+0x22>
- 194:	82 30       	cpi	r24, 0x02	; 2
- 196:	b1 f0       	breq	.+44     	; 0x1c4 <_Z10PWM_updateRh+0x3e>
- 198:	08 95       	ret
- 19a:	85 30       	cpi	r24, 0x05	; 5
- 19c:	e9 f1       	breq	.+122    	; 0x218 <_Z10PWM_updateRh+0x92>
- 19e:	70 f1       	brcs	.+92     	; 0x1fc <_Z10PWM_updateRh+0x76>
- 1a0:	86 30       	cpi	r24, 0x06	; 6
- 1a2:	09 f4       	brne	.+2      	; 0x1a6 <_Z10PWM_updateRh+0x20>
- 1a4:	47 c0       	rjmp	.+142    	; 0x234 <_Z10PWM_updateRh+0xae>
- 1a6:	08 95       	ret
+ 1aa:	fc 01       	movw	r30, r24
+ 1ac:	80 81       	ld	r24, Z
+ 1ae:	83 30       	cpi	r24, 0x03	; 3
+ 1b0:	49 f1       	breq	.+82     	; 0x204 <_Z10PWM_updateRh+0x5a>
+ 1b2:	28 f4       	brcc	.+10     	; 0x1be <_Z10PWM_updateRh+0x14>
+ 1b4:	81 30       	cpi	r24, 0x01	; 1
+ 1b6:	51 f0       	breq	.+20     	; 0x1cc <_Z10PWM_updateRh+0x22>
+ 1b8:	82 30       	cpi	r24, 0x02	; 2
+ 1ba:	b1 f0       	breq	.+44     	; 0x1e8 <_Z10PWM_updateRh+0x3e>
+ 1bc:	08 95       	ret
+ 1be:	85 30       	cpi	r24, 0x05	; 5
+ 1c0:	e9 f1       	breq	.+122    	; 0x23c <_Z10PWM_updateRh+0x92>
+ 1c2:	70 f1       	brcs	.+92     	; 0x220 <_Z10PWM_updateRh+0x76>
+ 1c4:	86 30       	cpi	r24, 0x06	; 6
+ 1c6:	09 f4       	brne	.+2      	; 0x1ca <_Z10PWM_updateRh+0x20>
+ 1c8:	47 c0       	rjmp	.+142    	; 0x258 <_Z10PWM_updateRh+0xae>
+ 1ca:	08 95       	ret
 	{
 		case 1:
 		//110
 		//HS_U_LOW;
 		HS_V_HIGH;
- 1a8:	2d 9a       	sbi	0x05, 5	; 5
+ 1cc:	2d 9a       	sbi	0x05, 5	; 5
 		HS_W_LOW;
- 1aa:	2e 98       	cbi	0x05, 6	; 5
+ 1ce:	2e 98       	cbi	0x05, 6	; 5
 		
 		LS_U_LOW;
- 1ac:	e2 e0       	ldi	r30, 0x02	; 2
- 1ae:	f1 e0       	ldi	r31, 0x01	; 1
- 1b0:	80 81       	ld	r24, Z
- 1b2:	8f 7e       	andi	r24, 0xEF	; 239
- 1b4:	80 83       	st	Z, r24
+ 1d0:	e2 e0       	ldi	r30, 0x02	; 2
+ 1d2:	f1 e0       	ldi	r31, 0x01	; 1
+ 1d4:	80 81       	ld	r24, Z
+ 1d6:	8f 7e       	andi	r24, 0xEF	; 239
+ 1d8:	80 83       	st	Z, r24
 		LS_V_HIGH;
- 1b6:	80 81       	ld	r24, Z
- 1b8:	80 62       	ori	r24, 0x20	; 32
- 1ba:	80 83       	st	Z, r24
+ 1da:	80 81       	ld	r24, Z
+ 1dc:	80 62       	ori	r24, 0x20	; 32
+ 1de:	80 83       	st	Z, r24
 		LS_W_HIGH;
- 1bc:	80 81       	ld	r24, Z
- 1be:	80 64       	ori	r24, 0x40	; 64
- 1c0:	80 83       	st	Z, r24
+ 1e0:	80 81       	ld	r24, Z
+ 1e2:	80 64       	ori	r24, 0x40	; 64
+ 1e4:	80 83       	st	Z, r24
 
 		break;
- 1c2:	08 95       	ret
+ 1e6:	08 95       	ret
 
 		case 2:
 		//100
 		HS_U_HIGH;
- 1c4:	2c 9a       	sbi	0x05, 4	; 5
+ 1e8:	2c 9a       	sbi	0x05, 4	; 5
 		//HS_V_LOW;
 		HS_W_LOW;
- 1c6:	2e 98       	cbi	0x05, 6	; 5
+ 1ea:	2e 98       	cbi	0x05, 6	; 5
 		LS_U_HIGH;
- 1c8:	e2 e0       	ldi	r30, 0x02	; 2
- 1ca:	f1 e0       	ldi	r31, 0x01	; 1
- 1cc:	80 81       	ld	r24, Z
- 1ce:	80 61       	ori	r24, 0x10	; 16
- 1d0:	80 83       	st	Z, r24
+ 1ec:	e2 e0       	ldi	r30, 0x02	; 2
+ 1ee:	f1 e0       	ldi	r31, 0x01	; 1
+ 1f0:	80 81       	ld	r24, Z
+ 1f2:	80 61       	ori	r24, 0x10	; 16
+ 1f4:	80 83       	st	Z, r24
 		LS_V_LOW;
- 1d2:	80 81       	ld	r24, Z
- 1d4:	8f 7d       	andi	r24, 0xDF	; 223
- 1d6:	80 83       	st	Z, r24
+ 1f6:	80 81       	ld	r24, Z
+ 1f8:	8f 7d       	andi	r24, 0xDF	; 223
+ 1fa:	80 83       	st	Z, r24
 		LS_W_HIGH;
- 1d8:	80 81       	ld	r24, Z
- 1da:	80 64       	ori	r24, 0x40	; 64
- 1dc:	80 83       	st	Z, r24
+ 1fc:	80 81       	ld	r24, Z
+ 1fe:	80 64       	ori	r24, 0x40	; 64
+ 200:	80 83       	st	Z, r24
 
 		break;
- 1de:	08 95       	ret
+ 202:	08 95       	ret
 
 		case 3:
 		//101
 		HS_U_HIGH;
- 1e0:	2c 9a       	sbi	0x05, 4	; 5
+ 204:	2c 9a       	sbi	0x05, 4	; 5
 		HS_V_LOW;
- 1e2:	2d 98       	cbi	0x05, 5	; 5
+ 206:	2d 98       	cbi	0x05, 5	; 5
 		//HS_W_LOW;
 		LS_U_HIGH;
- 1e4:	e2 e0       	ldi	r30, 0x02	; 2
- 1e6:	f1 e0       	ldi	r31, 0x01	; 1
- 1e8:	80 81       	ld	r24, Z
- 1ea:	80 61       	ori	r24, 0x10	; 16
- 1ec:	80 83       	st	Z, r24
+ 208:	e2 e0       	ldi	r30, 0x02	; 2
+ 20a:	f1 e0       	ldi	r31, 0x01	; 1
+ 20c:	80 81       	ld	r24, Z
+ 20e:	80 61       	ori	r24, 0x10	; 16
+ 210:	80 83       	st	Z, r24
 		LS_V_HIGH;
- 1ee:	80 81       	ld	r24, Z
- 1f0:	80 62       	ori	r24, 0x20	; 32
- 1f2:	80 83       	st	Z, r24
+ 212:	80 81       	ld	r24, Z
+ 214:	80 62       	ori	r24, 0x20	; 32
+ 216:	80 83       	st	Z, r24
 		LS_W_LOW;
- 1f4:	80 81       	ld	r24, Z
- 1f6:	8f 7b       	andi	r24, 0xBF	; 191
- 1f8:	80 83       	st	Z, r24
+ 218:	80 81       	ld	r24, Z
+ 21a:	8f 7b       	andi	r24, 0xBF	; 191
+ 21c:	80 83       	st	Z, r24
 
 		break;
- 1fa:	08 95       	ret
+ 21e:	08 95       	ret
 
 		case 4:
 		//001
 		//HS_U_LOW;
 		HS_V_LOW;
- 1fc:	2d 98       	cbi	0x05, 5	; 5
+ 220:	2d 98       	cbi	0x05, 5	; 5
 		HS_W_HIGH;
- 1fe:	2e 9a       	sbi	0x05, 6	; 5
+ 222:	2e 9a       	sbi	0x05, 6	; 5
 		LS_U_LOW;
- 200:	e2 e0       	ldi	r30, 0x02	; 2
- 202:	f1 e0       	ldi	r31, 0x01	; 1
- 204:	80 81       	ld	r24, Z
- 206:	8f 7e       	andi	r24, 0xEF	; 239
- 208:	80 83       	st	Z, r24
+ 224:	e2 e0       	ldi	r30, 0x02	; 2
+ 226:	f1 e0       	ldi	r31, 0x01	; 1
+ 228:	80 81       	ld	r24, Z
+ 22a:	8f 7e       	andi	r24, 0xEF	; 239
+ 22c:	80 83       	st	Z, r24
 		LS_V_HIGH;
- 20a:	80 81       	ld	r24, Z
- 20c:	80 62       	ori	r24, 0x20	; 32
- 20e:	80 83       	st	Z, r24
+ 22e:	80 81       	ld	r24, Z
+ 230:	80 62       	ori	r24, 0x20	; 32
+ 232:	80 83       	st	Z, r24
 		LS_W_HIGH;
- 210:	80 81       	ld	r24, Z
- 212:	80 64       	ori	r24, 0x40	; 64
- 214:	80 83       	st	Z, r24
+ 234:	80 81       	ld	r24, Z
+ 236:	80 64       	ori	r24, 0x40	; 64
+ 238:	80 83       	st	Z, r24
 
 		break;
- 216:	08 95       	ret
+ 23a:	08 95       	ret
 
 		case 5:
 		//011
 		HS_U_LOW;
- 218:	2c 98       	cbi	0x05, 4	; 5
+ 23c:	2c 98       	cbi	0x05, 4	; 5
 		//HS_V_LOW;
 		HS_W_HIGH;
- 21a:	2e 9a       	sbi	0x05, 6	; 5
+ 23e:	2e 9a       	sbi	0x05, 6	; 5
 		LS_U_HIGH;
- 21c:	e2 e0       	ldi	r30, 0x02	; 2
- 21e:	f1 e0       	ldi	r31, 0x01	; 1
- 220:	80 81       	ld	r24, Z
- 222:	80 61       	ori	r24, 0x10	; 16
- 224:	80 83       	st	Z, r24
+ 240:	e2 e0       	ldi	r30, 0x02	; 2
+ 242:	f1 e0       	ldi	r31, 0x01	; 1
+ 244:	80 81       	ld	r24, Z
+ 246:	80 61       	ori	r24, 0x10	; 16
+ 248:	80 83       	st	Z, r24
 		LS_V_LOW;
- 226:	80 81       	ld	r24, Z
- 228:	8f 7d       	andi	r24, 0xDF	; 223
- 22a:	80 83       	st	Z, r24
+ 24a:	80 81       	ld	r24, Z
+ 24c:	8f 7d       	andi	r24, 0xDF	; 223
+ 24e:	80 83       	st	Z, r24
 		LS_W_HIGH;
- 22c:	80 81       	ld	r24, Z
- 22e:	80 64       	ori	r24, 0x40	; 64
- 230:	80 83       	st	Z, r24
+ 250:	80 81       	ld	r24, Z
+ 252:	80 64       	ori	r24, 0x40	; 64
+ 254:	80 83       	st	Z, r24
 
 		break;
- 232:	08 95       	ret
+ 256:	08 95       	ret
 
 		case 6:
 		//010
 		HS_U_LOW;
- 234:	2c 98       	cbi	0x05, 4	; 5
+ 258:	2c 98       	cbi	0x05, 4	; 5
 		HS_V_HIGH;
- 236:	2d 9a       	sbi	0x05, 5	; 5
+ 25a:	2d 9a       	sbi	0x05, 5	; 5
 		//HS_W_LOW
 		LS_U_HIGH;
- 238:	e2 e0       	ldi	r30, 0x02	; 2
- 23a:	f1 e0       	ldi	r31, 0x01	; 1
- 23c:	80 81       	ld	r24, Z
- 23e:	80 61       	ori	r24, 0x10	; 16
- 240:	80 83       	st	Z, r24
+ 25c:	e2 e0       	ldi	r30, 0x02	; 2
+ 25e:	f1 e0       	ldi	r31, 0x01	; 1
+ 260:	80 81       	ld	r24, Z
+ 262:	80 61       	ori	r24, 0x10	; 16
+ 264:	80 83       	st	Z, r24
 		LS_V_HIGH;
- 242:	80 81       	ld	r24, Z
- 244:	80 62       	ori	r24, 0x20	; 32
- 246:	80 83       	st	Z, r24
+ 266:	80 81       	ld	r24, Z
+ 268:	80 62       	ori	r24, 0x20	; 32
+ 26a:	80 83       	st	Z, r24
 		LS_W_LOW;
- 248:	80 81       	ld	r24, Z
- 24a:	8f 7b       	andi	r24, 0xBF	; 191
- 24c:	80 83       	st	Z, r24
- 24e:	08 95       	ret
+ 26c:	80 81       	ld	r24, Z
+ 26e:	8f 7b       	andi	r24, 0xBF	; 191
+ 270:	80 83       	st	Z, r24
+ 272:	08 95       	ret
 
-00000250 <main>:
+00000274 <main>:
 uint8_t phase_state=1;//global state 1,2,3,4,5,6
 uint8_t reverse=0;
 int main(void)
 {	
 	
-	OCR4B=0x255;//Counter top value. Freq = 8 MHz/prescaler/(OCR0A + 1)
- 250:	85 e5       	ldi	r24, 0x55	; 85
- 252:	92 e0       	ldi	r25, 0x02	; 2
- 254:	90 93 ab 00 	sts	0x00AB, r25	; 0x8000ab <__TEXT_REGION_LENGTH__+0x7000ab>
- 258:	80 93 aa 00 	sts	0x00AA, r24	; 0x8000aa <__TEXT_REGION_LENGTH__+0x7000aa>
-	//ADC_Init();
+	OCR0A=0xFF;//Counter top value. Freq = 8 MHz/prescaler/(OCR0A + 1)
+ 274:	8f ef       	ldi	r24, 0xFF	; 255
+	ADC_Init();
+ 276:	87 bd       	out	0x27, r24	; 39
 	USART_Init(MY_UBRR);
- 25c:	87 e6       	ldi	r24, 0x67	; 103
- 25e:	90 e0       	ldi	r25, 0x00	; 0
- 260:	48 d0       	rcall	.+144    	; 0x2f2 <_Z10USART_Initj>
 	//setup_timer3();
-	setup_timer4();
- 262:	33 d0       	rcall	.+102    	; 0x2ca <_Z12setup_timer4v>
+	setup_timer0();
+ 278:	55 df       	rcall	.-342    	; 0x124 <_Z8ADC_Initv>
 	//Enable_timer3_interrupt();
-	Enable_timer4_compare_interrupt();
- 264:	40 d0       	rcall	.+128    	; 0x2e6 <_Z31Enable_timer4_compare_interruptv>
+	Enable_timer0_compare_interrupt();
+ 27a:	87 e6       	ldi	r24, 0x67	; 103
+ 27c:	90 e0       	ldi	r25, 0x00	; 0
 	init_gpio();
- 266:	5e df       	rcall	.-324    	; 0x124 <_Z9init_gpiov>
+ 27e:	64 d0       	rcall	.+200    	; 0x348 <_Z10USART_Initj>
+ 280:	53 d0       	rcall	.+166    	; 0x328 <_Z12setup_timer0v>
 	//GTCCR = 0;//release all timers
 	sei();
- 268:	78 94       	sei
+ 282:	5c d0       	rcall	.+184    	; 0x33c <_Z31Enable_timer0_compare_interruptv>
+ 284:	61 df       	rcall	.-318    	; 0x148 <_Z9init_gpiov>
+ 286:	78 94       	sei
+ 288:	ff cf       	rjmp	.-2      	; 0x288 <main+0x14>
 
-uint8_t state_counter=0;
+0000028a <__vector_21>:
+}
 
-uint8_t phase_state=1;//global state 1,2,3,4,5,6
-uint8_t reverse=0;
-int main(void)
- 26a:	ff cf       	rjmp	.-2      	; 0x26a <main+0x1a>
 
-0000026c <__vector_42>:
-//	//SWITCH_PHASE_STATE(phase_state);
-//	//UDR0=0x15;
-//}
 
-ISR(TIMER4_COMPA_vect)
+ISR(TIMER0_COMPA_vect)
 {
- 26c:	1f 92       	push	r1
- 26e:	0f 92       	push	r0
- 270:	0f b6       	in	r0, 0x3f	; 63
- 272:	0f 92       	push	r0
- 274:	11 24       	eor	r1, r1
- 276:	0b b6       	in	r0, 0x3b	; 59
- 278:	0f 92       	push	r0
- 27a:	2f 93       	push	r18
- 27c:	3f 93       	push	r19
- 27e:	4f 93       	push	r20
- 280:	5f 93       	push	r21
- 282:	6f 93       	push	r22
- 284:	7f 93       	push	r23
- 286:	8f 93       	push	r24
- 288:	9f 93       	push	r25
- 28a:	af 93       	push	r26
- 28c:	bf 93       	push	r27
- 28e:	ef 93       	push	r30
- 290:	ff 93       	push	r31
+ 28a:	1f 92       	push	r1
+ 28c:	0f 92       	push	r0
+ 28e:	0f b6       	in	r0, 0x3f	; 63
+ 290:	0f 92       	push	r0
+ 292:	11 24       	eor	r1, r1
+ 294:	0b b6       	in	r0, 0x3b	; 59
+ 296:	0f 92       	push	r0
+ 298:	2f 93       	push	r18
+ 29a:	3f 93       	push	r19
+ 29c:	4f 93       	push	r20
+ 29e:	5f 93       	push	r21
+ 2a0:	6f 93       	push	r22
+ 2a2:	7f 93       	push	r23
+ 2a4:	8f 93       	push	r24
+ 2a6:	9f 93       	push	r25
+ 2a8:	af 93       	push	r26
+ 2aa:	bf 93       	push	r27
+ 2ac:	ef 93       	push	r30
+ 2ae:	ff 93       	push	r31
 	PWM_update(phase_state);
- 292:	80 e0       	ldi	r24, 0x00	; 0
- 294:	92 e0       	ldi	r25, 0x02	; 2
- 296:	77 df       	rcall	.-274    	; 0x186 <_Z10PWM_updateRh>
+ 2b0:	80 e0       	ldi	r24, 0x00	; 0
+ 2b2:	92 e0       	ldi	r25, 0x02	; 2
+ 2b4:	7a df       	rcall	.-268    	; 0x1aa <_Z10PWM_updateRh>
 	SWITCH_PHASE_STATE(phase_state);
- 298:	80 e0       	ldi	r24, 0x00	; 0
- 29a:	92 e0       	ldi	r25, 0x02	; 2
- 29c:	52 df       	rcall	.-348    	; 0x142 <_Z18SWITCH_PHASE_STATERh>
-	UDR0=0x15;
- 29e:	85 e1       	ldi	r24, 0x15	; 21
- 2a0:	80 93 c6 00 	sts	0x00C6, r24	; 0x8000c6 <__TEXT_REGION_LENGTH__+0x7000c6>
+ 2b6:	80 e0       	ldi	r24, 0x00	; 0
+ 2b8:	92 e0       	ldi	r25, 0x02	; 2
+ 2ba:	55 df       	rcall	.-342    	; 0x166 <_Z18SWITCH_PHASE_STATERh>
+	//UDR0=0x15;
 }
- 2a4:	ff 91       	pop	r31
- 2a6:	ef 91       	pop	r30
- 2a8:	bf 91       	pop	r27
- 2aa:	af 91       	pop	r26
- 2ac:	9f 91       	pop	r25
- 2ae:	8f 91       	pop	r24
- 2b0:	7f 91       	pop	r23
- 2b2:	6f 91       	pop	r22
- 2b4:	5f 91       	pop	r21
- 2b6:	4f 91       	pop	r20
- 2b8:	3f 91       	pop	r19
- 2ba:	2f 91       	pop	r18
- 2bc:	0f 90       	pop	r0
- 2be:	0b be       	out	0x3b, r0	; 59
- 2c0:	0f 90       	pop	r0
- 2c2:	0f be       	out	0x3f, r0	; 63
- 2c4:	0f 90       	pop	r0
- 2c6:	1f 90       	pop	r1
- 2c8:	18 95       	reti
+ 2bc:	ff 91       	pop	r31
+ 2be:	ef 91       	pop	r30
+ 2c0:	bf 91       	pop	r27
+ 2c2:	af 91       	pop	r26
+ 2c4:	9f 91       	pop	r25
+ 2c6:	8f 91       	pop	r24
+ 2c8:	7f 91       	pop	r23
+ 2ca:	6f 91       	pop	r22
+ 2cc:	5f 91       	pop	r21
+ 2ce:	4f 91       	pop	r20
+ 2d0:	3f 91       	pop	r19
+ 2d2:	2f 91       	pop	r18
+ 2d4:	0f 90       	pop	r0
+ 2d6:	0b be       	out	0x3b, r0	; 59
+ 2d8:	0f 90       	pop	r0
+ 2da:	0f be       	out	0x3f, r0	; 63
+ 2dc:	0f 90       	pop	r0
+ 2de:	1f 90       	pop	r1
+ 2e0:	18 95       	reti
 
-000002ca <_Z12setup_timer4v>:
+000002e2 <__vector_29>:
+
+ISR(ADC_vect)//ADC interrupt routine
+{
+ 2e2:	1f 92       	push	r1
+ 2e4:	0f 92       	push	r0
+ 2e6:	0f b6       	in	r0, 0x3f	; 63
+ 2e8:	0f 92       	push	r0
+ 2ea:	11 24       	eor	r1, r1
+ 2ec:	0b b6       	in	r0, 0x3b	; 59
+ 2ee:	0f 92       	push	r0
+ 2f0:	8f 93       	push	r24
+ 2f2:	9f 93       	push	r25
+ 2f4:	ef 93       	push	r30
+ 2f6:	ff 93       	push	r31
+		ADCSRA |= (1<<ADSC);//start ADC conversion 
+ 2f8:	ea e7       	ldi	r30, 0x7A	; 122
+ 2fa:	f0 e0       	ldi	r31, 0x00	; 0
+ 2fc:	80 81       	ld	r24, Z
+ 2fe:	80 64       	ori	r24, 0x40	; 64
+ 300:	80 83       	st	Z, r24
+		ADC_value=ADC;
+ 302:	80 91 78 00 	lds	r24, 0x0078	; 0x800078 <__TEXT_REGION_LENGTH__+0x700078>
+ 306:	90 91 79 00 	lds	r25, 0x0079	; 0x800079 <__TEXT_REGION_LENGTH__+0x700079>
+ 30a:	80 93 02 02 	sts	0x0202, r24	; 0x800202 <__data_end>
+		UDR0=ADC_value;
+ 30e:	80 93 c6 00 	sts	0x00C6, r24	; 0x8000c6 <__TEXT_REGION_LENGTH__+0x7000c6>
+		//OCR0A=ADC_value;
+}
+ 312:	ff 91       	pop	r31
+ 314:	ef 91       	pop	r30
+ 316:	9f 91       	pop	r25
+ 318:	8f 91       	pop	r24
+ 31a:	0f 90       	pop	r0
+ 31c:	0b be       	out	0x3b, r0	; 59
+ 31e:	0f 90       	pop	r0
+ 320:	0f be       	out	0x3f, r0	; 63
+ 322:	0f 90       	pop	r0
+ 324:	1f 90       	pop	r1
+ 326:	18 95       	reti
+
+00000328 <_Z12setup_timer0v>:
 }
 
-void setup_timer4(void)
+void setup_timer0(void)
 {
 	//64 pres, 250.000 hz 0.000004s
-	sbi (TCCR4B, CS40);
- 2ca:	e1 ea       	ldi	r30, 0xA1	; 161
- 2cc:	f0 e0       	ldi	r31, 0x00	; 0
- 2ce:	80 81       	ld	r24, Z
- 2d0:	81 60       	ori	r24, 0x01	; 1
- 2d2:	80 83       	st	Z, r24
-	sbi (TCCR4B, CS41);
- 2d4:	80 81       	ld	r24, Z
- 2d6:	82 60       	ori	r24, 0x02	; 2
- 2d8:	80 83       	st	Z, r24
-	sbi (TCCR4A, WGM42);//OCR4A compare interrupt
- 2da:	e0 ea       	ldi	r30, 0xA0	; 160
- 2dc:	f0 e0       	ldi	r31, 0x00	; 0
- 2de:	80 81       	ld	r24, Z
- 2e0:	88 60       	ori	r24, 0x08	; 8
- 2e2:	80 83       	st	Z, r24
- 2e4:	08 95       	ret
+	sbi (TCCR0B, CS00);
+ 328:	85 b5       	in	r24, 0x25	; 37
+ 32a:	81 60       	ori	r24, 0x01	; 1
+ 32c:	85 bd       	out	0x25, r24	; 37
+	sbi (TCCR0B, CS01);
+ 32e:	85 b5       	in	r24, 0x25	; 37
+ 330:	82 60       	ori	r24, 0x02	; 2
+ 332:	85 bd       	out	0x25, r24	; 37
+	sbi (TCCR0A, WGM02);//OCR4A compare interrupt
+ 334:	84 b5       	in	r24, 0x24	; 36
+ 336:	88 60       	ori	r24, 0x08	; 8
+ 338:	84 bd       	out	0x24, r24	; 36
+ 33a:	08 95       	ret
 
-000002e6 <_Z31Enable_timer4_compare_interruptv>:
+0000033c <_Z31Enable_timer0_compare_interruptv>:
 }
 
-void Enable_timer4_compare_interrupt()
+void Enable_timer0_compare_interrupt()
 {
-	sbi (TIMSK4, OCIE4A);
- 2e6:	e2 e7       	ldi	r30, 0x72	; 114
- 2e8:	f0 e0       	ldi	r31, 0x00	; 0
- 2ea:	80 81       	ld	r24, Z
- 2ec:	82 60       	ori	r24, 0x02	; 2
- 2ee:	80 83       	st	Z, r24
- 2f0:	08 95       	ret
+	sbi (TIMSK0, OCIE0A);
+ 33c:	ee e6       	ldi	r30, 0x6E	; 110
+ 33e:	f0 e0       	ldi	r31, 0x00	; 0
+ 340:	80 81       	ld	r24, Z
+ 342:	82 60       	ori	r24, 0x02	; 2
+ 344:	80 83       	st	Z, r24
+ 346:	08 95       	ret
 
-000002f2 <_Z10USART_Initj>:
+00000348 <_Z10USART_Initj>:
 #include <avr/io.h>
 #include <stdio.h>
 void USART_Init(unsigned int ubrr)
 {
 	/* Set baud rate */
 	UBRR0H = (unsigned char)(ubrr>>8);
- 2f2:	90 93 c5 00 	sts	0x00C5, r25	; 0x8000c5 <__TEXT_REGION_LENGTH__+0x7000c5>
+ 348:	90 93 c5 00 	sts	0x00C5, r25	; 0x8000c5 <__TEXT_REGION_LENGTH__+0x7000c5>
 	UBRR0L = (unsigned char)ubrr;
- 2f6:	80 93 c4 00 	sts	0x00C4, r24	; 0x8000c4 <__TEXT_REGION_LENGTH__+0x7000c4>
+ 34c:	80 93 c4 00 	sts	0x00C4, r24	; 0x8000c4 <__TEXT_REGION_LENGTH__+0x7000c4>
 	
 	UCSR0B = (1<<TXEN0);// | (1<<TXCIE0);
- 2fa:	88 e0       	ldi	r24, 0x08	; 8
- 2fc:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7000c1>
+ 350:	88 e0       	ldi	r24, 0x08	; 8
+ 352:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7000c1>
 	UCSR0C = (1<<USBS0) | (3<<UCSZ00);//2 stop bit 8 bit
- 300:	8e e0       	ldi	r24, 0x0E	; 14
- 302:	80 93 c2 00 	sts	0x00C2, r24	; 0x8000c2 <__TEXT_REGION_LENGTH__+0x7000c2>
- 306:	08 95       	ret
+ 356:	8e e0       	ldi	r24, 0x0E	; 14
+ 358:	80 93 c2 00 	sts	0x00C2, r24	; 0x8000c2 <__TEXT_REGION_LENGTH__+0x7000c2>
+ 35c:	08 95       	ret
 
-00000308 <_exit>:
- 308:	f8 94       	cli
+0000035e <_exit>:
+ 35e:	f8 94       	cli
 
-0000030a <__stop_program>:
- 30a:	ff cf       	rjmp	.-2      	; 0x30a <__stop_program>
+00000360 <__stop_program>:
+ 360:	ff cf       	rjmp	.-2      	; 0x360 <__stop_program>

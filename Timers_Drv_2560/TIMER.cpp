@@ -21,15 +21,15 @@ void Enable_timer3_interrupt()
 	sbi (TIMSK3, TOIE3);
 }
 
-void setup_timer4(void)
+void setup_timer0(void)
 {
 	//64 pres, 250.000 hz 0.000004s
-	sbi (TCCR4B, CS40);
-	sbi (TCCR4B, CS41);
-	sbi (TCCR4A, WGM42);//OCR4A compare interrupt
+	sbi (TCCR0B, CS00);
+	sbi (TCCR0B, CS01);
+	sbi (TCCR0A, WGM02);//OCR4A compare interrupt
 }
 
-void Enable_timer4_compare_interrupt()
+void Enable_timer0_compare_interrupt()
 {
-	sbi (TIMSK4, OCIE4A);
+	sbi (TIMSK0, OCIE0A);
 }

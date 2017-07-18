@@ -9,5 +9,5 @@
 
 void setup_timer3(void);
 void Enable_timer3_interrupt();
-void setup_timer4(void);
-void Enable_timer4_compare_interrupt();
+void setup_timer0(void);
+void Enable_timer0_compare_interrupt();
