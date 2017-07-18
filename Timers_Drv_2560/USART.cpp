@@ -6,6 +6,7 @@
  */ 
 #include "USART.h"
 #include <avr/io.h>
+#include <stdio.h>
 void USART_Init(unsigned int ubrr)
 {
 	/* Set baud rate */
@@ -15,3 +16,4 @@ void USART_Init(unsigned int ubrr)
 	UCSR0B = (1<<TXEN0) | (1<<TXCIE0);
 	UCSR0C = (1<<USBS0) | (3<<UCSZ00);//2 stop bit 8 bit
 }
+
