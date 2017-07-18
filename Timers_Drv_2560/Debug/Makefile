@@ -40,6 +40,7 @@ C_SRCS +=  \
 ../ADC.cpp \
 ../functions.cpp \
 ../main.cpp \
+../TIMER.cpp \
 ../USART.cpp
 
 
@@ -53,24 +54,28 @@ OBJS +=  \
 ADC.o \
 functions.o \
 main.o \
+TIMER.o \
 USART.o
 
 OBJS_AS_ARGS +=  \
 ADC.o \
 functions.o \
 main.o \
+TIMER.o \
 USART.o
 
 C_DEPS +=  \
 ADC.d \
 functions.d \
 main.d \
+TIMER.d \
 USART.d
 
 C_DEPS_AS_ARGS +=  \
 ADC.d \
 functions.d \
 main.d \
+TIMER.d \
 USART.d
 
 OUTPUT_FILE_PATH +=Timers_Drv_2560.elf
@@ -87,6 +92,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

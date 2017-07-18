@@ -8,5 +8,7 @@ functions.cpp
 
 main.cpp
 
+TIMER.cpp
+
 USART.cpp
 

@@ -12,28 +12,7 @@
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
 
-void setup_timer3(void)
-{
-	//64 pres, 250.000 hz 0.000004s
-	sbi (TCCR3B, CS30);
-	sbi (TCCR3B, CS31);	
-	//sbi (TCCR3B, CS32);
-	
-	//sbi (TCCR3A, COM3A1);
-	//sbi (TCCR3A, COM3B1);
-	//sbi (TCCR3A, COM3C1);
-	sbi (TCCR3A, WGM30);//8bit
-	//sbi (TCCR3A, WGM31); // Mode 1 / Phase Correct PWM
-	//sbi (TCCR3B, WGM33);
-	//sbi (TCCR3B,WGM32);
-	
-}
 
-void Enable_timer3_interrupt()
-{
-	sbi (TIMSK3, TOIE3);
-	//sei();
-}
 
 void init_gpio()
 {
@@ -112,7 +91,31 @@ void REVERSE(uint8_t &reverse,uint8_t &phase_state)
 	}
 }
 
+void SWITCH_PHASE_STATE(uint8_t &phase_state)
+{
+	switch(phase_state)
+	{
+		case 1:
+		phase_state++;
+		break;
+		case 2:
+		phase_state++;
+		break;
+		case 3:
+		phase_state++;
+		break;
+		case 4:
+		phase_state++;
+		break;
+		case 5:
+		phase_state++;
+		break;
+		case 6:
+		phase_state=1;
+		break;
+		}
 
+}
 
 
 

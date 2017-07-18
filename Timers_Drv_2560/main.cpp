@@ -10,6 +10,7 @@
 #include "functions.h"
 #include "USART.h"
 #include "ADC.h"
+#include "TIMER.h"
 
 #include <avr/io.h>
 #include <util/delay.h>
@@ -41,11 +42,13 @@ uint8_t reverse=0;
 int main(void)
 {	
 	
-	
+	OCR4B=0x255;//Counter top value. Freq = 8 MHz/prescaler/(OCR0A + 1)
 	ADC_Init();
 	USART_Init(MY_UBRR);
 	setup_timer3();
+	setup_timer4();
 	Enable_timer3_interrupt();
+	Enable_timer4_compare_interrupt();
 	init_gpio();
 	//GTCCR = 0;//release all timers
 	sei();
@@ -55,17 +58,24 @@ int main(void)
     }
 }
 
-ISR(TIMER3_OVF_vect)//Timer interrupt routine
+//ISR(TIMER3_OVF_vect)//Timer interrupt routine
+//{
+//	PWM_update(phase_state);
+//	SWITCH_PHASE_STATE(phase_state);
+//	UDR0=0x15;
+//}
+
+ISR(TIMER4_COMPB_vect)
 {
 	PWM_update(phase_state);
-	REVERSE(reverse,phase_state);
+	SWITCH_PHASE_STATE(phase_state);
+	UDR0=0x15;
 }
 
 ISR(ADC_vect)//ADC interrupt routine
 {
 		ADCSRA |= (1<<ADSC);//start ADC conversion 
-		UDR0=ADC;
-		//_delay_ms(100);
+		//UDR0=ADC;
 }
 
 void PWM_update(uint8_t &phase_state)

@@ -171,6 +171,12 @@
     <Compile Include="main.cpp">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="TIMER.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TIMER.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="USART.cpp">
       <SubType>compile</SubType>
     </Compile>
