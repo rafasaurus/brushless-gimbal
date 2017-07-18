@@ -5,7 +5,8 @@
  *  Author: rafa
  */ 
 //vahagn comment
-
+#include <avr/io.h>
 void setup_timer3();
 void init_gpio();
 void Enable_timer3_interrupt();
+void REVERSE(uint8_t &,uint8_t &);

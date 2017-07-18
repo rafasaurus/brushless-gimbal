@@ -25,11 +25,15 @@ void setup_timer3(void)
 	sbi (TCCR3A, WGM30);//8bit
 	//sbi (TCCR3A, WGM31); // Mode 1 / Phase Correct PWM
 	//sbi (TCCR3B, WGM33);
-	
 	//sbi (TCCR3B,WGM32);
 	
 }
 
+void Enable_timer3_interrupt()
+{
+	sbi (TIMSK3, TOIE3);
+	//sei();
+}
 
 void init_gpio()
 {
@@ -54,12 +58,61 @@ void init_gpio()
 	sbi(DDRH,6);//digital 9
 }
 
-
-void Enable_timer3_interrupt()
+void REVERSE(uint8_t &reverse,uint8_t &phase_state)
 {
-	sbi (TIMSK3, TOIE3);
-	//sei();
+	if (reverse>127)
+	{
+		switch(phase_state)
+		{
+			case 1:
+			phase_state++;
+			break;
+			case 2:
+			phase_state++;
+			break;
+			case 3:
+			phase_state++;
+			break;
+			case 4:
+			phase_state++;
+			break;
+			case 5:
+			phase_state++;
+			break;
+			case 6:
+			phase_state=1;
+			break;
+		}
+		reverse++;
+	}
+	else
+	{
+		switch(phase_state)
+		{
+			case 1:
+			phase_state=6;
+			break;
+			case 2:
+			phase_state--;
+			break;
+			case 3:
+			phase_state--;
+			break;
+			case 4:
+			phase_state--;
+			break;
+			case 5:
+			phase_state--;
+			break;
+			case 6:
+			phase_state--;
+			break;
+		}
+		reverse++;
+	}
 }
+
+
 
 
 
