@@ -25,13 +25,12 @@ void setup_timer0(void)
 {
 	//64 pres, 250.000 hz 0.000004s
 	
-	//sbi (TCCR0B, CS00);
-	sbi (TCCR0B, CS01);
-	//sbi (TCCR3B, CS02);
-	sbi (TCCR0A, WGM02);//OCR4A compare interrupt
+	sbi (TCCR1B, CS10);
+	sbi (TCCR1B, CS11);
+	sbi (TCCR1B, WGM12);//OCR4A compare interrupt
 }
 
 void Enable_timer0_compare_interrupt()
 {
-	sbi (TIMSK0, OCIE0A);
+	sbi (TIMSK1, OCIE1A);
 }

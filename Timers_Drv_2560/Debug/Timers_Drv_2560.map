@@ -212,7 +212,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x39e
+.text           0x00000000      0x42a
  *(.vectors)
  .vectors       0x00000000       0xe4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6/crtatmega2560.o
                 0x00000000                __vector_default
@@ -293,7 +293,6 @@ END GROUP
                 0x00000122                __vector_11
                 0x00000122                __vector_54
                 0x00000122                __vector_13
-                0x00000122                __vector_17
                 0x00000122                __vector_19
                 0x00000122                __vector_56
                 0x00000122                __vector_7
@@ -311,6 +310,7 @@ END GROUP
                 0x00000122                __vector_51
                 0x00000122                __vector_9
                 0x00000122                __vector_2
+                0x00000122                __vector_21
                 0x00000122                __vector_15
                 0x00000122                __vector_36
                 0x00000122                __vector_40
@@ -339,37 +339,40 @@ END GROUP
  .text._Z10PWM_updateRh
                 0x000001aa       0xca functions.o
                 0x000001aa                _Z10PWM_updateRh
- .text.main     0x00000274       0x1a main.o
+ .text.main     0x00000274       0x22 main.o
                 0x00000274                main
- .text.__vector_21
-                0x0000028e       0x5e main.o
-                0x0000028e                __vector_21
- .text.__vector_29
-                0x000002ec       0x42 main.o
-                0x000002ec                __vector_29
+ .text.__vector_17
+                0x00000296       0x6c main.o
+                0x00000296                __vector_17
  .text.__vector_35
-                0x0000032e       0x14 main.o
-                0x0000032e                __vector_35
+                0x00000302       0x14 main.o
+                0x00000302                __vector_35
+ .text._Z7MAX_ADCRhS_
+                0x00000316       0x10 main.o
+                0x00000316                _Z7MAX_ADCRhS_
+ .text.__vector_29
+                0x00000326       0x9e main.o
+                0x00000326                __vector_29
  .text._Z12setup_timer3v
-                0x00000342       0x1c TIMER.o
-                0x00000342                _Z12setup_timer3v
+                0x000003c4       0x1c TIMER.o
+                0x000003c4                _Z12setup_timer3v
  .text._Z23Enable_timer3_interruptv
-                0x0000035e        0xc TIMER.o
-                0x0000035e                _Z23Enable_timer3_interruptv
+                0x000003e0        0xc TIMER.o
+                0x000003e0                _Z23Enable_timer3_interruptv
  .text._Z12setup_timer0v
-                0x0000036a        0xe TIMER.o
-                0x0000036a                _Z12setup_timer0v
+                0x000003ec       0x18 TIMER.o
+                0x000003ec                _Z12setup_timer0v
  .text._Z31Enable_timer0_compare_interruptv
-                0x00000378        0xc TIMER.o
-                0x00000378                _Z31Enable_timer0_compare_interruptv
+                0x00000404        0xc TIMER.o
+                0x00000404                _Z31Enable_timer0_compare_interruptv
  .text._Z10USART_Initj
-                0x00000384       0x16 USART.o
-                0x00000384                _Z10USART_Initj
-                0x0000039a                . = ALIGN (0x2)
+                0x00000410       0x16 USART.o
+                0x00000410                _Z10USART_Initj
+                0x00000426                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000039a        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_exit.o)
-                0x0000039a                _exit
-                0x0000039a                exit
+ .fini9         0x00000426        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_exit.o)
+                0x00000426                _exit
+                0x00000426                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -388,11 +391,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x0000039a        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_exit.o)
+ .fini0         0x00000426        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr6\libgcc.a(_exit.o)
  *(.fini0)
-                0x0000039e                _etext = .
+                0x0000042a                _etext = .
 
-.data           0x00800200        0x2 load address 0x0000039e
+.data           0x00800200        0x2 load address 0x0000042a
                 0x00800200                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -407,23 +410,30 @@ END GROUP
                 0x00800202                _edata = .
                 0x00800202                PROVIDE (__data_end, .)
 
-.bss            0x00800202        0x1
+.bss            0x00800202        0x4
                 0x00800202                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
+ .bss.ADC_max   0x00800202        0x1 main.o
+                0x00800202                ADC_max
+ .bss.ADC_set_max
+                0x00800203        0x1 main.o
+                0x00800203                ADC_set_max
+ .bss.com       0x00800204        0x1 main.o
+                0x00800204                com
  .bss.ADC_value
-                0x00800202        0x1 main.o
-                0x00800202                ADC_value
+                0x00800205        0x1 main.o
+                0x00800205                ADC_value
  *(COMMON)
-                0x00800203                PROVIDE (__bss_end, .)
-                0x0000039e                __data_load_start = LOADADDR (.data)
-                0x000003a0                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00800206                PROVIDE (__bss_end, .)
+                0x0000042a                __data_load_start = LOADADDR (.data)
+                0x0000042c                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800203        0x0
+.noinit         0x00800206        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x00800203                _end = .
+                0x00800206                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -492,77 +502,77 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000       0xf8
+.debug_aranges  0x00000000      0x100
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x30 ADC.o
  .debug_aranges
                 0x00000030       0x38 functions.o
  .debug_aranges
-                0x00000068       0x38 main.o
+                0x00000068       0x40 main.o
  .debug_aranges
-                0x000000a0       0x38 TIMER.o
+                0x000000a8       0x38 TIMER.o
  .debug_aranges
-                0x000000d8       0x20 USART.o
+                0x000000e0       0x20 USART.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x1167
+.debug_info     0x00000000     0x1217
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0xbbc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6/crtatmega2560.o
  .debug_info    0x00000bbc       0xdb ADC.o
  .debug_info    0x00000c97      0x144 functions.o
- .debug_info    0x00000ddb      0x229 main.o
- .debug_info    0x00001004       0xd1 TIMER.o
- .debug_info    0x000010d5       0x92 USART.o
+ .debug_info    0x00000ddb      0x2d9 main.o
+ .debug_info    0x000010b4       0xd1 TIMER.o
+ .debug_info    0x00001185       0x92 USART.o
 
-.debug_abbrev   0x00000000      0xdcb
+.debug_abbrev   0x00000000      0xe25
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0xb1a c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6/crtatmega2560.o
  .debug_abbrev  0x00000b1a       0x97 ADC.o
  .debug_abbrev  0x00000bb1       0x9b functions.o
- .debug_abbrev  0x00000c4c       0xd9 main.o
- .debug_abbrev  0x00000d25       0x52 TIMER.o
- .debug_abbrev  0x00000d77       0x54 USART.o
+ .debug_abbrev  0x00000c4c      0x133 main.o
+ .debug_abbrev  0x00000d7f       0x52 TIMER.o
+ .debug_abbrev  0x00000dd1       0x54 USART.o
 
-.debug_line     0x00000000      0x68d
+.debug_line     0x00000000      0x6e1
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000       0x1a c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6/crtatmega2560.o
  .debug_line    0x0000001a      0x10a ADC.o
  .debug_line    0x00000124      0x2ba functions.o
- .debug_line    0x000003de      0x163 main.o
- .debug_line    0x00000541       0xf8 TIMER.o
- .debug_line    0x00000639       0x54 USART.o
+ .debug_line    0x000003de      0x1b1 main.o
+ .debug_line    0x0000058f       0xfe TIMER.o
+ .debug_line    0x0000068d       0x54 USART.o
 
-.debug_frame    0x00000000      0x1d8
+.debug_frame    0x00000000      0x210
  *(.debug_frame)
  .debug_frame   0x00000000       0x44 ADC.o
  .debug_frame   0x00000044       0x54 functions.o
- .debug_frame   0x00000098       0xc8 main.o
- .debug_frame   0x00000160       0x54 TIMER.o
- .debug_frame   0x000001b4       0x24 USART.o
+ .debug_frame   0x00000098      0x100 main.o
+ .debug_frame   0x00000198       0x54 TIMER.o
+ .debug_frame   0x000001ec       0x24 USART.o
 
-.debug_str      0x00000000      0x770
+.debug_str      0x00000000      0x7a1
  *(.debug_str)
  .debug_str     0x00000000      0x3e6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6/crtatmega2560.o
- .debug_str     0x000003e6      0x1b5 ADC.o
-                                0x1e9 (size before relaxing)
- .debug_str     0x0000059b       0x9e functions.o
-                                0x22d (size before relaxing)
- .debug_str     0x00000639      0x114 main.o
-                                0x329 (size before relaxing)
- .debug_str     0x0000074d        0xf TIMER.o
-                                0x24e (size before relaxing)
- .debug_str     0x0000075c       0x14 USART.o
-                                0x1b2 (size before relaxing)
+ .debug_str     0x000003e6      0x1bb ADC.o
+                                0x1ef (size before relaxing)
+ .debug_str     0x000005a1       0x9e functions.o
+                                0x233 (size before relaxing)
+ .debug_str     0x0000063f      0x13f main.o
+                                0x35a (size before relaxing)
+ .debug_str     0x0000077e        0xf TIMER.o
+                                0x254 (size before relaxing)
+ .debug_str     0x0000078d       0x14 USART.o
+                                0x1b8 (size before relaxing)
 
-.debug_loc      0x00000000      0x360
+.debug_loc      0x00000000      0x3fe
  *(.debug_loc)
  .debug_loc     0x00000000       0x21 ADC.o
  .debug_loc     0x00000021      0x1bc functions.o
- .debug_loc     0x000001dd      0x15d main.o
- .debug_loc     0x0000033a       0x26 USART.o
+ .debug_loc     0x000001dd      0x1fb main.o
+ .debug_loc     0x000003d8       0x26 USART.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -582,13 +592,13 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000       0xa8
+.debug_ranges   0x00000000       0xb0
  *(.debug_ranges)
  .debug_ranges  0x00000000       0x20 ADC.o
  .debug_ranges  0x00000020       0x28 functions.o
- .debug_ranges  0x00000048       0x28 main.o
- .debug_ranges  0x00000070       0x28 TIMER.o
- .debug_ranges  0x00000098       0x10 USART.o
+ .debug_ranges  0x00000048       0x30 main.o
+ .debug_ranges  0x00000078       0x28 TIMER.o
+ .debug_ranges  0x000000a0       0x10 USART.o
 
 .debug_macro
  *(.debug_macro)

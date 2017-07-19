@@ -39,7 +39,7 @@ void init_gpio()
 
 void REVERSE(uint8_t &reverse,uint8_t &phase_state)
 {
-	if (reverse>127)
+	if (reverse<127)
 	{
 		switch(phase_state)
 		{
@@ -66,8 +66,10 @@ void REVERSE(uint8_t &reverse,uint8_t &phase_state)
 	}
 	else
 	{
+		
 		switch(phase_state)
 		{
+			
 			case 1:
 			phase_state=6;
 			break;
