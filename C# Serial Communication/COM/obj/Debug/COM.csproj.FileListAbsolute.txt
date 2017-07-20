@@ -7,3 +7,12 @@ C:\Users\rafa\Documents\Visual Studio 2013\Projects\COM\COM\obj\Debug\COM.Proper
 C:\Users\rafa\Documents\Visual Studio 2013\Projects\COM\COM\obj\Debug\COM.csproj.GenerateResource.Cache
 C:\Users\rafa\Documents\Visual Studio 2013\Projects\COM\COM\obj\Debug\COM.exe
 C:\Users\rafa\Documents\Visual Studio 2013\Projects\COM\COM\obj\Debug\COM.pdb
+C:\Users\rafa\Documents\GitHub\drv\C# Serial Communication\COM\bin\Debug\COM.exe.config
+C:\Users\rafa\Documents\GitHub\drv\C# Serial Communication\COM\obj\Debug\COM.exe
+C:\Users\rafa\Documents\GitHub\drv\C# Serial Communication\COM\obj\Debug\COM.pdb
+C:\Users\rafa\Documents\GitHub\drv\C# Serial Communication\COM\bin\Debug\COM.exe
+C:\Users\rafa\Documents\GitHub\drv\C# Serial Communication\COM\bin\Debug\COM.pdb
+C:\Users\rafa\Documents\GitHub\drv\C# Serial Communication\COM\obj\Debug\COM.csprojResolveAssemblyReference.cache
+C:\Users\rafa\Documents\GitHub\drv\C# Serial Communication\COM\obj\Debug\COM.Form1.resources
+C:\Users\rafa\Documents\GitHub\drv\C# Serial Communication\COM\obj\Debug\COM.Properties.Resources.resources
+C:\Users\rafa\Documents\GitHub\drv\C# Serial Communication\COM\obj\Debug\COM.csproj.GenerateResource.Cache
