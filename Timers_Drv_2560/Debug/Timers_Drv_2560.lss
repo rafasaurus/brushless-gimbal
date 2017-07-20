@@ -632,9 +632,9 @@ void MAX_ADC(uint8_t &ADC_value,uint8_t &max)
  320:	08 95       	ret
 
 00000322 <__vector_29>:
-	//UDR0=OCR1A;
-	//HS_U_INVERSE;
-}
+//ISR(USART0_TX_vect)//problem here---------------------------------------------
+//{
+//}
 
 ISR(ADC_vect)//ADC interrupt routine
 {
@@ -657,55 +657,57 @@ ISR(ADC_vect)//ADC interrupt routine
  342:	bf 93       	push	r27
  344:	ef 93       	push	r30
  346:	ff 93       	push	r31
-		ADCSRA |= (1<<ADSC);//start ADC conversion 
- 348:	ea e7       	ldi	r30, 0x7A	; 122
- 34a:	f0 e0       	ldi	r31, 0x00	; 0
- 34c:	80 81       	ld	r24, Z
- 34e:	80 64       	ori	r24, 0x40	; 64
- 350:	80 83       	st	Z, r24
+		
 		//ADC_value=ADCL;
 		//ADC_value=(ADCH<<8);
 		ADC_value=ADC;
- 352:	80 91 78 00 	lds	r24, 0x0078	; 0x800078 <__TEXT_REGION_LENGTH__+0x700078>
- 356:	90 91 79 00 	lds	r25, 0x0079	; 0x800079 <__TEXT_REGION_LENGTH__+0x700079>
- 35a:	80 93 0a 02 	sts	0x020A, r24	; 0x80020a <ADC_value>
+ 348:	80 91 78 00 	lds	r24, 0x0078	; 0x800078 <__TEXT_REGION_LENGTH__+0x700078>
+ 34c:	90 91 79 00 	lds	r25, 0x0079	; 0x800079 <__TEXT_REGION_LENGTH__+0x700079>
+ 350:	80 93 0a 02 	sts	0x020A, r24	; 0x80020a <ADC_value>
 		if (ADC_set_max<50)
- 35e:	80 91 09 02 	lds	r24, 0x0209	; 0x800209 <ADC_set_max>
- 362:	82 33       	cpi	r24, 0x32	; 50
- 364:	48 f4       	brcc	.+18     	; 0x378 <__vector_29+0x56>
+ 354:	80 91 09 02 	lds	r24, 0x0209	; 0x800209 <ADC_set_max>
+ 358:	82 33       	cpi	r24, 0x32	; 50
+ 35a:	48 f4       	brcc	.+18     	; 0x36e <__vector_29+0x4c>
 		{
 			ADC_set_max++;
- 366:	8f 5f       	subi	r24, 0xFF	; 255
- 368:	80 93 09 02 	sts	0x0209, r24	; 0x800209 <ADC_set_max>
+ 35c:	8f 5f       	subi	r24, 0xFF	; 255
+ 35e:	80 93 09 02 	sts	0x0209, r24	; 0x800209 <ADC_set_max>
 			MAX_ADC(ADC_value,ADC_max);
- 36c:	68 e0       	ldi	r22, 0x08	; 8
- 36e:	72 e0       	ldi	r23, 0x02	; 2
- 370:	8a e0       	ldi	r24, 0x0A	; 10
- 372:	92 e0       	ldi	r25, 0x02	; 2
- 374:	ce df       	rcall	.-100    	; 0x312 <_Z7MAX_ADCRhS_>
- 376:	13 c0       	rjmp	.+38     	; 0x39e <__vector_29+0x7c>
+ 362:	68 e0       	ldi	r22, 0x08	; 8
+ 364:	72 e0       	ldi	r23, 0x02	; 2
+ 366:	8a e0       	ldi	r24, 0x0A	; 10
+ 368:	92 e0       	ldi	r25, 0x02	; 2
+ 36a:	d3 df       	rcall	.-90     	; 0x312 <_Z7MAX_ADCRhS_>
+ 36c:	13 c0       	rjmp	.+38     	; 0x394 <__vector_29+0x72>
 		}
 		else
 		{
 		
 			OCR5A=2*ADC_max;
- 378:	80 91 08 02 	lds	r24, 0x0208	; 0x800208 <__data_end>
- 37c:	90 e0       	ldi	r25, 0x00	; 0
- 37e:	88 0f       	add	r24, r24
- 380:	99 1f       	adc	r25, r25
- 382:	90 93 29 01 	sts	0x0129, r25	; 0x800129 <__TEXT_REGION_LENGTH__+0x700129>
- 386:	80 93 28 01 	sts	0x0128, r24	; 0x800128 <__TEXT_REGION_LENGTH__+0x700128>
+ 36e:	80 91 08 02 	lds	r24, 0x0208	; 0x800208 <__data_end>
+ 372:	90 e0       	ldi	r25, 0x00	; 0
+ 374:	88 0f       	add	r24, r24
+ 376:	99 1f       	adc	r25, r25
+ 378:	90 93 29 01 	sts	0x0129, r25	; 0x800129 <__TEXT_REGION_LENGTH__+0x700129>
+ 37c:	80 93 28 01 	sts	0x0128, r24	; 0x800128 <__TEXT_REGION_LENGTH__+0x700128>
 			UDR0=ADC_max;
- 38a:	80 91 08 02 	lds	r24, 0x0208	; 0x800208 <__data_end>
- 38e:	80 93 c6 00 	sts	0x00C6, r24	; 0x8000c6 <__TEXT_REGION_LENGTH__+0x7000c6>
+ 380:	80 91 08 02 	lds	r24, 0x0208	; 0x800208 <__data_end>
+ 384:	80 93 c6 00 	sts	0x00C6, r24	; 0x8000c6 <__TEXT_REGION_LENGTH__+0x7000c6>
 			ADC_max=ADC_value;
- 392:	80 91 0a 02 	lds	r24, 0x020A	; 0x80020a <ADC_value>
- 396:	80 93 08 02 	sts	0x0208, r24	; 0x800208 <__data_end>
+ 388:	80 91 0a 02 	lds	r24, 0x020A	; 0x80020a <ADC_value>
+ 38c:	80 93 08 02 	sts	0x0208, r24	; 0x800208 <__data_end>
 			ADC_set_max=0;
- 39a:	10 92 09 02 	sts	0x0209, r1	; 0x800209 <ADC_set_max>
+ 390:	10 92 09 02 	sts	0x0209, r1	; 0x800209 <ADC_set_max>
+			
 	
 		}
-		
+		ADCSRA |= (1<<ADSC);//start ADC conversion
+ 394:	ea e7       	ldi	r30, 0x7A	; 122
+ 396:	f0 e0       	ldi	r31, 0x00	; 0
+ 398:	80 81       	ld	r24, Z
+ 39a:	80 64       	ori	r24, 0x40	; 64
+ 39c:	80 83       	st	Z, r24
+
 		//UDR0=ADC_value;
 		//OCR1A=ADC_value;
 }

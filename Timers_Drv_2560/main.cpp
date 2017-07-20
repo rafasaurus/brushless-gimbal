@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
 #include <string.h>
 void MAX_ADC(uint8_t &ADC_value,uint8_t &max);
 
@@ -96,10 +97,13 @@ ISR(TIMER5_COMPA_vect)
 	//UDR0=OCR1A;
 	//HS_U_INVERSE;
 }
+//ISR(USART0_TX_vect)//problem here---------------------------------------------
+//{
+//}
 
 ISR(ADC_vect)//ADC interrupt routine
 {
-		ADCSRA |= (1<<ADSC);//start ADC conversion 
+		
 		//ADC_value=ADCL;
 		//ADC_value=(ADCH<<8);
 		ADC_value=ADC;
@@ -118,7 +122,8 @@ ISR(ADC_vect)//ADC interrupt routine
 			
 	
 		}
-		
+		ADCSRA |= (1<<ADSC);//start ADC conversion
+
 		//UDR0=ADC_value;
 		//OCR1A=ADC_value;
 }
