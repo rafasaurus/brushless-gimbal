@@ -39,6 +39,7 @@ SUBDIRS :=
 C_SRCS +=  \
 ../ADC.cpp \
 ../functions.cpp \
+../i2c_master.cpp \
 ../main.cpp \
 ../TIMER.cpp \
 ../USART.cpp
@@ -53,6 +54,7 @@ ASM_SRCS +=
 OBJS +=  \
 ADC.o \
 functions.o \
+i2c_master.o \
 main.o \
 TIMER.o \
 USART.o
@@ -60,6 +62,7 @@ USART.o
 OBJS_AS_ARGS +=  \
 ADC.o \
 functions.o \
+i2c_master.o \
 main.o \
 TIMER.o \
 USART.o
@@ -67,6 +70,7 @@ USART.o
 C_DEPS +=  \
 ADC.d \
 functions.d \
+i2c_master.d \
 main.d \
 TIMER.d \
 USART.d
@@ -74,6 +78,7 @@ USART.d
 C_DEPS_AS_ARGS +=  \
 ADC.d \
 functions.d \
+i2c_master.d \
 main.d \
 TIMER.d \
 USART.d
@@ -92,6 +97,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

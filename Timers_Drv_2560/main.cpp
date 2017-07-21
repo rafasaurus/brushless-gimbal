@@ -11,6 +11,7 @@
 #include "USART.h"
 #include "ADC.h"
 #include "TIMER.h"
+#include "i2c_master.h"
 
 #include <avr/io.h>
 #include <util/delay.h>
@@ -22,18 +23,9 @@
 
 #include <string.h>
 void print16(uint16_t &value);
-//uint8_t currentEnableA=0;
-//uint8_t currentEnableB=85;
-//uint8_t currentEnableC=170;
-//uint8_t currentStepA=0;
-//uint8_t currentStepB=0;
-//uint8_t currentStepC=0;
-//----------------------------------------------
+void init_mpu6050();
 FILE * uart_str;
-
 static int uart_putchar(char c, FILE *stream);
-
-
 static int uart_putchar(char c, FILE *stream)
 {
 
@@ -53,13 +45,15 @@ uint8_t reverse=0;
 uint8_t com=0;
 uint8_t ADC_set_max=0;
 uint16_t ADC_max=0;
-
+uint8_t buffer[14];
 int main(void)
 {	
 	uart_str = fdevopen(uart_putchar, NULL);
 	OCR1A=50;
-//Counter top value. Freq = 16 MHz/prescaler/(OCR0A + 1)
+	//Counter top value. Freq = 16 MHz/prescaler/(OCR0A + 1)
 	ADC_Init();
+	i2c_init();
+	
 	USART_Init(MY_UBRR);
 	//setup_timer3();
 	setup_timer0();
@@ -71,16 +65,44 @@ int main(void)
 	sbi(ADCSRA,ADSC);
     while (1) 
     {
-	//for (int i=0;i<256;i++)
-	//{
-	//	OCR0A=i;
-	//	_delay_ms(500);
-	//}
-		//printf("ser \n");
-		//_delay_ms(500);
+      //init_mpu6050();
+	  //printf("d");
+	  while(i2c_receive(0x75,buffer,1));
+	  if (buffer[0]!=0x68)
+	  {
+		  //read who am i
+		  printf("error");
+	  }
+	  else
+	  {
+		  char c;
+		  itoa(buffer[0],&c,10);
+		  printf(&c);
+	  }
     }
 }
-
+void init_mpu6050()
+{
+	buffer[0] = 7; // Set the sample rate to 1000Hz - 8kHz/(7+1) = 1000Hz
+	buffer[1] = 0x00; // Disable FSYNC and set 260 Hz Acc filtering, 256 Hz Gyro filtering, 8 KHz sampling
+	buffer[2] = 0x00; // Set Gyro Full Scale Range to ±250deg/s
+	buffer[3] = 0x00; // Set Accelerometer Full Scale Range to ±2g
+	while(i2c_transmit(0x19,buffer,4));
+	//while(i2c_transmit((0x6B,0x01,1)));
+	while(i2c_receive(0x75,buffer,1));
+	if (buffer[0]!=0x68)
+	{
+		//read who am i
+		printf("error");	
+	}
+	else
+	{
+		char c;
+		itoa(buffer[0],&c,10);
+		printf(&c);
+	}
+	
+}
 
 
 ISR(TIMER1_COMPA_vect)

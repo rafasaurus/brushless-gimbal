@@ -168,6 +168,12 @@
     <Compile Include="functions.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="i2c_master.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="i2c_master.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.cpp">
       <SubType>compile</SubType>
     </Compile>
