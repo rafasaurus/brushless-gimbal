@@ -18,16 +18,18 @@ namespace COM
 
        static void RECEIVE_DATA()
         {
-            Form1 ob = new Form1();
-            try
-            {
-               
-                ob.textBox1.Text = ob.serialPort1.ReadLine();
-            }
-            catch (TimeoutException)
-            {
-                ob.textBox1.Text = "Time Out Exception";
-            }
+            
+                Form1 ob = new Form1();
+                try
+                {
+
+                    ob.textBox1.Text = ob.serialPort1.ReadLine();
+                }
+                catch (TimeoutException)
+                {
+                    ob.textBox1.Text = "Time Out Exception";
+                }
+            
         }
 
         Thread T = new Thread(RECEIVE_DATA);

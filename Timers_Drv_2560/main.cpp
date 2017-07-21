@@ -21,8 +21,7 @@
 
 
 #include <string.h>
-void MAX_ADC(uint8_t &ADC_value,uint8_t &max);
-
+void print16(uint16_t &value);
 //uint8_t currentEnableA=0;
 //uint8_t currentEnableB=85;
 //uint8_t currentEnableC=170;
@@ -48,17 +47,17 @@ static int uart_putchar(char c, FILE *stream)
 }
 //---------------------------------------------
 
-uint8_t ADC_value=0;
+uint16_t ADC_value=0;
 uint8_t phase_state=1;//global state 1,2,3,4,5,6
 uint8_t reverse=0;
 uint8_t com=0;
 uint8_t ADC_set_max=0;
-uint8_t ADC_max=0;
+uint16_t ADC_max=0;
 
 int main(void)
 {	
 	uart_str = fdevopen(uart_putchar, NULL);
-	OCR5A=400;
+	OCR1A=50;
 //Counter top value. Freq = 16 MHz/prescaler/(OCR0A + 1)
 	ADC_Init();
 	USART_Init(MY_UBRR);
@@ -69,6 +68,7 @@ int main(void)
 	init_gpio();
 	//GTCCR = 0;//release all timers
 	sei();
+	sbi(ADCSRA,ADSC);
     while (1) 
     {
 	//for (int i=0;i<256;i++)
@@ -76,56 +76,45 @@ int main(void)
 	//	OCR0A=i;
 	//	_delay_ms(500);
 	//}
-		
+		//printf("ser \n");
+		//_delay_ms(500);
     }
 }
 
 
 
-ISR(TIMER5_COMPA_vect)
+ISR(TIMER1_COMPA_vect)
 {
-	//if (com++>1)
-	//{
-	//	com=0;
+
 	PWM_update(phase_state);
 	SWITCH_PHASE_STATE(phase_state);
-	
-		  //REVERSE(reverse,phase_state);
-		  
-	//}
-	
-	//UDR0=OCR1A;
-	//HS_U_INVERSE;
+
 }
-//ISR(USART0_TX_vect)//problem here---------------------------------------------
-//{
-//}
+
 
 ISR(ADC_vect)//ADC interrupt routine
 {
-		
-		//ADC_value=ADCL;
-		//ADC_value=(ADCH<<8);
 		ADC_value=ADC;
-		if (ADC_set_max<50)
-		{
-			ADC_set_max++;
-			MAX_ADC(ADC_value,ADC_max);
-		}
-		else
-		{
-		
-			OCR5A=2*ADC_max;
-			UDR0=ADC_max;
-			ADC_max=ADC_value;
-			ADC_set_max=0;
-			
-	
-		}
-		ADCSRA |= (1<<ADSC);//start ADC conversion
-
-		//UDR0=ADC_value;
-		//OCR1A=ADC_value;
+		//print16(ADC_value);
+		OCR1A=ADC_value;
+		sbi(ADCSRA,ADSC);
+}
+void print16(uint16_t &value)
+{
+	uint8_t first_=(uint8_t)(value/1000);
+	uint8_t seccond_=(uint8_t)((value-first_*1000)/100);
+	uint8_t third_=(uint8_t)((value-first_*1000-seccond_*100)/10);
+	uint8_t fourth_=value-first_*1000-seccond_*100-third_*10;
+	char c;
+	itoa(first_, &c, 10);
+	printf(&c);
+	itoa(seccond_, &c, 10);
+	printf(&c);
+	itoa(third_, &c, 10);
+	printf(&c);
+	itoa(fourth_, &c, 10);
+	printf(&c);
+	printf("\n");
 }
 
 //ISR(TIMER3_OVF_vect)//Timer interrupt routine
@@ -135,11 +124,4 @@ ISR(ADC_vect)//ADC interrupt routine
 //	//UDR0=0x15;
 //	//HS_U_INVERSE;
 //}
-void MAX_ADC(uint8_t &ADC_value,uint8_t &max)
-{
-	if (ADC_value>max)
-	{
-		max=ADC_value;
-	}
-}
 
