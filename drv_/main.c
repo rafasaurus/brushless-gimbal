@@ -30,14 +30,19 @@ uint16_t mpu6050_read_accelX();
 uint16_t mpu6050_read_accelY();
 uint16_t mpu6050_read_accelZ();
 
-void mpu6050_calibrate_gyro(int16_t *x,int16_t *y, int16_t *z);
-void mpu6050_calibrate_accel(int64_t *x,int64_t *y, int64_t *z);
+void mpu6050_calibrate_gyro(int32_t *x,int32_t *y, int32_t *z);
+void mpu6050_calibrate_accel(int32_t *x,int32_t *y, int32_t *z);
 uint8_t mpu6050_rb(uint8_t byteToRead);//readbyte
 #include <string.h>
 
 #define accX (mpu6050_read_accelX()-accelX_calib)
 #define accY (mpu6050_read_accelY()-accelY_calib)
 #define accZ (mpu6050_read_accelZ()-accelZ_calib) 
+#define grX (mpu6050_read_gyroX()-gyroX_calib)
+#define grY (mpu6050_read_gyroY()-gyroY_calib)
+#define grZ (mpu6050_read_gyroZ()-gyroZ_calib)
+#define calibration_counter 2000
+#define caliberation_wait_delay 0//in ms
 
 FILE * uart_str;
 static int uart_putchar(char c, FILE *stream);
@@ -81,89 +86,121 @@ int main(void)
 	//sbi(ADCSRA,ADSC);
 
 	i2c_init();
-	int16_t gyroX_calib=0;
-	int16_t gyroY_calib=0;
-	int16_t gyroZ_calib=0;
-	int64_t accelX_calib=0;
-	int64_t accelY_calib=0;
-	int64_t accelZ_calib=0;
+	int32_t gyroX_calib=0;
+	int32_t gyroY_calib=0;
+	int32_t gyroZ_calib=0;
+	int32_t accelX_calib=0;
+	int32_t accelY_calib=0;
+	int32_t accelZ_calib=0;
+	printf("\n");
 	mpu6050_calibrate_gyro(&gyroX_calib,&gyroY_calib,&gyroZ_calib);
 	mpu6050_calibrate_accel(&accelX_calib,&accelY_calib,&accelZ_calib);
     while (1) //hesa kgam
     {
-		uint16_t var=0;	
-		//uint16_t var=mpu6050_read_gyroX()+gyroX_calib;
-		//printf("x= ");
-		//print16(&var);
-		//printf("  ");
-		//var=mpu6050_read_gyroY()+gyroY_calib;
-		//printf("y= ");
-		//print16(&var);
-		//printf("  ");
-		//var=mpu6050_read_gyroZ()+gyroZ_calib;
-		//printf("Z= ");
-		//print16(&var);
-		//printf("    ");
+		uint16_t var=grX;
+		printf("x= ");
+		print16(&var);
+		printf("  ");
+		var=grY;
+		printf("y= ");
+		print16(&var);
+		printf("  ");
+		var=grZ;
+		printf("Z= ");
+		print16(&var);
+		printf("  ");
+				
 		var=accX;
 		printf("accX= ");
 		print16(&var);
-		printf("    ");
+		printf("  ");
 		var=accY;
 		printf("accY= ");
 		print16(&var);
-		printf("    ");
+		printf("  ");
 		var=accZ;
 		printf("accZ= ");
 		print16(&var);
-		printf("    ");
-		
-		
-		
+		printf("  ");
+				
 		printf("\n");
-					  
+				  
 	}
 	return 0;
 }
-void mpu6050_calibrate_gyro(int16_t *x,int16_t *y, int16_t *z)
+
+void mpu6050_calibrate_gyro(int32_t *x,int32_t *y, int32_t *z)
 {
 	printf("Calibrating Gyro...\n");
-	for (int i=0;i<100;i++)
+	for (int i=0;i<calibration_counter;i++)
 	{
 		(*x)+=mpu6050_read_gyroX();
 		(*y)+=mpu6050_read_gyroY();
 		(*z)+=mpu6050_read_gyroZ();
-		_delay_ms(5);
+		_delay_ms(caliberation_wait_delay);
 	}
 		if(*x<0)
-		(*x)=abs(*x)/100;
+		(*x)=abs(*x)/calibration_counter;
+		else
+		(*x)=(*x)/calibration_counter;
+		
 		if(*y<0)
-		(*y)=abs(*y)/100;
+		(*y)=abs(*y)/calibration_counter;
+		else
+		(*y)=(*y)/calibration_counter;
+		
 		if(*z<0)
-		(*z)=abs(*z)/100;	
-}
-void mpu6050_calibrate_accel(int64_t *x,int64_t *y, int64_t *z)
-{
-	
-	printf("Calibrating Accelerometer...\n");
-	for(int i=0;i<100;i++){
-		(*x)+=mpu6050_read_accelX();
-		(*y)+=mpu6050_read_accelY();
-		(*z)+=mpu6050_read_accelZ();
-		_delay_ms(5);
-	}
-	//if(*x<0)
-	(*x)=abs(*x)/100;
-	//if(*y<0)
-	(*y)=abs(*y)/100;
-	//if(*z<0)
-	(*z)=abs(*z)/100;
-	printf("offsets are");
+		(*z)=abs(*z)/calibration_counter;
+		else
+		(*z)=(*z)/calibration_counter;
+	/*
+	//------------do not delete----------
+	printf("gyro offsets are");
 	print16(x);
 	printf("  ");
 	print16(y);
 	printf("  ");
 	print16ln(z);
 	_delay_ms(1000);
+	//-----------------------------------
+	*/			
+}
+void mpu6050_calibrate_accel(int32_t *x,int32_t *y, int32_t *z)
+{
+	
+	printf("Calibrating Accelerometer...\n");
+	for(int i=0;i<calibration_counter;i++){
+		(*x)+=mpu6050_read_accelX();
+		(*y)+=mpu6050_read_accelY();
+		(*z)+=mpu6050_read_accelZ();
+		_delay_ms(caliberation_wait_delay);
+	}
+	if(*x<0)
+	(*x)=abs(*x)/calibration_counter;
+	else
+	(*x)=(*x)/calibration_counter;
+	
+	if(*y<0)
+	(*y)=abs(*y)/calibration_counter;
+	else
+	(*y)=(*y)/calibration_counter;
+	
+	if(*z<0)
+	(*z)=abs(*z)/calibration_counter;
+	else
+	(*z)=(*z)/calibration_counter;
+	
+	/*
+	//------------do not delete----------
+	printf("accel offsets are");
+	print16(x);
+	printf("  ");
+	print16(y);
+	printf("  ");
+	print16ln(z);
+	_delay_ms(1000);
+	//-----------------------------------
+	*/
 }
 uint16_t mpu6050_read_gyroX()//axis x=0,y=1,z=2
 {
