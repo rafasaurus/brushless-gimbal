@@ -7,7 +7,7 @@
 
 
 //#include "Init.h"
-#define PRINT_RAW_DATA
+//#define PRINT_RAW_DATA
 #include "defines.h"
 #include "functions.h"
 #include "USART.h"
@@ -23,6 +23,9 @@
 #include <stdio.h>
 #include <math.h>
 
+typedef int bool;
+enum { false, true };
+bool __ftoa(double val, char * buf, int nLen,uint8_t after_decimal_point);
 uint16_t mpu6050_read_gyroX();
 uint16_t mpu6050_read_gyroY();
 uint16_t mpu6050_read_gyroZ();
@@ -110,64 +113,62 @@ int main(void)
     while (1) //hesa kgam
     {
 		#ifdef PRINT_RAW_DATA
-		/*--------raw data gyro-accel------*/
-		uint16_t var=grX;
-		gyro_x=var;
-		printf("x= ");
-		print16(&var);
-		printf("  ");
-		var=grY;
-		gyro_y=var;
-		printf("y= ");
-		print16(&var);
-		printf("  ");
-		var=grZ;
-		gyro_z=var;
-		printf("Z= ");
-		print16(&var);
-		printf("  ");
-		
-		var=accX;
-		accel_x=var;
-		printf("accX= ");
-		print16(&var);
-		printf("  ");
-		var=accY;
-		accel_y=var;
-		printf("accY= ");
-		print16(&var);
-		printf("  ");
-		var=accZ;
-		accel_z=var;
-		printf("accZ= ");
-		print16(&var);
-		printf("  ");
-		printf("\n");
-		/*--------end------*/
-		
+			/*--------raw data gyro-accel------*/
+			uint16_t var=grX;
+			gyro_x=var;
+			printf("x= ");
+			print16(&var);
+			printf("  ");
+			var=grY;
+			gyro_y=var;
+			printf("y= ");
+			print16(&var);
+			printf("  ");
+			var=grZ;
+			gyro_z=var;
+			printf("Z= ");
+			print16(&var);
+			printf("  ");
+			
+			var=accX;
+			accel_x=var;
+			printf("accX= ");
+			print16(&var);
+			printf("  ");
+			var=accY;
+			accel_y=var;
+			printf("accY= ");
+			print16(&var);
+			printf("  ");
+			var=accZ;
+			accel_z=var;
+			printf("accZ= ");
+			print16(&var);
+			printf("  ");
+			printf("\n");
+			/*--------end------*/
+			
 		#else
-		accel_x=accX;
-		accel_y=accY;
-		accel_z=accZ;
-		gyro_x=grX;
-		gyro_y=grY;
-		gyro_z=grZ;
-		//Gyro angle calculations
-		//0.0000611 = 1 / (250Hz / 65.5)
-		angle_pitch += gyro_x * 0.0000611; //Calculate the traveled pitch angle and add this to the angle_pitch variable
-		angle_roll += gyro_y * 0.0000611;  //Calculate the traveled roll angle and add this to the angle_roll variable
-		
-		  //0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
-		angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
-		angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the pitch angle to the roll angel
-		
-		uint16_t lol=angle_pitch;
-		uint16_t lol1=angle_roll;
-		print16(lol);
-		printf(" ");
-		print16ln(lol1);
-		
-		_delay_ms(10);	
+			accel_x=accX;
+			accel_y=accY;
+			accel_z=accZ;
+			gyro_x=grX;	
+			gyro_y=grY;
+			gyro_z=grZ;
+			//Gyro angle calculations
+			//0.0000611 = 1 / (250Hz / 65.5)
+			angle_pitch += gyro_x * 0.0000611; //Calculate the traveled pitch angle and add this to the angle_pitch variable
+			angle_roll += gyro_y * 0.0000611;  //Calculate the traveled roll angle and add this to the angle_roll variable
+			
+			  //0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
+			angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
+			angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the pitch angle to the roll angel
+			
+			uint16_t lol=angle_pitch;
+			uint16_t lol1=angle_roll;
+			double tosend=3145.47;
+			print_double(&tosend);
+			_delay_ms(10);	
 		#endif  
 	}
 	return 0;
@@ -364,4 +365,37 @@ void print16ln(uint16_t *value)
 	printf(c);
 	printf("\n");
 }
+void print_double(double *value)
+//this is pointer value, transmited value
+//must be reference type &
+{
+	char c[10];
+	__ftoa(*value, c, 10,2);
+	printf(c);
+	printf("\n");
+}
+bool __ftoa(double val, char * buf, int nLen,uint8_t after_decimal_point){
+//----------https://rsdn.org/forum/cpp/1539621.all-----------//
+	int32_t nValue = val * pow(10,after_decimal_point);
 
+	int32_t nCharCount = after_decimal_point+1; // decimals and point by default is present
+	int32_t nCharCounter = nValue;
+	while ( nCharCounter > 100 ) {
+		nCharCount++;
+		nCharCounter /= 10;
+	}
+	
+	if ( nLen < nCharCount )
+	return false;
+
+	for ( int32_t i = 0; i < nCharCount; i++ ) {
+		if ( after_decimal_point == i ) {
+			buf[nCharCount - i - 1] = '.';
+			} else 
+			{
+			buf[nCharCount-i-1]=(int32_t)(nValue%10)+48;
+			nValue /= 10;
+		}
+	}
+	return true;
+}
