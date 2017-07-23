@@ -163,11 +163,11 @@ int main(void)
 			  //0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
 			angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
 			angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the pitch angle to the roll angel
-			
-			uint16_t lol=angle_pitch;
-			uint16_t lol1=angle_roll;
-			double tosend=3145.47;
-			print_double(&tosend);
+		
+			print_double(&angle_pitch);
+			printf("  ");
+			print_double(&angle_roll);
+			printf("\n");
 			_delay_ms(10);	
 		#endif  
 	}
@@ -372,7 +372,6 @@ void print_double(double *value)
 	char c[10];
 	__ftoa(*value, c, 10,2);
 	printf(c);
-	printf("\n");
 }
 bool __ftoa(double val, char * buf, int nLen,uint8_t after_decimal_point){
 //----------https://rsdn.org/forum/cpp/1539621.all-----------//
