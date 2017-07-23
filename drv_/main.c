@@ -22,22 +22,25 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
 
+FILE * uart_str;
 typedef int bool;
 enum { false, true };
-bool __ftoa(double val, char * buf, int nLen,uint8_t after_decimal_point);
+bool __ftoa(double val, char * buf, int nLen,uint8_t after_decimal_point);//convert double to char
+static int uart_putchar(char c, FILE *stream);
+/*----------MPU6050 defines---------*/
 uint16_t mpu6050_read_gyroX();
 uint16_t mpu6050_read_gyroY();
 uint16_t mpu6050_read_gyroZ();
 uint16_t mpu6050_read_accelX();
 uint16_t mpu6050_read_accelY();
 uint16_t mpu6050_read_accelZ();
-
 void mpu6050_calibrate_gyro(int32_t *x,int32_t *y, int32_t *z);
 void mpu6050_calibrate_accel(int32_t *x,int32_t *y, int32_t *z);
+void print_double(double *value);
 uint8_t mpu6050_rb(uint8_t byteToRead);//readbyte
-#include <string.h>
-
+void mpu6050_wb(uint8_t wereToWrite,uint8_t byteToWrite);
 #define accX (mpu6050_read_accelX()-accelX_calib)
 #define accY (mpu6050_read_accelY()-accelY_calib)
 #define accZ (mpu6050_read_accelZ()-accelZ_calib) 
@@ -46,20 +49,9 @@ uint8_t mpu6050_rb(uint8_t byteToRead);//readbyte
 #define grZ (mpu6050_read_gyroZ()-gyroZ_calib)
 #define calibration_counter 2000
 #define caliberation_wait_delay 0//in ms
+/*----------end MPU6050 defines---------*/
 
-FILE * uart_str;
-static int uart_putchar(char c, FILE *stream);
-static int uart_putchar(char c, FILE *stream)
-{
 
-	if (c == '\n')
-	uart_putchar('\r', stream);
-	while ( !( UCSR0A & (1<<UDRE0)) )
-	;
-	/* Put data into buffer, sends the data */
-	UDR0 = c;
-	return 0;
-}
 //---------------------------------------------
 
 uint16_t ADC_value=0;
@@ -70,8 +62,6 @@ uint8_t ADC_set_max=0;
 uint16_t ADC_max=0;
 uint8_t buffer[14];
 
-
-
 int main(void)
 
 {	
@@ -79,7 +69,7 @@ int main(void)
 	USART_Init(MY_UBRR);
 	//uart_init(UART_BAUD_SELECT(UART_BAUD_RATE,F_CPU));
 	uart_str = fdevopen(uart_putchar, NULL);
-//	OCR1A=50;
+	//	OCR1A=50;
 	//Counter top value. Freq = 16 MHz/prescaler/(OCR0A + 1)
 	//ADC_Init();
 	//setup_timer0();
@@ -96,9 +86,9 @@ int main(void)
 	int32_t accelX_calib=0;
 	int32_t accelY_calib=0;
 	int32_t accelZ_calib=0;
-	uint16_t gyro_x ;
-	uint16_t gyro_y ;
-	uint16_t gyro_z ;
+	uint16_t gyro_x;
+	uint16_t gyro_y;
+	uint16_t gyro_z;
 	uint16_t accel_x;
 	uint16_t accel_y;
 	uint16_t accel_z;
@@ -397,4 +387,15 @@ bool __ftoa(double val, char * buf, int nLen,uint8_t after_decimal_point){
 		}
 	}
 	return true;
+}
+static int uart_putchar(char c, FILE *stream)
+{
+
+	if (c == '\n')
+	uart_putchar('\r', stream);
+	while ( !( UCSR0A & (1<<UDRE0)) )
+	;
+	/* Put data into buffer, sends the data */
+	UDR0 = c;
+	return 0;
 }
