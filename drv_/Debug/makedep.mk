@@ -8,6 +8,8 @@ functions.c
 
 main.c
 
+MPU6050.c
+
 TIMER.c
 
 twimastertimeout.c

@@ -154,7 +154,13 @@
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="MPU6050.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="mpu6050registers.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MPU6050.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="TIMER.c">

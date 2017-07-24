@@ -40,6 +40,7 @@ C_SRCS +=  \
 ../ADC.c \
 ../functions.c \
 ../main.c \
+../MPU6050.c \
 ../TIMER.c \
 ../twimastertimeout.c \
 ../USART.c
@@ -55,6 +56,7 @@ OBJS +=  \
 ADC.o \
 functions.o \
 main.o \
+MPU6050.o \
 TIMER.o \
 twimastertimeout.o \
 USART.o
@@ -63,6 +65,7 @@ OBJS_AS_ARGS +=  \
 ADC.o \
 functions.o \
 main.o \
+MPU6050.o \
 TIMER.o \
 twimastertimeout.o \
 USART.o
@@ -71,6 +74,7 @@ C_DEPS +=  \
 ADC.d \
 functions.d \
 main.d \
+MPU6050.d \
 TIMER.d \
 twimastertimeout.d \
 USART.d
@@ -79,6 +83,7 @@ C_DEPS_AS_ARGS +=  \
 ADC.d \
 functions.d \
 main.d \
+MPU6050.d \
 TIMER.d \
 twimastertimeout.d \
 USART.d
@@ -97,6 +102,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

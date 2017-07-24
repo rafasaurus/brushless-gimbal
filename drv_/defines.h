@@ -43,9 +43,7 @@
 #define LS_V_LOW cbi(PORTH,5)
 #define LS_W_LOW cbi(PORTH,6)
 
-#ifndef MPU6050_GETATTITUDE
-	#define MPU6050_GETATTITUDE 2
-#endif
+#define CALIBERATED_DATA
 //_delay_us();
 //EN1 = LS_U	digital 7 PORTD ^= (1<<7);
 //EN2 = LS_V	digital 8 PORTB ^=(1<<0);

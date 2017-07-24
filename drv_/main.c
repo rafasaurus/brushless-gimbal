@@ -7,14 +7,15 @@
 
 
 //#include "Init.h"
-//#define PRINT_RAW_DATA
+#define PRINT_RAW_DATA
+
 #include "defines.h"
 #include "functions.h"
 #include "USART.h"
 #include "ADC.h"
 #include "TIMER.h"
 #include "mpu6050registers.h"
-
+#include "MPU6050.h"
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/pgmspace.h>
@@ -30,25 +31,7 @@ enum { false, true };
 bool __ftoa(double val, char * buf, int nLen,uint8_t after_decimal_point);//convert double to char
 static int uart_putchar(char c, FILE *stream);
 /*----------MPU6050 defines---------*/
-uint16_t mpu6050_read_gyroX();
-uint16_t mpu6050_read_gyroY();
-uint16_t mpu6050_read_gyroZ();
-uint16_t mpu6050_read_accelX();
-uint16_t mpu6050_read_accelY();
-uint16_t mpu6050_read_accelZ();
-void mpu6050_calibrate_gyro(int32_t *x,int32_t *y, int32_t *z);
-void mpu6050_calibrate_accel(int32_t *x,int32_t *y, int32_t *z);
-void print_double(double *value);
-uint8_t mpu6050_rb(uint8_t byteToRead);//readbyte
-void mpu6050_wb(uint8_t wereToWrite,uint8_t byteToWrite);
-#define accX (mpu6050_read_accelX()-accelX_calib)
-#define accY (mpu6050_read_accelY()-accelY_calib)
-#define accZ (mpu6050_read_accelZ()-accelZ_calib) 
-#define grX (mpu6050_read_gyroX()-gyroX_calib)
-#define grY (mpu6050_read_gyroY()-gyroY_calib)
-#define grZ (mpu6050_read_gyroZ()-gyroZ_calib)
-#define calibration_counter 2000
-#define caliberation_wait_delay 0//in ms
+
 /*----------end MPU6050 defines---------*/
 
 
@@ -80,12 +63,6 @@ int main(void)
 	
 	/*----------MPU6050 twi init---------*/
 	i2c_init();
-	int32_t gyroX_calib=0;
-	int32_t gyroY_calib=0;
-	int32_t gyroZ_calib=0;
-	int32_t accelX_calib=0;
-	int32_t accelY_calib=0;
-	int32_t accelZ_calib=0;
 	uint16_t gyro_x;
 	uint16_t gyro_y;
 	uint16_t gyro_z;
@@ -95,56 +72,64 @@ int main(void)
 	double angle_pitch=0;
 	double angle_roll=0;
 	printf("\n");
-	mpu6050_wb(MPU6050_RA_GYRO_CONFIG,0x08);//gyro sensitivity set to 500 o/s
-	mpu6050_wb(MPU6050_RA_ACCEL_CONFIG,0x10);//accel sensitivity -/+ 8g
-	mpu6050_calibrate_gyro(&gyroX_calib,&gyroY_calib,&gyroZ_calib);
-	mpu6050_calibrate_accel(&accelX_calib,&accelY_calib,&accelZ_calib);
+	mpu6050_writeByte(MPU6050_RA_GYRO_CONFIG,0x08);//gyro sensitivity set to 500 o/s
+	mpu6050_writeByte(MPU6050_RA_ACCEL_CONFIG,0x10);//accel sensitivity -/+ 8g
+	#ifdef CALIBERATED_DATA
+		int32_t gyroX_calib=0;
+		int32_t gyroY_calib=0;
+		int32_t gyroZ_calib=0;
+		int32_t accelX_calib=0;
+		int32_t accelY_calib=0;
+		int32_t accelZ_calib=0;
+		mpu6050_calibrate_gyro(&gyroX_calib,&gyroY_calib,&gyroZ_calib);
+		mpu6050_calibrate_accel(&accelX_calib,&accelY_calib,&accelZ_calib);
+	#endif
+	
+	
 	/*-----------------end---------------*/
     while (1) //hesa kgam
     {
+    	mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);
+			#ifdef CALIBERATED_DATA
+				accX;
+				accY;
+				accZ;
+				grX;
+				grY;
+				grZ;
+			#endif
 		#ifdef PRINT_RAW_DATA
 			/*--------raw data gyro-accel------*/
-			uint16_t var=grX;
-			gyro_x=var;
+			
 			printf("x= ");
-			print16(&var);
-			printf("  ");
-			var=grY;
-			gyro_y=var;
-			printf("y= ");
-			print16(&var);
-			printf("  ");
-			var=grZ;
-			gyro_z=var;
-			printf("Z= ");
-			print16(&var);
+			print16(&gyro_x);
 			printf("  ");
 			
-			var=accX;
-			accel_x=var;
+			printf("y= ");
+			print16(&gyro_y);
+			printf("  ");
+			
+			printf("Z= ");
+			print16(&gyro_z);
+			printf("  ");
+			
+			
 			printf("accX= ");
-			print16(&var);
+			print16(&accel_x);
 			printf("  ");
-			var=accY;
-			accel_y=var;
+			
 			printf("accY= ");
-			print16(&var);
+			print16(&accel_y);
 			printf("  ");
-			var=accZ;
-			accel_z=var;
+			
 			printf("accZ= ");
-			print16(&var);
+			print16(&accel_z);
 			printf("  ");
 			printf("\n");
 			/*--------end------*/
 			
 		#else
-			accel_x=accX;
-			accel_y=accY;
-			accel_z=accZ;
-			gyro_x=grX;	
-			gyro_y=grY;
-			gyro_z=grZ;
+			/*
 			//Gyro angle calculations
 			//0.0000611 = 1 / (250Hz / 65.5)
 			angle_pitch += gyro_x * 0.0000611; //Calculate the traveled pitch angle and add this to the angle_pitch variable
@@ -152,11 +137,12 @@ int main(void)
 			
 			  //0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
 			angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
-			angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the pitch angle to the roll angel
-		
+			angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);    */           //If the IMU has yawed transfer the pitch angle to the roll angel
+			
+			double angle_pitch_=3.14;
 			print_double(&angle_pitch);
-			printf("  ");
-			print_double(&angle_roll);
+			
+			//print_double(&angle_roll);
 			printf("\n");
 			_delay_ms(10);	
 		#endif  
@@ -164,135 +150,6 @@ int main(void)
 	return 0;
 }
 
-void mpu6050_calibrate_gyro(int32_t *x,int32_t *y, int32_t *z)
-{
-	printf("Calibrating Gyro...\n");
-	for (int i=0;i<calibration_counter;i++)
-	{
-		(*x)+=mpu6050_read_gyroX();
-		(*y)+=mpu6050_read_gyroY();
-		(*z)+=mpu6050_read_gyroZ();
-		_delay_ms(caliberation_wait_delay);
-	}
-		if(*x<0)
-		(*x)=abs(*x)/calibration_counter;
-		else
-		(*x)=(*x)/calibration_counter;
-		
-		if(*y<0)
-		(*y)=abs(*y)/calibration_counter;
-		else
-		(*y)=(*y)/calibration_counter;
-		
-		if(*z<0)
-		(*z)=abs(*z)/calibration_counter;
-		else
-		(*z)=(*z)/calibration_counter;
-	/*
-	//------------do not delete----------
-	printf("gyro offsets are");
-	print16(x);
-	printf("  ");
-	print16(y);
-	printf("  ");
-	print16ln(z);
-	_delay_ms(1000);
-	//-----------------------------------
-	*/			
-	
-}
-
-void mpu6050_calibrate_accel(int32_t *x,int32_t *y, int32_t *z)
-{
-	
-	printf("Calibrating Accelerometer...\n");
-	for(int i=0;i<calibration_counter;i++){
-		(*x)+=mpu6050_read_accelX();
-		(*y)+=mpu6050_read_accelY();
-		(*z)+=mpu6050_read_accelZ();
-		_delay_ms(caliberation_wait_delay);
-	}
-	if(*x<0)
-	(*x)=abs(*x)/calibration_counter;
-	else
-	(*x)=(*x)/calibration_counter;
-	
-	if(*y<0)
-	(*y)=abs(*y)/calibration_counter;
-	else
-	(*y)=(*y)/calibration_counter;
-	
-	if(*z<0)
-	(*z)=abs(*z)/calibration_counter;
-	else
-	(*z)=(*z)/calibration_counter;
-	
-	/*
-	//------------do not delete----------
-	printf("accel offsets are");
-	print16(x);
-	printf("  ");
-	print16(y);
-	printf("  ");
-	print16ln(z);
-	_delay_ms(1000);
-	//-----------------------------------
-	*/
-}
-uint16_t mpu6050_read_gyroX()//axis x=0,y=1,z=2
-{
-	uint16_t axis_value=mpu6050_rb(MPU6050_RA_GYRO_XOUT_H);
-	axis_value=(axis_value<<8) | mpu6050_rb(MPU6050_RA_GYRO_XOUT_L);
-	return axis_value;
-}
-uint16_t mpu6050_read_gyroY()//axis x=0,y=1,z=2
-{
-	uint16_t axis_value=mpu6050_rb(MPU6050_RA_GYRO_YOUT_H);
-	axis_value=(axis_value<<8) | mpu6050_rb(MPU6050_RA_GYRO_YOUT_L);
-	return axis_value;
-}
-uint16_t mpu6050_read_gyroZ()//axis x=0,y=1,z=2
-{
-	uint16_t axis_value=mpu6050_rb(MPU6050_RA_GYRO_ZOUT_H);
-	axis_value=(axis_value<<8) | mpu6050_rb(MPU6050_RA_GYRO_ZOUT_L);
-	return axis_value;
-}
-uint16_t mpu6050_read_accelX()
-{
-	uint16_t axis_value=mpu6050_rb(MPU6050_RA_ACCEL_XOUT_H);
-	axis_value=(axis_value<<8) | mpu6050_rb(MPU6050_RA_ACCEL_XOUT_L);
-	return axis_value;
-}
-uint16_t mpu6050_read_accelY()
-{
-	uint16_t axis_value=mpu6050_rb(MPU6050_RA_ACCEL_YOUT_H);
-	axis_value=(axis_value<<8) | mpu6050_rb(MPU6050_RA_ACCEL_YOUT_L);
-	return axis_value;
-}
-uint16_t mpu6050_read_accelZ()
-{
-	uint16_t axis_value=mpu6050_rb(MPU6050_RA_ACCEL_ZOUT_H);
-	axis_value=(axis_value<<8) | mpu6050_rb(MPU6050_RA_ACCEL_ZOUT_L);
-	return axis_value;
-}
-uint8_t mpu6050_rb(uint8_t byteToRead)//readbyte
-{
-	i2c_start(MPU6050_WRITE);
-	i2c_write(byteToRead);
-	i2c_stop();
-	
-	i2c_start(MPU6050_READ);
-	uint8_t byteToReturn=i2c_readNak();
-	i2c_stop();
-	return byteToReturn;
-}
-void mpu6050_wb(uint8_t wereToWrite,uint8_t byteToWrite)//writebyte
-{
-	i2c_start(MPU6050_WRITE);
-	i2c_write(wereToWrite);
-	i2c_write(byteToWrite);
-	i2c_stop();
-}
 
 //ISR(TIMER1_COMPA_vect)
 //{
