@@ -148,7 +148,6 @@ int main(void)
 			printf("\n");
 			_delay_ms(10);	
 		#endif  
-		
 	}
 	return 0;
 }
