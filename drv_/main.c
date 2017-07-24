@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <time.h>
 
 FILE * uart_str;
 typedef int bool;
@@ -85,10 +86,11 @@ int main(void)
 		mpu6050_calibrate_accel(&accelX_calib,&accelY_calib,&accelZ_calib);
 	#endif
 	
-	
+	uint32_t timer=0;
 	/*-----------------end---------------*/
     while (1) //hesa kgam
     {
+		time_t timer=time(NULL);
     	mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);
 			#ifdef CALIBERATED_DATA
 				accX;
@@ -139,13 +141,14 @@ int main(void)
 			angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
 			angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);    */           //If the IMU has yawed transfer the pitch angle to the roll angel
 			
-			double angle_pitch_=3.14;
-			print_double(&angle_pitch);
+			uint16_t var=time(NULL) - timer ;                                 //Wait until the loop_timer reaches 4000us (250Hz) before starting the next loop
+			print16(var);
 			
 			//print_double(&angle_roll);
 			printf("\n");
 			_delay_ms(10);	
 		#endif  
+		
 	}
 	return 0;
 }
