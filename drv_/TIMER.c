@@ -6,7 +6,7 @@
  */ 
 #include "TIMER.h"
 
-
+#define clockCyclesPerMicrosecond () ( F_CPU / 1000000L )
 void setup_timer3(void)
 {
 	//64 pres, 250.000 hz 0.000004s
@@ -20,8 +20,8 @@ void Enable_timer3_interrupt()
 {
 	sbi (TIMSK3, TOIE3);
 }
-
-void setup_timer0(void)
+/*-----------Timter 1-----------*/
+void setup_timer1(void)
 {
 	//64 pres, 250.000 hz 0.000004s
 	
@@ -31,8 +31,21 @@ void setup_timer0(void)
     sbi (TCCR1B, WGM12);//OCR4A compare interrupt
 }
 
-void Enable_timer0_compare_interrupt()
+void Enable_timer1_compare_interrupt()
 {
-	sbi (TIMSK1, OCIE1A);
+	sbi (TIMSK1, OCIE1A);	
+}
+/*-----------Timter 0-----------*/
+void setup_timer5(void)
+{
+	//64 pres, 250.000 hz 0.000004s
+	//sbi (TCCR5B, CS50);//only this no prescaling
 	
+	sbi (TCCR5B, CS50);//only this 8
+	//sbi (TCCR5B, CS52);//only this 256
+	//sbi (TCCR5B, WGM51);//OCR4A compare interrupt
+}
+void Enable_timer5_compare_interrupt()
+{
+	sbi (TIMSK5, OCIE5A);
 }

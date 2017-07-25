@@ -1,13 +1,6 @@
-/*
- * Timers_drv.cpp
- *
- * Created: 4/13/2017 3:15:05 PM
- * Author : rafa
- */ 
-
-
 //#include "Init.h"
-#define PRINT_RAW_DATA
+//#define PRINT_RAW_DATA
+//#define GYRO
 
 #include "defines.h"
 #include "functions.h"
@@ -26,15 +19,20 @@
 #include <string.h>
 #include <time.h>
 
+
+void print16(uint16_t *value);
+void print16ln(uint16_t *value);
+char *itoa__ (int __val, char *__s, int __radix);
+
+uint32_t micros_return_value=0;
+volatile uint32_t timer5_ovf_count=0;
+unsigned long micros(void);
+
 FILE * uart_str;
 typedef int bool;
 enum { false, true };
 bool __ftoa(double val, char * buf, int nLen,uint8_t after_decimal_point);//convert double to char
 static int uart_putchar(char c, FILE *stream);
-/*----------MPU6050 defines---------*/
-
-/*----------end MPU6050 defines---------*/
-
 
 //---------------------------------------------
 
@@ -45,36 +43,39 @@ uint8_t com=0;
 uint8_t ADC_set_max=0;
 uint16_t ADC_max=0;
 uint8_t buffer[14];
-
+uint8_t flag=0;
 int main(void)
 
 {	
-
+	i2c_init();
 	USART_Init(MY_UBRR);
-	//uart_init(UART_BAUD_SELECT(UART_BAUD_RATE,F_CPU));
 	uart_str = fdevopen(uart_putchar, NULL);
-	//	OCR1A=50;
+	setup_timer5();
+	Enable_timer5_compare_interrupt();
+	OCR5A=7;//interrupt every 1us
+
 	//Counter top value. Freq = 16 MHz/prescaler/(OCR0A + 1)
 	//ADC_Init();
 	//setup_timer0();
 	//Enable_timer0_compare_interrupt();
 	//init_gpio();
-	sei();
+	
 	//sbi(ADCSRA,ADSC);
 	
 	/*----------MPU6050 twi init---------*/
-	i2c_init();
-	uint16_t gyro_x;
-	uint16_t gyro_y;
-	uint16_t gyro_z;
-	uint16_t accel_x;
-	uint16_t accel_y;
-	uint16_t accel_z;
+	
+	int16_t gyro_x;
+	int16_t gyro_y;
+	int16_t gyro_z;
+	int16_t accel_x;
+	int16_t accel_y;
+	int16_t accel_z;
 	double angle_pitch=0;
 	double angle_roll=0;
-	printf("\n");
-	mpu6050_writeByte(MPU6050_RA_GYRO_CONFIG,0x08);//gyro sensitivity set to 500 o/s
-	mpu6050_writeByte(MPU6050_RA_ACCEL_CONFIG,0x10);//accel sensitivity -/+ 8g
+	double acc_total_vector=0;
+	double angle_pitch_acc=0;
+	double angle_roll_acc=0;
+	bool set_gyro_angles;
 	#ifdef CALIBERATED_DATA
 		int32_t gyroX_calib=0;
 		int32_t gyroY_calib=0;
@@ -85,13 +86,20 @@ int main(void)
 		mpu6050_calibrate_gyro(&gyroX_calib,&gyroY_calib,&gyroZ_calib);
 		mpu6050_calibrate_accel(&accelX_calib,&accelY_calib,&accelZ_calib);
 	#endif
+	mpu6050_writeByte(MPU6050_RA_SMPLRT_DIV,7);
+	mpu6050_writeByte(MPU6050_RA_CONFIG,0x00);
+	mpu6050_writeByte(MPU6050_RA_GYRO_CONFIG,0x08);//gyro sensitivity set to 500 o/s
+	mpu6050_writeByte(MPU6050_RA_ACCEL_CONFIG,0x10);//accel sensitivity -/+ 8g
+	mpu6050_writeByte(MPU6050_RA_PWR_MGMT_1,0x01);
 	
-	uint32_t timer=0;
 	/*-----------------end---------------*/
-    while (1) //hesa kgam
+	sei();
+    while (1) 
     {
-		time_t timer=time(NULL);
-    	mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);
+		uint32_t timer1=micros();
+    	//mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);//15us to do 
+			
+			
 			#ifdef CALIBERATED_DATA
 				accX;
 				accY;
@@ -127,32 +135,78 @@ int main(void)
 			printf("accZ= ");
 			print16(&accel_z);
 			printf("  ");
+			
+			printf("read= ");
+			printf("  ");
 			printf("\n");
 			/*--------end------*/
 			
 		#else
-			/*
-			//Gyro angle calculations
-			//0.0000611 = 1 / (250Hz / 65.5)
-			angle_pitch += gyro_x * 0.0000611; //Calculate the traveled pitch angle and add this to the angle_pitch variable
-			angle_roll += gyro_y * 0.0000611;  //Calculate the traveled roll angle and add this to the angle_roll variable
-			
-			  //0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
-			angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
-			angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);    */           //If the IMU has yawed transfer the pitch angle to the roll angel
-			
-			uint16_t var=time(NULL) - timer ;                                 //Wait until the loop_timer reaches 4000us (250Hz) before starting the next loop
-			print16(var);
-			
+			#ifdef GYRO
+							//Gyro angle calculations
+				//0.0000611 = 1 / (250Hz / 65.5)
+				angle_pitch += gyro_x * 0.0000611; //Calculate the traveled pitch angle and add this to the angle_pitch variable
+				angle_roll += gyro_y * 0.0000611;  //Calculate the traveled roll angle and add this to the angle_roll variable
+				
+				  //0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
+				angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
+				angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the pitch angle to the roll angel
+				
+				 //Accelerometer angle calculations
+				 acc_total_vector = sqrt((accel_x*accel_x)+(accel_y*accel_y)+(accel_z*accel_z));  //Calculate the total accelerometer vector
+				 //57.296 = 1 / (3.142 / 180) The Arduino asin function is in radians
+				 angle_pitch_acc = asin((float)accel_y/acc_total_vector)* 57.296;       //Calculate the pitch angle
+				 angle_roll_acc = asin((float)accel_x/acc_total_vector)* -57.296;       //Calculate the roll angle
+				 
+				 if(set_gyro_angles){                                                 //If the IMU is already started
+					 angle_pitch = angle_pitch * 0.9996 + angle_pitch_acc * 0.0004;     //Correct the drift of the gyro pitch angle with the accelerometer pitch angle
+					 angle_roll = angle_roll * 0.9996 + angle_roll_acc * 0.0004;        //Correct the drift of the gyro roll angle with the accelerometer roll angle
+				 }
+				 else{                                                                //At first start
+					 angle_pitch = angle_pitch_acc;                                     //Set the gyro pitch angle equal to the accelerometer pitch angle
+					 angle_roll = angle_roll_acc;                                       //Set the gyro roll angle equal to the accelerometer roll angle
+					 set_gyro_angles = true;                                            //Set the IMU started flag
+				 }
+				  //To dampen the pitch and roll angles a complementary filter is used
+				 uint16_t var1 = var1 * 0.9 + angle_pitch * 0.1;   //Take 90% of the output pitch value and add 10% of the raw pitch value
+				 uint16_t var2 = var2 * 0.9 + angle_roll * 0.1;      //Take 90% of the output roll value and add 10% of the raw roll value
+				 
+				//printf("pitch=");
+				//print16(var1);
+				//printf("  ");
+				//
+				//printf("roll=");
+				//print16(var2);
+				//printf("\n");
+			#endif
+			//for(int i=0;i<10000;i++);
+			//_delay_ms(10);
+			USART_Transmit(0xff);
+			//uint32_t value=timer1-micros();
+			// print16ln(&value);
+			timer1=micros();
+			while(micros()-timer1<1000000);
 			//print_double(&angle_roll);
-			printf("\n");
-			_delay_ms(10);	
+			//printf("\n");
+			//_delay_ms(10);	
 		#endif  
 	}
 	return 0;
 }
-
-
+ISR(TIMER5_COMPA_vect)
+{
+	//prescaler 1 ,calls OCR5A=7 
+	// ???? 1 ????????????? ??? ?????? ?????
+	timer5_ovf_count=timer5_ovf_count+1;
+	printf("asdf");
+}
+unsigned long micros()
+{
+	cli();
+	uint32_t micros_return_value=timer5_ovf_count;
+	sei();
+	return micros_return_value;
+}
 //ISR(TIMER1_COMPA_vect)
 //{
 //

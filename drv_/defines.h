@@ -44,6 +44,8 @@
 #define LS_W_LOW cbi(PORTH,6)
 
 #define CALIBERATED_DATA
+#define TIMER5_FREQ 250000//hz
+#define TIMER5_TO_US(OCR_) ((F_CPU/(2*TIMER5_FREQ))-1)
 //_delay_us();
 //EN1 = LS_U	digital 7 PORTD ^= (1<<7);
 //EN2 = LS_V	digital 8 PORTB ^=(1<<0);

@@ -8,6 +8,9 @@
 #include "defines.h"
 
 void setup_timer3(void);
-void Enable_timer3_interrupt();
-void setup_timer0(void);
-void Enable_timer0_compare_interrupt();
+void Enable_timer3_interrupt(void);
+void setup_timer1(void);
+void Enable_timer1_compare_interrupt(void);
+void setup_timer5(void);
+void Enable_timer5_compare_interrupt(void);
+
