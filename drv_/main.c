@@ -25,7 +25,8 @@ void print16ln(uint16_t *value);
 char *itoa__ (int __val, char *__s, int __radix);
 
 uint32_t micros_return_value=0;
-volatile uint32_t timer5_ovf_count=0;
+volatile uint32_t timer3_ovf_count=0;
+uint32_t millis_counter=0;
 unsigned long micros(void);
 
 FILE * uart_str;
@@ -50,9 +51,9 @@ int main(void)
 	i2c_init();
 	USART_Init(MY_UBRR);
 	uart_str = fdevopen(uart_putchar, NULL);
-	setup_timer5();
-	Enable_timer5_compare_interrupt();
-	OCR5A=7;//interrupt every 1us
+	setup_timer3();
+	Enable_timer3_compare_interrupt();
+	OCR3A=7;//interrupt every 1us
 
 	//Counter top value. Freq = 16 MHz/prescaler/(OCR0A + 1)
 	//ADC_Init();
@@ -179,31 +180,27 @@ int main(void)
 				//print16(var2);
 				//printf("\n");
 			#endif
-			//for(int i=0;i<10000;i++);
-			//_delay_ms(10);
+			
 			USART_Transmit(0xff);
-			//uint32_t value=timer1-micros();
-			// print16ln(&value);
+			
 			timer1=micros();
-			while(micros()-timer1<1000000);
-			//print_double(&angle_roll);
-			//printf("\n");
-			//_delay_ms(10);	
+			while(micros()-timer1<100000);
 		#endif  
 	}
 	return 0;
 }
-ISR(TIMER5_COMPA_vect)
+ISR(TIMER3_COMPA_vect)
 {
 	//prescaler 1 ,calls OCR5A=7 
 	// ???? 1 ????????????? ??? ?????? ?????
-	timer5_ovf_count=timer5_ovf_count+1;
-	printf("asdf");
+
+		++timer3_ovf_count;
+		
 }
 unsigned long micros()
 {
 	cli();
-	uint32_t micros_return_value=timer5_ovf_count;
+	uint32_t micros_return_value=timer3_ovf_count;
 	sei();
 	return micros_return_value;
 }
