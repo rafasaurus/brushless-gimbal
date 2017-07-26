@@ -1,5 +1,5 @@
 //#include "Init.h"
-#define PRINT_RAW_DATA
+//#define PRINT_RAW_DATA
 #define GYRO
 
 #include "defines.h"
@@ -28,6 +28,7 @@ char *itoa__ (int __val, char *__s, int __radix);
 uint32_t micros_return_value=0;
 volatile uint32_t _10micros=0;
 uint32_t millis_counter=0;
+uint32_t timer1;
 
 FILE * uart_str;
 typedef int bool;
@@ -55,7 +56,7 @@ int main(void)
 	setup_timer3();
 	Enable_timer3_compare_interrupt();
 	OCR3A=159;//interrupt every 10us
-
+	
 	//Counter top value. Freq = 16 MHz/prescaler/(OCR0A + 1)
 	//ADC_Init();
 	//setup_timer0();
@@ -98,7 +99,6 @@ int main(void)
 	sei();
     while (1) 
     {
-		uint32_t timer1=_10micros;
     	mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);//15us to do 
 			
 			
@@ -113,9 +113,7 @@ int main(void)
 		#ifdef PRINT_RAW_DATA
 			/*--------raw data gyro-accel------*/
 			
-			printf("x= ");
-			print16(&gyro_x);
-			printf("  ");
+			
 			
 			printf("y= ");
 			print16(&gyro_y);
@@ -138,8 +136,8 @@ int main(void)
 			print16(&accel_z);
 			printf("  ");
 			
-			printf("read= ");
-			printf("  ");
+			//printf("read= ");
+			//printf("  ");
 			printf("\n");
 			/*--------end------*/
 			
@@ -149,17 +147,23 @@ int main(void)
 				//0.0000611 = 1 / (250Hz / 65.5)
 				angle_pitch += gyro_x * 0.0000611; //Calculate the traveled pitch angle and add this to the angle_pitch variable
 				angle_roll += gyro_y * 0.0000611;  //Calculate the traveled roll angle and add this to the angle_roll variable
-				uint16_t reg=angle_pitch;
-				print16ln(&reg);
-				  //0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
-				angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
-				angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the pitch angle to the roll angel
+				uint16_t reg=(uint16_t)angle_pitch;
+				printf("x= ");
+				print16(&gyro_x);
+				printf("  ");
+				printf("reg= ");
+				print16(&reg);
+				printf("  \n");
 				
-				 //Accelerometer angle calculations
+				  /*//0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
+				angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
+				angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the pitch angle to the roll angel*/
+				
+				/* //Accelerometer angle calculations
 				 acc_total_vector = sqrt((accel_x*accel_x)+(accel_y*accel_y)+(accel_z*accel_z));  //Calculate the total accelerometer vector
 				 //57.296 = 1 / (3.142 / 180) The Arduino asin function is in radians
 				 angle_pitch_acc = asin((float)accel_y/acc_total_vector)* 57.296;       //Calculate the pitch angle
-				 angle_roll_acc = asin((float)accel_x/acc_total_vector)* -57.296;       //Calculate the roll angle
+				 angle_roll_acc = asin((float)accel_x/acc_total_vector)* -57.296;       //Calculate the roll angle*/
 				 
 				 if(set_gyro_angles){                                                 //If the IMU is already started
 					 angle_pitch = angle_pitch * 0.9996 + angle_pitch_acc * 0.0004;     //Correct the drift of the gyro pitch angle with the accelerometer pitch angle
@@ -186,6 +190,7 @@ int main(void)
 			//USART_Transmit(0xff);
 			timer1=_10micros;
 			while(_10micros-timer1<_4millis);
+		timer1=_10micros;
 		#endif  
 	}
 	return 0;
