@@ -1,6 +1,6 @@
 //#include "Init.h"
-//#define PRINT_RAW_DATA
-//#define GYRO
+#define PRINT_RAW_DATA
+#define GYRO
 
 #include "defines.h"
 #include "functions.h"
@@ -22,12 +22,12 @@
 
 void print16(uint16_t *value);
 void print16ln(uint16_t *value);
-char *itoa__ (int __val, char *__s, int __radix);
+char *itoa__ (int __val, char *__s, int __radix); 
 
+#define _4millis 400
 uint32_t micros_return_value=0;
-volatile uint32_t timer3_ovf_count=0;
+volatile uint32_t _10micros=0;
 uint32_t millis_counter=0;
-unsigned long micros(void);
 
 FILE * uart_str;
 typedef int bool;
@@ -48,12 +48,13 @@ uint8_t flag=0;
 int main(void)
 
 {	
+	init_gpio();
 	i2c_init();
 	USART_Init(MY_UBRR);
 	uart_str = fdevopen(uart_putchar, NULL);
 	setup_timer3();
 	Enable_timer3_compare_interrupt();
-	OCR3A=7;//interrupt every 1us
+	OCR3A=159;//interrupt every 10us
 
 	//Counter top value. Freq = 16 MHz/prescaler/(OCR0A + 1)
 	//ADC_Init();
@@ -71,11 +72,11 @@ int main(void)
 	int16_t accel_x;
 	int16_t accel_y;
 	int16_t accel_z;
-	double angle_pitch=0;
-	double angle_roll=0;
-	double acc_total_vector=0;
-	double angle_pitch_acc=0;
-	double angle_roll_acc=0;
+	float angle_pitch=0;
+	float angle_roll=0;
+	float acc_total_vector=0;
+	float angle_pitch_acc=0;
+	float angle_roll_acc=0;
 	bool set_gyro_angles;
 	#ifdef CALIBERATED_DATA
 		int32_t gyroX_calib=0;
@@ -97,8 +98,8 @@ int main(void)
 	sei();
     while (1) 
     {
-		uint32_t timer1=micros();
-    	//mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);//15us to do 
+		uint32_t timer1=_10micros;
+    	mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);//15us to do 
 			
 			
 			#ifdef CALIBERATED_DATA
@@ -148,7 +149,8 @@ int main(void)
 				//0.0000611 = 1 / (250Hz / 65.5)
 				angle_pitch += gyro_x * 0.0000611; //Calculate the traveled pitch angle and add this to the angle_pitch variable
 				angle_roll += gyro_y * 0.0000611;  //Calculate the traveled roll angle and add this to the angle_roll variable
-				
+				uint16_t reg=angle_pitch;
+				print16ln(&reg);
 				  //0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
 				angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
 				angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the pitch angle to the roll angel
@@ -169,41 +171,30 @@ int main(void)
 					 set_gyro_angles = true;                                            //Set the IMU started flag
 				 }
 				  //To dampen the pitch and roll angles a complementary filter is used
-				 uint16_t var1 = var1 * 0.9 + angle_pitch * 0.1;   //Take 90% of the output pitch value and add 10% of the raw pitch value
-				 uint16_t var2 = var2 * 0.9 + angle_roll * 0.1;      //Take 90% of the output roll value and add 10% of the raw roll value
-				 
+				 double var1 = var1 * 0.9 + angle_pitch * 0.1;   //Take 90% of the output pitch value and add 10% of the raw pitch value
+				 double var2 = var2 * 0.9 + angle_roll * 0.1;      //Take 90% of the output roll value and add 10% of the raw roll value
+				 uint16_t var_to_print1=var1;
+				 uint16_t var_to_print2=var2;
 				//printf("pitch=");
-				//print16(var1);
+				//print16(&var_to_print1);
 				//printf("  ");
 				//
 				//printf("roll=");
-				//print16(var2);
+				//print16(&var_to_print2);
 				//printf("\n");
-			#endif
-			
-			USART_Transmit(0xff);
-			
-			timer1=micros();
-			while(micros()-timer1<100000);
+			#endif		
+			//USART_Transmit(0xff);
+			timer1=_10micros;
+			while(_10micros-timer1<_4millis);
 		#endif  
 	}
 	return 0;
 }
-ISR(TIMER3_COMPA_vect)
+ISR(TIMER3_COMPA_vect)//10 microsecconed timer interrupt
 {
-	//prescaler 1 ,calls OCR5A=7 
-	// ???? 1 ????????????? ??? ?????? ?????
+		++_10micros;
+}
 
-		++timer3_ovf_count;
-		
-}
-unsigned long micros()
-{
-	cli();
-	uint32_t micros_return_value=timer3_ovf_count;
-	sei();
-	return micros_return_value;
-}
 //ISR(TIMER1_COMPA_vect)
 //{
 //
