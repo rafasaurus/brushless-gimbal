@@ -22,20 +22,20 @@ void Enable_timer3_interrupt()
 	sbi (TIMSK3, TOIE3);
 }*/
 /*-----------Timter 1-----------*/
-void setup_timer1(void)
+void setup_timer4(void)
 {
-	//64 pres, 250.000 hz 0.000004s
+    sbi (TCCR4B, CS40);//prescakaer 256
+    sbi (TCCR4A, WGM40);//8 bit phase correct PWM
 	
-	//sbi (TCCR1B, CS10);
-	//sbi (TCCR1B, CS11);
-    sbi (TCCR1B, CS12);
-    sbi (TCCR1B, WGM12);//OCR4A compare interrupt
+	//sbi (TCCR4A,COM4A0);
+	sbi (TCCR4A,COM4A1);
+	//sbi (TCCR4A,COM4B0);
+	sbi (TCCR4A,COM4B1);
+	//sbi (TCCR4A,COM4C0);
+	sbi (TCCR4A,COM4C1);
+	
 }
 
-void Enable_timer1_compare_interrupt()
-{
-	sbi (TIMSK1, OCIE1A);	
-}
 /*-----------Timter 0-----------*/
 void setup_timer3(void)
 {
@@ -49,4 +49,15 @@ void setup_timer3(void)
 void Enable_timer3_compare_interrupt()
 {
 	sbi (TIMSK3, OCIE3A);
+}
+void setup_timer1(void)
+{
+	sbi (TCCR1B, CS10);//only this 8
+	//sbi (TCCR5B, CS52);//only this 256
+	sbi (TCCR1B, WGM12);//OCR4A compare interrupt
+	
+}
+void Enable_timer1_compare_interrupt()
+{
+	sbi (TIMSK1, OCIE1A);
 }

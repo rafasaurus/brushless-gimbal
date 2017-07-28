@@ -29,12 +29,13 @@ void init_gpio()
 	DDRD|=(1<<PD2);//enable 3 DIGITAL 2
 	*/
 	//DDRB|=(1<<PB5);//LED13
-	sbi(DDRB,4);//digital 10
-	sbi(DDRB,5);//digital 11
-	sbi(DDRB,6);//digital 12
-	sbi(DDRH,4);//digital 7
-	sbi(DDRH,5);//digital 8
-	sbi(DDRH,6);//digital 9
+	//sbi(DDRB,4);//digital 10
+	//sbi(DDRB,5);//digital 11
+	//sbi(DDRB,6);//digital 12
+	sbi(DDRH,3);//digital 6 OC4A
+	sbi(DDRH,4);//digital 7 OC4B
+	sbi(DDRH,5);//digital 8 OC4C
+	//sbi(DDRH,6);//digital 9
 }
 
 void REVERSE(uint8_t *reverse,uint8_t *phase_state)
@@ -119,78 +120,7 @@ void SWITCH_PHASE_STATE(uint8_t *phase_state)
 
 }
 
-void PWM_update(uint8_t *phase_state)
-{
-	switch(*phase_state)
-	{
-		case 1:
-		//110
-		//HS_U_LOW;
-		HS_V_HIGH;
-		HS_W_LOW;
-		
-		LS_U_LOW;
-		LS_V_HIGH;
-		LS_W_HIGH;
 
-		break;
-
-		case 2:
-		//100
-		HS_U_HIGH;
-		//HS_V_LOW;
-		HS_W_LOW;
-		LS_U_HIGH;
-		LS_V_LOW;
-		LS_W_HIGH;
-
-		break;
-
-		case 3:
-		//101
-		HS_U_HIGH;
-		HS_V_LOW;
-		//HS_W_LOW;
-		LS_U_HIGH;
-		LS_V_HIGH;
-		LS_W_LOW;
-
-		break;
-
-		case 4:
-		//001
-		//HS_U_LOW;
-		HS_V_LOW;
-		HS_W_HIGH;
-		LS_U_LOW;
-		LS_V_HIGH;
-		LS_W_HIGH;
-
-		break;
-
-		case 5:
-		//011
-		HS_U_LOW;
-		//HS_V_LOW;
-		HS_W_HIGH;
-		LS_U_HIGH;
-		LS_V_LOW;
-		LS_W_HIGH;
-
-		break;
-
-		case 6:
-		//010
-		HS_U_LOW;
-		HS_V_HIGH;
-		//HS_W_LOW
-		LS_U_HIGH;
-		LS_V_HIGH;
-		LS_W_LOW;
-
-		break;
-	}
-}
 
 
 

@@ -1,6 +1,14 @@
 //#include "Init.h"
-#define PRINT_RAW_DATA
+//#define PRINT_RAW_DATA
 #define GYRO
+#define DRV8313
+
+#define BITSPERLONG 32
+#define TOP2BITS(x) ((x & (3L << (BITSPERLONG-2))) >> (BITSPERLONG-2))
+
+struct int_sqrt {
+	unsigned sqrt, frac;
+};
 
 #include "defines.h"
 #include "functions.h"
@@ -18,8 +26,8 @@
 #include <math.h>
 #include <string.h>
 #include <time.h>
-
-
+uint32_t SquareRoot(uint32_t a_nInput);
+void PWM_update();
 void print16(uint16_t *value);
 void print16ln(uint16_t *value);
 char *itoa__ (int __val, char *__s, int __radix); 
@@ -34,7 +42,7 @@ typedef int bool;
 enum { false, true };
 bool __ftoa(double val, char * buf, int nLen,uint8_t after_decimal_point);//convert double to char
 static int uart_putchar(char c, FILE *stream);
-
+void writeOcr(uint16_t bla);
 //---------------------------------------------
 
 uint16_t ADC_value=0;
@@ -45,17 +53,57 @@ uint8_t ADC_set_max=0;
 uint16_t ADC_max=0;
 uint8_t buffer[14];
 uint8_t flag=0;
+/*
+const uint8_t pwmSin[] = {128, 147, 166, 185, 203, 221, 238, 243, 248, 251, 253, 255, 255,
+	 255, 253, 251, 248, 243, 238, 243, 248, 251, 253, 255, 255, 255, 253, 251, 248, 243,
+	  238, 221, 203, 185, 166, 147, 128, 109, 90, 71, 53, 35, 18, 13, 8, 5, 3, 1, 1, 1,
+	   3, 5, 8, 13, 18, 13, 8, 5, 3, 1, 1, 1, 3, 5, 8, 13, 18, 35, 53, 71, 90, 109};*/
+	   
+const uint8_t pwmSin[] = {128, 132, 136, 140, 143, 147, 151, 155, 159, 162, 166, 170,
+	 174, 178, 181, 185, 189, 192, 196, 200, 203, 207, 211, 214, 218, 221, 225, 228, 
+	 232, 235, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 248, 249, 250, 
+	 250, 251, 252, 252, 253, 253, 253, 254, 254, 254, 255, 255, 255, 255, 255, 255,
+	  255, 255, 255, 255, 255, 255, 255, 254, 254, 254, 253, 253, 253, 252, 252, 251,
+	   250, 250, 249, 248, 248, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 239,
+	    240, 241, 242, 243, 244, 245, 246, 247, 248, 248, 249, 250, 250, 251, 252, 252,
+		 253, 253, 253, 254, 254, 254, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		  255, 255, 255, 254, 254, 254, 253, 253, 253, 252, 252, 251, 250, 250, 249, 248,
+		   248, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 235, 232, 228, 225, 221,
+		    218, 214, 211, 207, 203, 200, 196, 192, 189, 185, 181, 178, 174, 170, 166, 162,
+			 159, 155, 151, 147, 143, 140, 136, 132, 128, 124, 120, 116, 113, 109, 105, 101,
+			  97, 94, 90, 86, 82, 78, 75, 71, 67, 64, 60, 56, 53, 49, 45, 42, 38, 35, 31, 28,
+			   24, 21, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 8, 7, 6, 6, 5, 4, 4, 3, 3, 3,
+			    2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 6, 6, 
+				7, 8, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9,
+				 8, 8, 7, 6, 6, 5, 4, 4, 3, 3, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+				  2, 2, 3, 3, 3, 4, 4, 5, 6, 6, 7, 8, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 24,
+				   28, 31, 35, 38, 42, 45, 49, 53, 56, 60, 64, 67, 71, 75, 78, 82, 86, 90, 94, 97, 101,
+				    105, 109, 113, 116, 120, 124};
+
+bool direction;
+int incr=-1;//increment variable
+uint8_t sinTableSize = 180;//sizeof(pwmSin)/sizeof(int); // Find lookup table size
+uint8_t phase = 60;//sinTableSize / 3;         // Find phase shift and initial A, B C phase values
+int U_step=0;
+int V_step=60;
+int W_step=120;
+uint16_t pwm_delay=0;
 int main(void)
 
 {	
+	
 	init_gpio();
 	i2c_init();
 	USART_Init(MY_UBRR);
 	uart_str = fdevopen(uart_putchar, NULL);
+	setup_timer1();
 	setup_timer3();
+	setup_timer4();//pwm
 	Enable_timer3_compare_interrupt();
+	Enable_timer1_compare_interrupt();
 	OCR3A=159;//interrupt every 10us
-
+	OCR1A=4000;
+	
 	//Counter top value. Freq = 16 MHz/prescaler/(OCR0A + 1)
 	//ADC_Init();
 	//setup_timer0();
@@ -145,9 +193,7 @@ int main(void)
 			
 		#else
 			#ifdef GYRO
-							//Gyro angle calculations
-				//0.0000611 = 1 / (250Hz / 65.5)
-				
+				//Accelerometer angle calculations
 				double gyroXrate = gyro_x / 65.5; // Convert to deg/s
 				double gyroYrate = gyro_y / 65.5; // Convert to deg/s
 				angle_pitch += gyroXrate*dt/100000; //Calculate the traveled pitch angle and add this to the angle_pitch variable
@@ -161,7 +207,9 @@ int main(void)
 				//57.296 = 1 / (3.142 / 180) The Arduino asin function is in radians
 				angle_pitch_acc = asin((float)accel_y/acc_total_vector)* 57.296;       //Calculate the pitch angle
 				angle_roll_acc = asin((float)accel_x/acc_total_vector)* -57.296;       //Calculate the roll angle
+				//double acc_total_vector_=sqrt((169*169)+(129*129)+(4308*4308));
 				
+				//long double acc_total_vector_=SquareRoot((long double)(4308*4308));
 				//printf("x=");
 				//print16(&gyro_x);
 				//uint16_t reg=angle_pitch;
@@ -180,15 +228,48 @@ int main(void)
 				//printf("dt= ");
 				//print16(&reg);
 				
+				//jul28 debug
 				////accel print
-				uint16_t reg=angle_pitch_acc;
+				/*printf("accX= ");
+				print16(&accel_x);
+				printf("  ");
+				
+				printf("accY= ");
+				print16(&accel_y);
+				printf("  ");
+				
+				printf("accZ= ");
+				print16(&accel_z);
+				printf("  ");
+				uint16_t reg=acc_total_vector;
 				printf(" ");
 				printf("accel= ");
-				print16ln(&reg);
+				print16ln(&reg);*/
+				
+				#ifdef DRV8313
+					uint16_t reg=angle_pitch;
+					//printf(" ");
+					printf("angle_x= ");
+					print16(&reg);
+					printf(" ");
+					pwm_delay =abs(reg)*200;
+					printf("ocr= ");
+					print16ln(&pwm_delay);
+					//if (reg>=0)
+					//	{
+					//		cli();
+					//		incr=1;
+					//		sei();
+					//	}
+					//	else
+					//	{	cli();
+					//		incr=-1;
+					//		sei();
+					//	}
+					
+				#endif
 				
 				
-				 //Accelerometer angle calculations
-				 
 				 
 				//if(set_gyro_angles){                                                 //If the IMU is already started
 				//	 angle_pitch = angle_pitch * 0.9996 + angle_pitch_acc * 0.0004;     //Correct the drift of the gyro pitch angle with the accelerometer pitch angle
@@ -229,8 +310,38 @@ ISR(TIMER3_COMPA_vect)//10 microsecconed timer interrupt
 {
 		++_10micros;
 		//HS_U_INVERSE;
+		
 }
-
+ISR(TIMER1_COMPA_vect)//10 microsecconed timer interrupt
+{
+	PWM_update();
+	//PWM_update();
+}
+void PWM_update()
+{
+	U_PWM=pwmSin[U_step];
+	V_PWM=pwmSin[V_step];
+	W_PWM=pwmSin[W_step];
+	U_step=U_step+incr;
+	V_step=V_step+incr;
+	W_step=W_step+incr;
+	if(U_step > sinTableSize)  U_step = 0;
+	if(U_step < 0)  U_step = sinTableSize;
+	
+	if(V_step > sinTableSize)  V_step = 0;
+	if(V_step < 0)  V_step = sinTableSize;
+	
+	if(W_step > sinTableSize)  W_step = 0;
+	if(W_step < 0) W_step = sinTableSize;
+	//_delay_us(100);
+	OCR1A=pwm_delay;
+}
+void writeOcr(uint16_t bla)
+{	
+	cli();
+	OCR1A=bla;
+	sei();
+}
 //ISR(TIMER1_COMPA_vect)
 //{
 //
@@ -335,4 +446,29 @@ static int uart_putchar(char c, FILE *stream)
 	/* Put data into buffer, sends the data */
 	UDR0 = c;
 	return 0;
+}
+uint32_t SquareRoot(uint32_t a_nInput)
+{
+	uint32_t op  = a_nInput;
+	uint32_t res = 0;
+	uint32_t one = 1uL << 30; // The second-to-top bit is set: use 1u << 14 for uint16_t type; use 1uL<<30 for uint32_t type
+
+
+	// "one" starts at the highest power of four <= than the argument.
+	while (one > op)
+	{
+		one >>= 2;
+	}
+
+	while (one != 0)
+	{
+		if (op >= res + one)
+		{
+			op = op - (res + one);
+			res = res +  2 * one;
+		}
+		res >>= 1;
+		one >>= 2;
+	}
+	return res;
 }

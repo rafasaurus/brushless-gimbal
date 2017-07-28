@@ -10,8 +10,9 @@
 /*
 void setup_timer3(void);
 void Enable_timer3_interrupt(void);*/
-void setup_timer1(void);
-void Enable_timer1_compare_interrupt(void);
+void setup_timer4(void);
 void setup_timer3(void);
 void Enable_timer3_compare_interrupt(void);
+void setup_timer1(void);
+void Enable_timer1_compare_interrupt(void);
 
