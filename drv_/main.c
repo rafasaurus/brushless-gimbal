@@ -2,7 +2,7 @@
 //#define PRINT_RAW_DATA
 #define GYRO
 #define DRV8313
-#define SIN_TABLE_PRESCALER 10
+#define SIN_TABLE_PRESCALER 11
 int sinTableSize = 449;
 int U_step=0;
 int V_step=150;
@@ -474,9 +474,12 @@ int main(void)
 				//0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
 				angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
 				angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the pitch angle to the roll angel
-				 
-				acc_total_vector = sqrt((accel_x*accel_x)+(accel_y*accel_y)+(accel_z*accel_z));  //Calculate the total accelerometer vector
+				double temporar_accel_x=accel_x/100;
+				double temporar_accel_y=accel_y/100;
+				double temporar_accel_z=accel_z/100;
+				acc_total_vector = sqrt((temporar_accel_x*temporar_accel_x)+(temporar_accel_y*temporar_accel_y)+(temporar_accel_z*temporar_accel_z));  //Calculate the total accelerometer vector
 				//57.296 = 1 / (3.142 / 180) The Arduino asin function is in radians
+				acc_total_vector*=100;
 				angle_pitch_acc = asin((float)accel_y/acc_total_vector)* 57.296;       //Calculate the pitch angle
 				angle_roll_acc = asin((float)accel_x/acc_total_vector)* -57.296;       //Calculate the roll angle
 				//double acc_total_vector_=sqrt((169*169)+(129*129)+(4308*4308));
@@ -502,30 +505,37 @@ int main(void)
 				
 				//jul28 debug
 				////accel print
-				/*printf("accX= ");
-				print16(&accel_x);
-				printf("  ");
+				//printf("accX= ");
+				//print16(&accel_x);
+				//printf("  ");
+				//
+				//printf("accY= ");
+				//print16(&accel_y);
+				//printf("  ");
+				//
+				//printf("accZ= ");
+				//print16(&accel_z);
+				//printf("  ");
+				//int reg_=angle_pitch_acc;
+				//printf(" ");
+				//printf("accelpitch= ");
+				//print16(&reg_);
 				
-				printf("accY= ");
-				print16(&accel_y);
-				printf("  ");
-				
-				printf("accZ= ");
-				print16(&accel_z);
-				printf("  ");
-				uint16_t reg=acc_total_vector;
+				uint16_t reg=angle_roll_acc;
 				printf(" ");
-				printf("accel= ");
-				print16ln(&reg);*/
+				printf("accelvector= ");
+				print16(&reg);
+				
 				
 				#ifdef DRV8313
-					int reg=angle_roll;
-					//printf(" ");
+					double reg__=angle_roll*0.9+angle_roll_acc*0.1;
+					uint16_t reg___=reg;
+					printf(" ");
 					printf("angle_y= ");
-					print16(&reg);
+					print16(&reg___);
 					printf(" ");
 					uint16_t learing_rate;
-					int absoulute_y=abs(reg);
+					int absoulute_y=abs(reg__);
 					if(absoulute_y>0 && absoulute_y<10)
 					{
 						switch (absoulute_y)
