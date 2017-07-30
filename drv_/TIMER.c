@@ -50,14 +50,22 @@ void Enable_timer3_compare_interrupt()
 {
 	sbi (TIMSK3, OCIE3A);
 }
-void setup_timer1(void)
+void setup_timer5(void)
 {
 	sbi (TCCR5B, CS50);//only this 8
 	//sbi (TCCR5B, CS52);//only this 256
 	sbi (TCCR5B, WGM52);//OCR4A compare interrupt
 	
 }
-void Enable_timer1_compare_interrupt()
+void Enable_timer5_compare_interrupt()
 {
 	sbi (TIMSK5, OCIE5A);
+}
+void setup_timer2(void)
+{
+		sbi(TCCR2B,CS20);
+}
+void Enable_timer2_overflow_interrupt()
+{
+	sbi(TIMSK2,TOIE2);
 }

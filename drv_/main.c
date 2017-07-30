@@ -1,18 +1,12 @@
 //#include "Init.h"
 //#define PRINT_RAW_DATA
-#define GYRO
-#define DRV8313
+//#define GYRO
+//#define DRV8313
 #define SIN_TABLE_PRESCALER 11
 int sinTableSize = 449;
 int U_step=0;
 int V_step=150;
 int W_step=300;
-#define BITSPERLONG 32
-#define TOP2BITS(x) ((x & (3L << (BITSPERLONG-2))) >> (BITSPERLONG-2))
-
-struct int_sqrt {
-	unsigned sqrt, frac;
-};
 
 #include "defines.h"
 #include "functions.h"
@@ -40,6 +34,7 @@ char *itoa__ (int __val, char *__s, int __radix);
 uint32_t micros_return_value=0;
 volatile uint32_t _10micros=0;
 uint32_t millis_counter=0;
+uint32_t _micros=0;
 
 FILE * uart_str;
 typedef int bool;
@@ -368,11 +363,13 @@ int main(void)
 	i2c_init();
 	USART_Init(MY_UBRR);
 	uart_str = fdevopen(uart_putchar, NULL);
-	setup_timer1();
+	setup_timer2();
+	setup_timer5();
 	setup_timer3();
 	setup_timer4();//pwm
 	Enable_timer3_compare_interrupt();
-	Enable_timer1_compare_interrupt();
+	Enable_timer5_compare_interrupt();
+	Enable_timer2_overflow_interrupt();
 	OCR3A=159;//interrupt every 10us
 	OCR5A=4000;
 	
@@ -397,7 +394,7 @@ int main(void)
 	float acc_total_vector=0;
 	float angle_pitch_acc=0;
 	float angle_roll_acc=0;
-	bool set_gyro_angles;
+	bool set_gyro_angles=false;
 	#ifdef CALIBERATED_DATA
 		int32_t gyroX_calib=0;
 		int32_t gyroY_calib=0;
@@ -421,7 +418,6 @@ int main(void)
     {
     	mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);//15us to do
     	double dt = (double)((_10micros - timer1));
-    	timer1 = _10micros;
 			#ifdef CALIBERATED_DATA
 				accX;
 				accY;
@@ -474,6 +470,7 @@ int main(void)
 				//0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
 				angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
 				angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the pitch angle to the roll angel
+				
 				double temporar_accel_x=accel_x/100;
 				double temporar_accel_y=accel_y/100;
 				double temporar_accel_z=accel_z/100;
@@ -482,111 +479,27 @@ int main(void)
 				acc_total_vector*=100;
 				angle_pitch_acc = asin((float)accel_y/acc_total_vector)* 57.296;       //Calculate the pitch angle
 				angle_roll_acc = asin((float)accel_x/acc_total_vector)* -57.296;       //Calculate the roll angle
-				//double acc_total_vector_=sqrt((169*169)+(129*129)+(4308*4308));
-				
-				//long double acc_total_vector_=SquareRoot((long double)(4308*4308));
-				//printf("x=");
-				//print16(&gyro_x);
-				//uint16_t reg=angle_pitch;
-				////printf(" ");
-				//printf("angle_x= ");
-				//print16(&reg);
-				////printf(" ");
-				////printf("y=");
-				////print16(&gyro_y);
-				//reg=angle_roll;
-				////printf(" ");
-				//printf(" angle_y=");
-				//print16(&reg);
-				//reg=dt;
-				//printf(" ");
-				//printf("dt= ");
-				//print16(&reg);
-				
-				//jul28 debug
-				////accel print
-				//printf("accX= ");
-				//print16(&accel_x);
-				//printf("  ");
-				//
-				//printf("accY= ");
-				//print16(&accel_y);
-				//printf("  ");
-				//
-				//printf("accZ= ");
-				//print16(&accel_z);
-				//printf("  ");
-				//int reg_=angle_pitch_acc;
-				//printf(" ");
-				//printf("accelpitch= ");
-				//print16(&reg_);
-				
 				uint16_t reg=angle_roll_acc;
 				printf(" ");
 				printf("accelvector= ");
 				print16(&reg);
-				
-				
+				reg=angle_roll;
+				printf(" ");
+				printf("gyro_angle= ");
+				print16(&reg);
+				reg=angle_roll_acc;
+				printf(" ");
+				printf("accel_angle= ");
+				print16(&reg);				
 				#ifdef DRV8313
-					double reg__=angle_roll*0.9+angle_roll_acc*0.1;
-					uint16_t reg___=reg;
+					double final_angle=angle_roll*0.96+angle_roll_acc*0.04;
+					uint16_t reg_print=final_angle;
 					printf(" ");
 					printf("angle_y= ");
-					print16(&reg___);
+					print16(&reg_print);
 					printf(" ");
 					uint16_t learing_rate;
-					int absoulute_y=abs(reg__);
-					if(absoulute_y>0 && absoulute_y<10)
-					{
-						switch (absoulute_y)
-						{
-							case 1:
-								learing_rate=6000;
-								break;
-							case 2:
-							learing_rate=3000;
-							break;
-							case 3:
-							learing_rate=3000;
-							break;
-							case 4:
-							learing_rate=4000;
-							break;
-							case 5:
-							learing_rate=4000;
-							break;
-							case 6:
-							learing_rate=3000;
-							break;
-							case 7:
-							learing_rate=3000;
-							break;
-							case 8:
-							learing_rate=3000;
-							break;
-							case 9:
-							learing_rate=3000;
-							break;
-							case 10:
-							learing_rate=3000;
-							break;
-							
-						}
-						
-						printf(" haleluya ");
-					}
-					if(absoulute_y>10 && absoulute_y<20)
-					{
-						learing_rate=250;
-					}
-					if(absoulute_y>20 && absoulute_y<30)
-					{
-						learing_rate=150;
-					}
-					if(absoulute_y>30 && absoulute_y<50)
-					{
-						learing_rate=50;
-					}
+					int absoulute_y=abs(final_angle);
 					uint16_t local_motor_delay=(32735-(absoulute_y*learing_rate));
 					if (local_motor_delay>2000)
 					{
@@ -613,52 +526,37 @@ int main(void)
 							incr=-1;
 							printf(" no\n");
 							sei();
-						}
-					
-				#endif
-				
-				
-				 
-				//if(set_gyro_angles){                                                 //If the IMU is already started
-				//	 angle_pitch = angle_pitch * 0.9996 + angle_pitch_acc * 0.0004;     //Correct the drift of the gyro pitch angle with the accelerometer pitch angle
-				//	 angle_roll = angle_roll * 0.9996 + angle_roll_acc * 0.0004;        //Correct the drift of the gyro roll angle with the accelerometer roll angle
-				//}
-				//else{                                                                //At first start
-				//	 angle_pitch = angle_pitch_acc;                                     //Set the gyro pitch angle equal to the accelerometer pitch angle
-				//	 angle_roll = angle_roll_acc;                                       //Set the gyro roll angle equal to the accelerometer roll angle
-				//	 set_gyro_angles = true;                                            //Set the IMU started flag
-				//}
-				// //To dampen the pitch and roll angles a complementary filter is used
-				//double var1 = var1 * 0.9 + angle_pitch * 0.1;   //Take 90% of the output pitch value and add 10% of the raw pitch value
-				//double var2 = var2 * 0.9 + angle_roll * 0.1;      //Take 90% of the output roll value and add 10% of the raw roll value
-				//uint16_t var_to_print1=var1;
-				//uint16_t var_to_print2=var2;
-				//printf("pitch=");
-				//print16(&var_to_print1);
-				//printf("  ");
-				//
-				//printf("roll=");
-				//print16(&var_to_print2);
-				//printf("\n");
-			#endif		
-			
-			//////for (int i=0;i<1000;++i);
-			////while(_10micros-timer1<_4millis)
-			////{
-			////	//uint16_t pop = (_10micros-timer1)*10;
-			////	//print16ln(&pop);
-			////}
-			
-			
+						}					
+				#endif				 
+				if(set_gyro_angles){                                                 //If the IMU is already started
+					 angle_pitch = angle_pitch * 0.9996 + angle_pitch_acc * 0.0004;     //Correct the drift of the gyro pitch angle with the accelerometer pitch angle
+					 angle_roll = angle_roll * 0.9996 + angle_roll_acc * 0.0004;        //Correct the drift of the gyro roll angle with the accelerometer roll angle
+				}
+				else{                                                                //At first start
+					 angle_pitch = angle_pitch_acc;                                     //Set the gyro pitch angle equal to the accelerometer pitch angle
+					 angle_roll = angle_roll_acc;                                       //Set the gyro roll angle equal to the accelerometer roll angle
+					 set_gyro_angles = true;                                            //Set the IMU started flag
+				}
+			#endif				
 		#endif  
 	}
 	return 0;
 }
+ISR(TIMER2_OVF_vect)
+{
+	TCNT2=248;
+	++_micros;
+	if(_micros>1000000)
+	{	
+		USART_Transmit(0xd3);
+		_micros=0;
+	}
+	
+}
 ISR(TIMER3_COMPA_vect)//10 microsecconed timer interrupt
 {
-		++_10micros;
-		//HS_U_INVERSE;
-		
+	++_10micros;
+	//HS_U_INVERSE;		
 }
 ISR(TIMER5_COMPA_vect)//10 microsecconed timer interrupt
 {
@@ -690,47 +588,7 @@ void writeOcr(uint16_t bla)
 	OCR1A=bla;
 	sei();
 }
-//ISR(TIMER1_COMPA_vect)
-//{
-//
-//	PWM_update(&phase_state);
-//	SWITCH_PHASE_STATE(&phase_state);
-//
-//}
-//
-//
-//ISR(ADC_vect)//ADC interrupt routine
-//{
-//		ADC_value=ADC;
-//		//print16(ADC_value);
-//		OCR1A=ADC_value;
-//		sbi(ADCSRA,ADSC);
-//}
-//void print16(uint16_t *value)
-//{
-//	uint8_t first_=(uint8_t)(*value/1000);
-//	uint8_t seccond_=(uint8_t)((*value-first_*1000)/100);
-//	uint8_t third_=(uint8_t)((*value-first_*1000-seccond_*100)/10);
-//	uint8_t fourth_=*value-first_*1000-seccond_*100-third_*10;
-//	char c;
-//	itoa(first_, &c, 10);
-//	printf(&c);
-//	itoa(seccond_, &c, 10);
-//	printf(&c);
-//	itoa(third_, &c, 10);
-//	printf(&c);
-//	itoa(fourth_, &c, 10);
-//	printf(&c);
-//	printf("\n");
-//}
 
-//ISR(TIMER3_OVF_vect)//Timer interrupt routine
-//{	//
-//	//PWM_update(phase_state);
-//	//SWITCH_PHASE_STATE(phase_state);
-//	//UDR0=0x15;
-//	//HS_U_INVERSE;
-//}
 
 void print16(uint16_t *value)
 //this is pointer value, transmited value
@@ -794,29 +652,4 @@ static int uart_putchar(char c, FILE *stream)
 	/* Put data into buffer, sends the data */
 	UDR0 = c;
 	return 0;
-}
-uint32_t SquareRoot(uint32_t a_nInput)
-{
-	uint32_t op  = a_nInput;
-	uint32_t res = 0;
-	uint32_t one = 1uL << 30; // The second-to-top bit is set: use 1u << 14 for uint16_t type; use 1uL<<30 for uint32_t type
-
-
-	// "one" starts at the highest power of four <= than the argument.
-	while (one > op)
-	{
-		one >>= 2;
-	}
-
-	while (one != 0)
-	{
-		if (op >= res + one)
-		{
-			op = op - (res + one);
-			res = res +  2 * one;
-		}
-		res >>= 1;
-		one >>= 2;
-	}
-	return res;
 }
