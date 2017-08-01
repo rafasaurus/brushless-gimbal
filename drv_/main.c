@@ -1,8 +1,11 @@
 //#include "Init.h"
 //#define PRINT_RAW_DATA
 //#define GYRO
+//#define CALIBERATED_DATA
 //#define DRV8313
 #define SIN_TABLE_PRESCALER 11
+#define clockCyclesPerMicrosecond() (F_CPU / 1000000L)
+
 int sinTableSize = 449;
 int U_step=0;
 int V_step=150;
@@ -12,7 +15,7 @@ int W_step=300;
 #include "functions.h"
 #include "USART.h"
 #include "ADC.h"
-#include "TIMER.h"
+#include "TIMER.h"1
 #include "mpu6050registers.h"
 #include "MPU6050.h"
 #include <avr/io.h>
@@ -24,24 +27,23 @@ int W_step=300;
 #include <math.h>
 #include <string.h>
 #include <time.h>
-uint32_t SquareRoot(uint32_t a_nInput);
+
+uint32_t micros();
 void PWM_update();
 void print16(uint16_t *value);
 void print16ln(uint16_t *value);
-char *itoa__ (int __val, char *__s, int __radix); 
 
 #define _4millis 400
 uint32_t micros_return_value=0;
 volatile uint32_t _10micros=0;
 uint32_t millis_counter=0;
-uint32_t _micros=0;
+uint32_t _micros=0; 
+volatile unsigned long timer3_overflow_count=0;
 
 FILE * uart_str;
-typedef int bool;
+typedef int bool; 
 enum { false, true };
-bool __ftoa(double val, char * buf, int nLen,uint8_t after_decimal_point);//convert double to char
 static int uart_putchar(char c, FILE *stream);
-void writeOcr(uint16_t bla);
 //---------------------------------------------
 
 uint16_t ADC_value=0;
@@ -52,6 +54,7 @@ uint8_t ADC_set_max=0;
 uint16_t ADC_max=0;
 uint8_t buffer[14];
 uint8_t flag=0;
+
 /*
 const uint8_t pwmSin[] = {128, 147, 166, 185, 203, 221, 238, 243, 248, 251, 253, 255, 255,
 	 255, 253, 251, 248, 243, 238, 243, 248, 251, 253, 255, 255, 255, 253, 251, 248, 243,
@@ -348,7 +351,7 @@ const uint8_t pwmSin[]={
 	41,42,43,44,44,45,46,47,47,48,49,50,51,52,52,53,54,55,56,56,57,58,
 	59,60,61,61,62
 };
-#endif
+	#endif //PRESCALER
 bool direction;
 int incr=-1;//increment variable
 //sizeof(pwmSin)/sizeof(int); // Find lookup table size
@@ -360,17 +363,19 @@ int main(void)
 {	
 	
 	init_gpio();
-	i2c_init();
+	#ifdef GYRO
+		i2c_init();
+	#endif
 	USART_Init(MY_UBRR);
 	uart_str = fdevopen(uart_putchar, NULL);
-	setup_timer2();
+	//setup_timer2();
 	setup_timer5();
 	setup_timer3();
 	setup_timer4();//pwm
 	Enable_timer3_compare_interrupt();
 	Enable_timer5_compare_interrupt();
-	Enable_timer2_overflow_interrupt();
-	OCR3A=159;//interrupt every 10us
+	//Enable_timer2_overflow_interrupt();
+	OCR3A=63;//159;//interrupt every 10us
 	OCR5A=4000;
 	
 	//Counter top value. Freq = 16 MHz/prescaler/(OCR0A + 1)
@@ -382,7 +387,7 @@ int main(void)
 	//sbi(ADCSRA,ADSC);
 	
 	/*----------MPU6050 twi init---------*/
-	
+	#ifdef GYRO
 	int16_t gyro_x;
 	int16_t gyro_y;
 	int16_t gyro_z;
@@ -395,7 +400,8 @@ int main(void)
 	float angle_pitch_acc=0;
 	float angle_roll_acc=0;
 	bool set_gyro_angles=false;
-	#ifdef CALIBERATED_DATA
+	
+		#ifdef CALIBERATED_DATA
 		int32_t gyroX_calib=0;
 		int32_t gyroY_calib=0;
 		int32_t gyroZ_calib=0;
@@ -404,20 +410,30 @@ int main(void)
 		int32_t accelZ_calib=0;
 		mpu6050_calibrate_gyro(&gyroX_calib,&gyroY_calib,&gyroZ_calib);
 		//mpu6050_calibrate_accel(&accelX_calib,&accelY_calib,&accelZ_calib);
-	#endif
+		#endif
+	
 	mpu6050_writeByte(MPU6050_RA_SMPLRT_DIV,7);
 	mpu6050_writeByte(MPU6050_RA_CONFIG,0x00);
 	mpu6050_writeByte(MPU6050_RA_GYRO_CONFIG,0x08);//gyro sensitivity set to 500 o/s
 	mpu6050_writeByte(MPU6050_RA_ACCEL_CONFIG,0x10);//accel sensitivity -/+ 8g
 	mpu6050_writeByte(MPU6050_RA_PWR_MGMT_1,0x01);
-	
-	/*-----------------end---------------*/
-	sei();
 	uint32_t timer1=_10micros;
+	#endif
+	/*-----------------end mpu definition -----------------*/
+	sei();
     while (1) 
     {
-    	mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);//15us to do
-    	double dt = (double)((_10micros - timer1));
+		uint32_t timer = _10micros;
+		USART_Transmit(0xA3);
+		while(_10micros-timer<250000)
+		{
+			
+			};
+		#ifdef GYRO
+    		mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);//15us to do
+    		double dt = (double)((_10micros - timer1));
+		#endif
+		#ifdef GYRO
 			#ifdef CALIBERATED_DATA
 				accX;
 				accY;
@@ -457,10 +473,9 @@ int main(void)
 			//printf("read= ");
 			//printf("  ");
 			printf("\n");
-			/*--------end------*/
-			
+			/*--------end------*/			
 		#else
-			#ifdef GYRO
+			//#ifdef GYRO
 				//Accelerometer angle calculations
 				double gyroXrate = gyro_x / 65.5; // Convert to deg/s
 				double gyroYrate = gyro_y / 65.5; // Convert to deg/s
@@ -527,7 +542,8 @@ int main(void)
 							printf(" no\n");
 							sei();
 						}					
-				#endif				 
+				#endif	//DRV8313
+							 
 				if(set_gyro_angles){                                                 //If the IMU is already started
 					 angle_pitch = angle_pitch * 0.9996 + angle_pitch_acc * 0.0004;     //Correct the drift of the gyro pitch angle with the accelerometer pitch angle
 					 angle_roll = angle_roll * 0.9996 + angle_roll_acc * 0.0004;        //Correct the drift of the gyro roll angle with the accelerometer roll angle
@@ -537,26 +553,24 @@ int main(void)
 					 angle_roll = angle_roll_acc;                                       //Set the gyro roll angle equal to the accelerometer roll angle
 					 set_gyro_angles = true;                                            //Set the IMU started flag
 				}
-			#endif				
-		#endif  
+			
+			#endif //PRINT_RAW_DATA			
+		#endif //GYRO
 	}
 	return 0;
 }
-ISR(TIMER2_OVF_vect)
-{
-	TCNT2=248;
-	++_micros;
-	if(_micros>1000000)
-	{	
-		USART_Transmit(0xd3);
-		_micros=0;
-	}
-	
-}
+//ISR(TIMER2_OVF_vect)
+//{
+//	//cli();
+//	++_10micros;
+//	//++timer3_overflow_count;
+////	sei();
+//	TCNT2=191;
+//	//USART_Transmit(0xfe);
+//}
 ISR(TIMER3_COMPA_vect)//10 microsecconed timer interrupt
 {
 	++_10micros;
-	//HS_U_INVERSE;		
 }
 ISR(TIMER5_COMPA_vect)//10 microsecconed timer interrupt
 {
@@ -582,14 +596,6 @@ void PWM_update()
 	//_delay_us(100);
 	OCR5A=pwm_delay;
 }
-void writeOcr(uint16_t bla)
-{	
-	cli();
-	OCR1A=bla;
-	sei();
-}
-
-
 void print16(uint16_t *value)
 //this is pointer value, transmited value
 //must be reference type &
@@ -609,39 +615,7 @@ void print16ln(uint16_t *value)
 	printf(c);
 	printf("\n");
 }
-void print_double(double *value)
-//this is pointer value, transmited value
-//must be reference type &
-{
-	char c[10];
-	__ftoa(*value, c, 10,2);
-	printf(c);
-}
-bool __ftoa(double val, char * buf, int nLen,uint8_t after_decimal_point){
-//----------https://rsdn.org/forum/cpp/1539621.all-----------//
-	int32_t nValue = val * pow(10,after_decimal_point);
 
-	int32_t nCharCount = after_decimal_point+1; // decimals and point by default is present
-	int32_t nCharCounter = nValue;
-	while ( nCharCounter > 100 ) {
-		nCharCount++;
-		nCharCounter /= 10;
-	}
-	
-	if ( nLen < nCharCount )
-	return false;
-
-	for ( int32_t i = 0; i < nCharCount; i++ ) {
-		if ( after_decimal_point == i ) {
-			buf[nCharCount - i - 1] = '.';
-			} else 
-			{
-			buf[nCharCount-i-1]=(int32_t)(nValue%10)+48;
-			nValue /= 10;
-		}
-	}
-	return true;
-}
 static int uart_putchar(char c, FILE *stream)
 {
 
@@ -652,4 +626,17 @@ static int uart_putchar(char c, FILE *stream)
 	/* Put data into buffer, sends the data */
 	UDR0 = c;
 	return 0;
+}
+uint32_t micros()
+{
+	unsigned long m;
+	uint8_t oldSREG = SREG, t;
+	
+	cli();
+	m = timer3_overflow_count;
+	t = TCNT3;
+	
+	SREG = oldSREG;
+	
+	return ((m << 8) + t) * (64 / clockCyclesPerMicrosecond());
 }

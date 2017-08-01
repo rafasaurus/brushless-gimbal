@@ -4,15 +4,8 @@
  * Created: 7/12/2017 5:18:53 PM
  *  Author: rafa
  */ 
-#include "defines.h"
+
 #include "functions.h"
-
-#include <avr/io.h>
-#include <util/delay.h>
-#include <avr/pgmspace.h>
-#include <avr/interrupt.h>
-
-
 
 void init_gpio()
 {
@@ -38,87 +31,6 @@ void init_gpio()
 	//sbi(DDRH,6);//digital 9
 }
 
-void REVERSE(uint8_t *reverse,uint8_t *phase_state)
-{
-	if (reverse<127)
-	{
-		switch(*phase_state)
-		{
-			case 1:
-			*phase_state++;
-			break;
-			case 2:
-			*phase_state++;
-			break;
-			case 3:
-			*phase_state++;
-			break;
-			case 4:
-			*phase_state++;
-			break;
-			case 5:
-			*phase_state++;
-			break;
-			case 6:
-			*phase_state=1;
-			break;
-		}
-		reverse++;
-	}
-	else
-	{
-		
-		switch(*phase_state)
-		{
-			
-			case 1:
-			*phase_state=6;
-			break;
-			case 2:
-			*phase_state--;
-			break;
-			case 3:
-			*phase_state--;
-			break;
-			case 4:
-			*phase_state--;
-			break;
-			case 5:
-			*phase_state--;
-			break;
-			case 6:
-			*phase_state--;
-			break;
-		}
-		reverse++;
-	}
-}
-
-void SWITCH_PHASE_STATE(uint8_t *phase_state)
-{
-	switch(*phase_state)
-	{
-		case 1:
-		phase_state++;
-		break;
-		case 2:
-		phase_state++;
-		break;
-		case 3:
-		phase_state++;
-		break;
-		case 4:
-		phase_state++;
-		break;
-		case 5:
-		phase_state++;
-		break;
-		case 6:
-		phase_state=1;
-		break;
-		}
-
-}
 
 
 

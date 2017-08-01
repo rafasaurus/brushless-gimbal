@@ -6,9 +6,10 @@
  */ 
 //vahagn comment
 #include <avr/io.h>
-void setup_timer3();
+#include "defines.h"
+#include <avr/io.h>
+#include <util/delay.h>
+#include <avr/pgmspace.h>
+#include <avr/interrupt.h>
+
 void init_gpio();
-void Enable_timer3_interrupt();
-void REVERSE(uint8_t *,uint8_t *);
-void SWITCH_PHASE_STATE(uint8_t *);
-//void PWM_update(uint8_t *);

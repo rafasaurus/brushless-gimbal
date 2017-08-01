@@ -47,7 +47,7 @@
 #define V_PWM OCR4B
 #define W_PWM OCR4C
 
-#define CALIBERATED_DATA
+
 #define TIMER5_FREQ 250000//hz
 #define TIMER5_TO_US(OCR_) ((F_CPU/(2*TIMER5_FREQ))-1)
 //_delay_us();
