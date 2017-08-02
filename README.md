@@ -1,2 +1,2 @@
-# drv
-this is a test
+# Brushless Gimbal
+This code drives brushless motors with DRV8313 using AVR microcontroller, and mpu6050 IMU.
