@@ -11,9 +11,9 @@
 void setup_timer3(void);
 void Enable_timer3_interrupt(void);*/
 void setup_timer4(void);
-void setup_timer3(void);
-void Enable_timer3_compare_interrupt(void);
+//void setup_timer3(void);
+//void Enable_timer3_compare_interrupt(void);
 void setup_timer5(void);
 void Enable_timer5_compare_interrupt(void);
-void setup_timer2(void);
-void Enable_timer2_overflow_interrupt(void);
+void setup_timer0(void);
+void Enable_timer0_overflow_interrupt(void);

@@ -1,7 +1,7 @@
-//#include "Init.h"
 //#define PRINT_RAW_DATA
-//#define GYRO
-//#define CALIBERATED_DATA
+#define GYRO
+#define CALIBERATED_DATA
+
 //#define DRV8313
 #define SIN_TABLE_PRESCALER 11
 #define clockCyclesPerMicrosecond() (F_CPU / 1000000L)
@@ -27,18 +27,17 @@ int W_step=300;
 #include <math.h>
 #include <string.h>
 #include <time.h>
-
-uint32_t micros();
-void PWM_update();
+uint32_t micros(void);
+void PWM_update(void);
 void print16(uint16_t *value);
 void print16ln(uint16_t *value);
-
+unsigned long micros(void);
 #define _4millis 400
 uint32_t micros_return_value=0;
 volatile uint32_t _10micros=0;
 uint32_t millis_counter=0;
 uint32_t _micros=0; 
-volatile unsigned long timer3_overflow_count=0;
+volatile unsigned long timer0_overflow_count=0;
 
 FILE * uart_str;
 typedef int bool; 
@@ -369,13 +368,14 @@ int main(void)
 	USART_Init(MY_UBRR);
 	uart_str = fdevopen(uart_putchar, NULL);
 	//setup_timer2();
-	setup_timer5();
-	setup_timer3();
+	
 	setup_timer4();//pwm
-	Enable_timer3_compare_interrupt();
-	Enable_timer5_compare_interrupt();
+	setup_timer0();
+	Enable_timer0_overflow_interrupt();//micros
+	setup_timer5();
+	Enable_timer5_compare_interrupt();//motor
 	//Enable_timer2_overflow_interrupt();
-	OCR3A=63;//159;//interrupt every 10us
+	//OCR3A=63;//159;//interrupt every 10us
 	OCR5A=4000;
 	
 	//Counter top value. Freq = 16 MHz/prescaler/(OCR0A + 1)
@@ -400,8 +400,7 @@ int main(void)
 	float angle_pitch_acc=0;
 	float angle_roll_acc=0;
 	bool set_gyro_angles=false;
-	
-		#ifdef CALIBERATED_DATA
+	#ifdef CALIBERATED_DATA
 		int32_t gyroX_calib=0;
 		int32_t gyroY_calib=0;
 		int32_t gyroZ_calib=0;
@@ -410,28 +409,28 @@ int main(void)
 		int32_t accelZ_calib=0;
 		mpu6050_calibrate_gyro(&gyroX_calib,&gyroY_calib,&gyroZ_calib);
 		//mpu6050_calibrate_accel(&accelX_calib,&accelY_calib,&accelZ_calib);
-		#endif
-	
+	#endif
 	mpu6050_writeByte(MPU6050_RA_SMPLRT_DIV,7);
 	mpu6050_writeByte(MPU6050_RA_CONFIG,0x00);
 	mpu6050_writeByte(MPU6050_RA_GYRO_CONFIG,0x08);//gyro sensitivity set to 500 o/s
 	mpu6050_writeByte(MPU6050_RA_ACCEL_CONFIG,0x10);//accel sensitivity -/+ 8g
 	mpu6050_writeByte(MPU6050_RA_PWR_MGMT_1,0x01);
-	uint32_t timer1=_10micros;
+	uint32_t timer1=micros();
 	#endif
 	/*-----------------end mpu definition -----------------*/
 	sei();
     while (1) 
     {
-		uint32_t timer = _10micros;
-		USART_Transmit(0xA3);
-		while(_10micros-timer<250000)
-		{
-			
-			};
+		//uint32_t timer = micros();
+		//USART_Transmit(0xA3);
+		//while(micros()-timer<1000000)
+		//{
+		//	
+		//	};
 		#ifdef GYRO
     		mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);//15us to do
-    		double dt = (double)((_10micros - timer1));
+    		double dt = (double)((micros() - timer1));
+			timer1=micros();
 		#endif
 		#ifdef GYRO
 			#ifdef CALIBERATED_DATA
@@ -445,30 +444,30 @@ int main(void)
 		#ifdef PRINT_RAW_DATA
 			/*--------raw data gyro-accel------*/
 			
-			//printf("x= ");
-			//print16(&gyro_x);
+			printf("x= ");
+			print16(&gyro_x);
+			printf("  ");
+			
+			printf("y= ");
+			print16(&gyro_y);
+			printf("  ");
+			
+			printf("Z= ");
+			print16(&gyro_z);
+			printf("  ");
+			
+			
+			//printf("accX= ");
+			//print16(&accel_x);
 			//printf("  ");
 			//
-			//printf("y= ");
-			//print16(&gyro_y);
+			//printf("accY= ");
+			//print16(&accel_y);
 			//printf("  ");
 			//
-			//printf("Z= ");
-			//print16(&gyro_z);
+			//printf("accZ= ");
+			//print16(&accel_z);
 			//printf("  ");
-			
-			
-			printf("accX= ");
-			print16(&accel_x);
-			printf("  ");
-			
-			printf("accY= ");
-			print16(&accel_y);
-			printf("  ");
-			
-			printf("accZ= ");
-			print16(&accel_z);
-			printf("  ");
 			
 			//printf("read= ");
 			//printf("  ");
@@ -479,12 +478,12 @@ int main(void)
 				//Accelerometer angle calculations
 				double gyroXrate = gyro_x / 65.5; // Convert to deg/s
 				double gyroYrate = gyro_y / 65.5; // Convert to deg/s
-				angle_pitch += gyroXrate*dt/100000; //Calculate the traveled pitch angle and add this to the angle_pitch variable
-				angle_roll += gyroYrate*dt/100000;  //Calculate the traveled roll angle and add this to the angle_roll variable
+				angle_pitch += gyroXrate*dt/1000000; //Calculate the traveled pitch angle and add this to the angle_pitch variable
+				angle_roll += gyroYrate*dt/1000000;  //Calculate the traveled roll angle and add this to the angle_roll variable
 				
 				//0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
-				angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
-				angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the pitch angle to the roll angel
+				//angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
+				//angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the pitch angle to the roll angel
 				
 				double temporar_accel_x=accel_x/100;
 				double temporar_accel_y=accel_y/100;
@@ -505,7 +504,7 @@ int main(void)
 				reg=angle_roll_acc;
 				printf(" ");
 				printf("accel_angle= ");
-				print16(&reg);				
+				print16ln(&reg);				
 				#ifdef DRV8313
 					double final_angle=angle_roll*0.96+angle_roll_acc*0.04;
 					uint16_t reg_print=final_angle;
@@ -559,18 +558,30 @@ int main(void)
 	}
 	return 0;
 }
-//ISR(TIMER2_OVF_vect)
-//{
-//	//cli();
-//	++_10micros;
-//	//++timer3_overflow_count;
-////	sei();
-//	TCNT2=191;
-//	//USART_Transmit(0xfe);
-//}
-ISR(TIMER3_COMPA_vect)//10 microsecconed timer interrupt
+ISR(TIMER0_OVF_vect)//10 microsecconed timer interrupt
 {
-	++_10micros;
+	++timer0_overflow_count;
+}
+unsigned long micros() {
+	unsigned long m;
+	uint8_t oldSREG = SREG, t;
+	
+	cli();
+	m = timer0_overflow_count;
+	t = TCNT0;
+	
+
+	#ifdef TIFR0
+	if ((TIFR0 & _BV(TOV0)) && (t < 255))
+	m++;
+	#else
+	if ((TIFR0 & _BV(TOV0)) && (t < 255))
+	m++;
+	#endif
+
+	SREG = oldSREG;
+
+	return ((m << 8) + t) * (64 / clockCyclesPerMicrosecond());
 }
 ISR(TIMER5_COMPA_vect)//10 microsecconed timer interrupt
 {
@@ -626,17 +637,4 @@ static int uart_putchar(char c, FILE *stream)
 	/* Put data into buffer, sends the data */
 	UDR0 = c;
 	return 0;
-}
-uint32_t micros()
-{
-	unsigned long m;
-	uint8_t oldSREG = SREG, t;
-	
-	cli();
-	m = timer3_overflow_count;
-	t = TCNT3;
-	
-	SREG = oldSREG;
-	
-	return ((m << 8) + t) * (64 / clockCyclesPerMicrosecond());
 }

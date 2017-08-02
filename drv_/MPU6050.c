@@ -5,7 +5,7 @@
  *  Author: HP
  */ 
 #include "MPU6050.h"
-#ifdef CALIBERATED_DATA
+
 void mpu6050_calibrate_gyro(int32_t *x,int32_t *y, int32_t *z)
 {
 	printf("Calibrating Gyro...\n");
@@ -81,7 +81,7 @@ void mpu6050_calibrate_accel(int32_t *x,int32_t *y, int32_t *z)
 	//-----------------------------------
 	*/
 }
-#endif
+
 uint16_t mpu6050_read_gyroX()//axis x=0,y=1,z=2
 {
 	uint16_t axis_value=mpu6050_readByte(MPU6050_RA_GYRO_XOUT_H);

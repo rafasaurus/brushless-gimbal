@@ -22,18 +22,7 @@ void setup_timer4(void){
 	
 }
 
-/*-----------Timter 3-----------*/
-void setup_timer3(void){
-	//64 pres, 250.000 hz 0.000004s
-	//sbi (TCCR5B, CS50);//only this no prescaling
-	
-	sbi (TCCR3B, CS30);//only this 8
-	//sbi (TCCR5B, CS52);//only this 256
-	sbi (TCCR3B, WGM32);//OCR3A compare interrupt
-}
-void Enable_timer3_compare_interrupt(){
-	sbi (TIMSK3, OCIE3A);
-}
+
 /*-----------Timter 5-----------*/
 void setup_timer5(void){
 	sbi (TCCR5B, CS50);//only this 8
@@ -45,9 +34,10 @@ void Enable_timer5_compare_interrupt(){
 	sbi (TIMSK5, OCIE5A);
 }
 /*-----------Timter 2-----------*/
-void setup_timer2(void){
-	sbi(TCCR2B,CS20);
+void setup_timer0(void){
+	sbi(TCCR0B,CS00);
+	sbi(TCCR0B,CS01);;//prescaler 64 , 250khz timer
 }
-void Enable_timer2_overflow_interrupt(){
-	sbi(TIMSK2,TOIE2);
+void Enable_timer0_overflow_interrupt(){
+	sbi(TIMSK0,TOIE0);
 }

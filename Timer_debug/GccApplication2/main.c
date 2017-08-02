@@ -46,14 +46,19 @@ int main(void)
 	
 	sei();
 
-	printf("asd \n");
+	//printf("asd \n");
     while (1) 
     {
 	unsigned long timer=micros();
 	printf("asd \n");
 	//for (int i=0;i<1000;i++);
 	//reg=(micros()-timer);
-	while(micros()-timer<2000000);
+	while(micros()-timer<2000000)
+	{
+		//uint16_t reg=micros()-timer;
+		//print16(&reg);
+		//printf("\n");
+		};
 	
     }
 }
@@ -92,7 +97,7 @@ unsigned long micros() {
 	#endif
 
 	SREG = oldSREG;
-	
+
 	return ((m << 8) + t) * (64 / clockCyclesPerMicrosecond());
 }
 		
