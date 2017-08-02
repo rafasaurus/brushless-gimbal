@@ -34,10 +34,10 @@ void Enable_timer5_compare_interrupt(){
 	sbi (TIMSK5, OCIE5A);
 }
 /*-----------Timter 2-----------*/
-//void setup_timer0(void){
-//	sbi(TCCR0B,CS00);
-//	sbi(TCCR0B,CS01);;//prescaler 64 , 250khz timer
-//}
-//void Enable_timer0_overflow_interrupt(){
-//	sbi(TIMSK0,TOIE0);
-//}
+void setup_timer0(void){
+	sbi(TCCR0B,CS00);
+	sbi(TCCR0B,CS01);;//prescaler 64 , 250khz timer
+}
+void Enable_timer0_overflow_interrupt(){
+	sbi(TIMSK0,TOIE0);
+}

@@ -447,7 +447,6 @@ int main(void)
  2d6:	01 97       	sbiw	r24, 0x01	; 1
  2d8:	f1 f7       	brne	.-4      	; 0x2d6 <main+0x36>
  2da:	00 c0       	rjmp	.+0      	; 0x2dc <main+0x3c>
-		//_delay_ms(20);
 		_delay_us(100);
 		uint16_t killer=micros()-timer1;
  2dc:	00 00       	nop

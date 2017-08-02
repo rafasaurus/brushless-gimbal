@@ -7,8 +7,8 @@
 #define FRACT_INC ((MICROSECONDS_PER_TIMER0_OVERFLOW % 1000) >> 3)
 #define FRACT_MAX (1000 >> 3)
 //#define PRINT_RAW_DATA
-//#define GYRO
-//#define CALIBERATED_DATA
+#define GYRO
+#define CALIBERATED_DATA
 
 //#define DRV8313
 #define SIN_TABLE_PRESCALER 11
@@ -38,8 +38,7 @@ void PWM_update(void);
 void print16(uint16_t *value);
 void print16ln(uint16_t *value);
 /*----------------micros,millis functions---------------*/
-void setup_timer0();
-void Enable_timer0_overflow_interrupt();
+
 unsigned long micros();
 unsigned long millis();
 //volatile unsigned long timer2_overflow_count=0;
@@ -364,14 +363,14 @@ bool direction;
 int incr=-1;//increment variable
 //sizeof(pwmSin)/sizeof(int); // Find lookup table size
 uint8_t phase = 60;//sinTableSize / 3;         // Find phase shift and initial A, B C phase values
-uint16_t pwm_delay=0;
+uint16_t pwm_delay=2000;
 
 int main(void)
 {	
 	cli();
 	init_gpio();
 		#ifdef GYRO
-		i2c_init();
+			i2c_init();
 		#endif
 	USART_Init(MY_UBRR);
 	uart_str = fdevopen(uart_putchar, NULL);
@@ -385,7 +384,7 @@ int main(void)
 	Enable_timer5_compare_interrupt();//motor
 
 	OCR5A=4000;
-	
+	unsigned long timer1;
 	
 	//sbi(ADCSRA,ADSC);//start ADC conversion
 	
@@ -423,21 +422,6 @@ int main(void)
 	sei();
     while (1) 
     {
-		
-		unsigned long timer1=micros();
-		//_delay_ms(20);
-		_delay_us(100);
-		uint16_t killer=micros()-timer1-276;
-		print16(&killer);
-		printf("\n");
-		
-		
-		
-		
-		
-		
-		
-		
 		#ifdef GYRO
     		mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);//15us to do
 		#endif
@@ -483,20 +467,21 @@ int main(void)
 			printf("\n");
 			/*--------end------*/			
 		#else
-			//#ifdef GYRO
-				//double dt = (double)((micros() - timer1));
-				//timer1=micros();
+			
 				
-				//double gyroXrate = gyro_x / 65.5/250; // Convert to deg/s
-				//double gyroYrate = gyro_x / 65.5/250; // Convert to deg/s
+				double dt = (double)((micros() - timer1));
+				timer1=micros();
 				
-				/*angle_pitch += gyro_x*0.0000611;//*dt/1000000; //Calculate the traveled pitch angle and add this to the angle_pitch variable
-				angle_roll += gyro_y*0.0000611;//*dt/1000000;  //Calculate the traveled roll angle and add this to the angle_roll variable
+				double gyroXrate = gyro_x / 65.5; // Convert to deg/s
+				double gyroYrate = gyro_x / 65.5; // Convert to deg/s
+				
+				angle_pitch += gyro_x*dt/1000000; //Calculate the traveled pitch angle and add this to the angle_pitch variable
+				angle_roll += gyro_y*dt/1000000;  //Calculate the traveled roll angle and add this to the angle_roll variable
 				
 				//0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
 				angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
 				angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the pitch angle to the roll angel
-				*/
+				
 				///double temporar_accel_x=accel_x/100;
 				///double temporar_accel_y=accel_y/100;
 				///double temporar_accel_z=accel_z/100;
@@ -507,7 +492,7 @@ int main(void)
 				///angle_pitch_acc = asin((float)accel_y/acc_total_vector)* 57.296;       //Calculate the pitch angle
 				///angle_roll_acc = asin((float)accel_x/acc_total_vector)* -57.296;       //Calculate the roll angle
 				
-				/*uint16_t reg=angle_pitch;
+				uint16_t reg=angle_pitch;
 				printf(" ");
 				printf("gyrox_angle= ");
 				print16(&reg);
@@ -515,7 +500,11 @@ int main(void)
 				printf(" ");
 				printf("gyroy_angle= ");
 				print16(&reg);
-				*/
+				reg=dt;
+				printf(" ");
+				printf("gyroy_angle= ");
+				print16ln(&reg);
+				
 				
 				//reg=angle_roll_acc;
 				//printf(" ");
@@ -596,21 +585,6 @@ ISR(TIMER0_OVF_vect)//10 microsecconed timer interrupt
 	timer0_millis = m;
 	timer0_overflow_count++;
 }
-void setup_timer0(void)
-{
-	sbi (TCCR0B, CS00);//only this 8
-	sbi (TCCR0B, CS01);
-	//sbi (TCCR2B,WGM02);
-	//sbi (TCCR2B,WGM22);
-	//sbi (TCCR2B, CS22);
-	//sbi (TCCR3B, CS31);//only this 256
-	//sbi (TCCR0B, WGM02);//OCR4A compare interrupt
-}
-void Enable_timer0_overflow_interrupt()
-{
-	sbi (TIMSK0, TOIE0);
-}
-
 unsigned long micros() {
 	unsigned long m;
 	uint8_t oldSREG = SREG, t;

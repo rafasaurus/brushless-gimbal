@@ -57,13 +57,17 @@ int main(void)
     while (1) 
     {
 		unsigned long timer1=micros();
-		//_delay_ms(20);
 		_delay_us(100);
 		uint16_t killer=micros()-timer1;
 		print16(&killer);
 		printf("\n");
 	}
 }
+
+
+
+
+
 ISR(TIMER0_OVF_vect)//10 microsecconed timer interrupt
 {
 	unsigned long m = timer0_millis;
