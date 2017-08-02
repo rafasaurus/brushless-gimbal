@@ -1,9 +1,12 @@
-/*
- * GccApplication2.c
- *
- * Created: 7/31/2017 1:57:04 PM
- * Author : HP
- */ 
+#define clockCyclesToMicroseconds(a) ( ((a) * 1000L) / (F_CPU / 1000L) )
+#define MICROSECONDS_PER_TIMER0_OVERFLOW (clockCyclesToMicroseconds(64 * 256))
+#define MILLIS_INC (MICROSECONDS_PER_TIMER0_OVERFLOW / 1000)
+// the fractional number of milliseconds per timer0 overflow. we shift right
+// by three to fit these numbers into a byte. (for the clock speeds we care
+// about - 8 and 16 MHz - this doesn't lose precision.)
+#define FRACT_INC ((MICROSECONDS_PER_TIMER0_OVERFLOW % 1000) >> 3)
+#define FRACT_MAX (1000 >> 3)
+
 #define F_CPU 16000000
 #define BAUD 57600UL
 #define MY_UBRR (F_CPU/16/BAUD-1)
@@ -27,10 +30,14 @@ volatile unsigned long timer1_micros;
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #define HS_U_INVERSE (PORTB^=(1<<4));
 unsigned long _micros=0;
-void setup_timer2();
-void Enable_timer2_overflow_interrupt();
+void setup_timer0();
+void Enable_timer0_overflow_interrupt();
 unsigned long micros();
-volatile unsigned long timer2_overflow_count=0;
+unsigned long millis();
+//volatile unsigned long timer2_overflow_count=0;
+volatile unsigned long timer0_overflow_count = 0;
+volatile unsigned long timer0_millis = 0;
+static unsigned char timer0_fract = 0;
 #define clockCyclesPerMicrosecond() (F_CPU / 1000000L)
 FILE * uart_str;
 int main(void)
@@ -41,42 +48,52 @@ int main(void)
 	cli();
 	USART_Init(MY_UBRR);
 	uart_str = fdevopen(uart_putchar, NULL);
-	setup_timer2();
-	Enable_timer2_overflow_interrupt();
+	setup_timer0();
+	Enable_timer0_overflow_interrupt();
 	
 	sei();
 
 	//printf("asd \n");
     while (1) 
     {
-	unsigned long timer=micros();
-	printf("asd \n");
-	//for (int i=0;i<1000;i++);
-	//reg=(micros()-timer);
-	while(micros()-timer<2000000)
-	{
-		//uint16_t reg=micros()-timer;
-		//print16(&reg);
-		//printf("\n");
-		};
-	
-    }
+		unsigned long timer1=micros();
+		//_delay_ms(20);
+		_delay_us(100);
+		uint16_t killer=micros()-timer1;
+		print16(&killer);
+		printf("\n");
+	}
 }
-ISR(TIMER2_OVF_vect)//10 microsecconed timer interrupt
+ISR(TIMER0_OVF_vect)//10 microsecconed timer interrupt
 {
-	++timer2_overflow_count;
+	unsigned long m = timer0_millis;
+	unsigned char f = timer0_fract;
+
+	m += MILLIS_INC;
+	f += FRACT_INC;
+	if (f >= FRACT_MAX) {
+		f -= FRACT_MAX;
+		m += 1;
+	}
+
+
+	timer0_fract = f;
+	timer0_millis = m;
+	timer0_overflow_count++;
 }
-void setup_timer2(void)
+void setup_timer0(void)
 {
-	sbi (TCCR2B, CS20);//only this 8
-	sbi (TCCR2B, CS21);
+	sbi (TCCR0B, CS00);//only this 8
+	sbi (TCCR0B, CS01);
+	//sbi (TCCR2B,WGM02);
+	//sbi (TCCR2B,WGM22);
 	//sbi (TCCR2B, CS22);
 	//sbi (TCCR3B, CS31);//only this 256
 	//sbi (TCCR0B, WGM02);//OCR4A compare interrupt
 }
-void Enable_timer2_overflow_interrupt()
+void Enable_timer0_overflow_interrupt()
 {
-	sbi (TIMSK2, TOIE2);
+	sbi (TIMSK0, TOIE0);
 }
 
 unsigned long micros() {
@@ -84,23 +101,34 @@ unsigned long micros() {
 	uint8_t oldSREG = SREG, t;
 	
 	cli();
-	m = timer2_overflow_count;
+	m = timer0_overflow_count;
 	t = TCNT0;
-	
 
-	#ifdef TIFR0
+	
 	if ((TIFR0 & _BV(TOV0)) && (t < 255))
 	m++;
-	#else
-	if ((TIFR0 & _BV(TOV0)) && (t < 255))
-	m++;
-	#endif
 
 	SREG = oldSREG;
-
+	
 	return ((m << 8) + t) * (64 / clockCyclesPerMicrosecond());
 }
 		
+unsigned long millis()
+{
+	unsigned long m;
+	uint8_t oldSREG = SREG;
+
+	cli();
+	m = timer0_millis;
+	SREG = oldSREG;
+
+	return m;
+}
+
+
+
+
+
 
 void USART_Init(unsigned int ubrr)
 {

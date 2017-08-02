@@ -1,10 +1,17 @@
+#define clockCyclesToMicroseconds(a) ( ((a) * 1000L) / (F_CPU / 1000L) )
+#define MICROSECONDS_PER_TIMER0_OVERFLOW (clockCyclesToMicroseconds(64 * 256))
+#define MILLIS_INC (MICROSECONDS_PER_TIMER0_OVERFLOW / 1000)
+// the fractional number of milliseconds per timer0 overflow. we shift right
+// by three to fit these numbers into a byte. (for the clock speeds we care
+// about - 8 and 16 MHz - this doesn't lose precision.)
+#define FRACT_INC ((MICROSECONDS_PER_TIMER0_OVERFLOW % 1000) >> 3)
+#define FRACT_MAX (1000 >> 3)
 //#define PRINT_RAW_DATA
-#define GYRO
-#define CALIBERATED_DATA
+//#define GYRO
+//#define CALIBERATED_DATA
 
 //#define DRV8313
 #define SIN_TABLE_PRESCALER 11
-#define clockCyclesPerMicrosecond() (F_CPU / 1000000L)
 
 int sinTableSize = 449;
 int U_step=0;
@@ -15,7 +22,7 @@ int W_step=300;
 #include "functions.h"
 #include "USART.h"
 #include "ADC.h"
-#include "TIMER.h"1
+#include "TIMER.h"
 #include "mpu6050registers.h"
 #include "MPU6050.h"
 #include <avr/io.h>
@@ -27,17 +34,19 @@ int W_step=300;
 #include <math.h>
 #include <string.h>
 #include <time.h>
-uint32_t micros(void);
 void PWM_update(void);
 void print16(uint16_t *value);
 void print16ln(uint16_t *value);
-unsigned long micros(void);
-#define _4millis 400
-uint32_t micros_return_value=0;
-volatile uint32_t _10micros=0;
-uint32_t millis_counter=0;
-uint32_t _micros=0; 
-volatile unsigned long timer0_overflow_count=0;
+/*----------------micros,millis functions---------------*/
+void setup_timer0();
+void Enable_timer0_overflow_interrupt();
+unsigned long micros();
+unsigned long millis();
+//volatile unsigned long timer2_overflow_count=0;
+volatile unsigned long timer0_overflow_count = 0;
+volatile unsigned long timer0_millis = 0;
+static unsigned char timer0_fract = 0;
+#define clockCyclesPerMicrosecond() (F_CPU / 1000000L)
 
 FILE * uart_str;
 typedef int bool; 
@@ -355,82 +364,82 @@ bool direction;
 int incr=-1;//increment variable
 //sizeof(pwmSin)/sizeof(int); // Find lookup table size
 uint8_t phase = 60;//sinTableSize / 3;         // Find phase shift and initial A, B C phase values
-
 uint16_t pwm_delay=0;
-int main(void)
 
+int main(void)
 {	
-	
+	cli();
 	init_gpio();
-	#ifdef GYRO
+		#ifdef GYRO
 		i2c_init();
-	#endif
+		#endif
 	USART_Init(MY_UBRR);
 	uart_str = fdevopen(uart_putchar, NULL);
-	//setup_timer2();
-	
-	setup_timer4();//pwm
+		
 	setup_timer0();
 	Enable_timer0_overflow_interrupt();//micros
+	
+	setup_timer4();//pwm
+	
 	setup_timer5();
 	Enable_timer5_compare_interrupt();//motor
-	//Enable_timer2_overflow_interrupt();
-	//OCR3A=63;//159;//interrupt every 10us
+
 	OCR5A=4000;
 	
-	//Counter top value. Freq = 16 MHz/prescaler/(OCR0A + 1)
-	//ADC_Init();
-	//setup_timer0();
-	//Enable_timer0_compare_interrupt();
-	//init_gpio();
 	
-	//sbi(ADCSRA,ADSC);
+	//sbi(ADCSRA,ADSC);//start ADC conversion
 	
 	/*----------MPU6050 twi init---------*/
 	#ifdef GYRO
-	int16_t gyro_x;
-	int16_t gyro_y;
-	int16_t gyro_z;
-	int16_t accel_x;
-	int16_t accel_y;
-	int16_t accel_z;
-	float angle_pitch=0;
-	float angle_roll=0;
-	float acc_total_vector=0;
-	float angle_pitch_acc=0;
-	float angle_roll_acc=0;
-	bool set_gyro_angles=false;
-	#ifdef CALIBERATED_DATA
-		int32_t gyroX_calib=0;
-		int32_t gyroY_calib=0;
-		int32_t gyroZ_calib=0;
-		int32_t accelX_calib=0;
-		int32_t accelY_calib=0;
-		int32_t accelZ_calib=0;
-		mpu6050_calibrate_gyro(&gyroX_calib,&gyroY_calib,&gyroZ_calib);
-		//mpu6050_calibrate_accel(&accelX_calib,&accelY_calib,&accelZ_calib);
-	#endif
-	mpu6050_writeByte(MPU6050_RA_SMPLRT_DIV,7);
-	mpu6050_writeByte(MPU6050_RA_CONFIG,0x00);
-	mpu6050_writeByte(MPU6050_RA_GYRO_CONFIG,0x08);//gyro sensitivity set to 500 o/s
-	mpu6050_writeByte(MPU6050_RA_ACCEL_CONFIG,0x10);//accel sensitivity -/+ 8g
-	mpu6050_writeByte(MPU6050_RA_PWR_MGMT_1,0x01);
-	uint32_t timer1=micros();
+		int16_t gyro_x;
+		int16_t gyro_y;
+		int16_t gyro_z;
+		int16_t accel_x;
+		int16_t accel_y;
+		int16_t accel_z;
+		float angle_pitch=0;
+		float angle_roll=0;
+		float acc_total_vector=0;
+		float angle_pitch_acc=0;
+		float angle_roll_acc=0;
+		bool set_gyro_angles=false;
+			#ifdef CALIBERATED_DATA
+				int32_t gyroX_calib=0;
+				int32_t gyroY_calib=0;
+				int32_t gyroZ_calib=0;
+				int32_t accelX_calib=0;
+				int32_t accelY_calib=0;
+				int32_t accelZ_calib=0;
+				mpu6050_calibrate_gyro(&gyroX_calib,&gyroY_calib,&gyroZ_calib);
+				//mpu6050_calibrate_accel(&accelX_calib,&accelY_calib,&accelZ_calib);
+			#endif
+		mpu6050_writeByte(MPU6050_RA_SMPLRT_DIV,7);
+		mpu6050_writeByte(MPU6050_RA_CONFIG,0x00);
+		mpu6050_writeByte(MPU6050_RA_GYRO_CONFIG,0x08);//gyro sensitivity set to 500 o/s
+		mpu6050_writeByte(MPU6050_RA_ACCEL_CONFIG,0x10);//accel sensitivity -/+ 8g
+		mpu6050_writeByte(MPU6050_RA_PWR_MGMT_1,0x01);
 	#endif
 	/*-----------------end mpu definition -----------------*/
 	sei();
     while (1) 
     {
-		//uint32_t timer = micros();
-		//USART_Transmit(0xA3);
-		//while(micros()-timer<1000000)
-		//{
-		//	
-		//	};
+		
+		unsigned long timer1=micros();
+		//_delay_ms(20);
+		_delay_us(100);
+		uint16_t killer=micros()-timer1-276;
+		print16(&killer);
+		printf("\n");
+		
+		
+		
+		
+		
+		
+		
+		
 		#ifdef GYRO
     		mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);//15us to do
-    		double dt = (double)((micros() - timer1));
-			timer1=micros();
 		#endif
 		#ifdef GYRO
 			#ifdef CALIBERATED_DATA
@@ -475,36 +484,45 @@ int main(void)
 			/*--------end------*/			
 		#else
 			//#ifdef GYRO
-				//Accelerometer angle calculations
-				double gyroXrate = gyro_x / 65.5; // Convert to deg/s
-				double gyroYrate = gyro_y / 65.5; // Convert to deg/s
-				angle_pitch += gyroXrate*dt/1000000; //Calculate the traveled pitch angle and add this to the angle_pitch variable
-				angle_roll += gyroYrate*dt/1000000;  //Calculate the traveled roll angle and add this to the angle_roll variable
+				//double dt = (double)((micros() - timer1));
+				//timer1=micros();
+				
+				//double gyroXrate = gyro_x / 65.5/250; // Convert to deg/s
+				//double gyroYrate = gyro_x / 65.5/250; // Convert to deg/s
+				
+				/*angle_pitch += gyro_x*0.0000611;//*dt/1000000; //Calculate the traveled pitch angle and add this to the angle_pitch variable
+				angle_roll += gyro_y*0.0000611;//*dt/1000000;  //Calculate the traveled roll angle and add this to the angle_roll variable
 				
 				//0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
-				//angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
-				//angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the pitch angle to the roll angel
+				angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
+				angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the pitch angle to the roll angel
+				*/
+				///double temporar_accel_x=accel_x/100;
+				///double temporar_accel_y=accel_y/100;
+				///double temporar_accel_z=accel_z/100;
+				///
+				///acc_total_vector = sqrt((temporar_accel_x*temporar_accel_x)+(temporar_accel_y*temporar_accel_y)+(temporar_accel_z*temporar_accel_z));  //Calculate the total accelerometer vector
+				/////57.296 = 1 / (3.142 / 180) The Arduino asin function is in radians
+				///acc_total_vector*=100;
+				///angle_pitch_acc = asin((float)accel_y/acc_total_vector)* 57.296;       //Calculate the pitch angle
+				///angle_roll_acc = asin((float)accel_x/acc_total_vector)* -57.296;       //Calculate the roll angle
 				
-				double temporar_accel_x=accel_x/100;
-				double temporar_accel_y=accel_y/100;
-				double temporar_accel_z=accel_z/100;
-				acc_total_vector = sqrt((temporar_accel_x*temporar_accel_x)+(temporar_accel_y*temporar_accel_y)+(temporar_accel_z*temporar_accel_z));  //Calculate the total accelerometer vector
-				//57.296 = 1 / (3.142 / 180) The Arduino asin function is in radians
-				acc_total_vector*=100;
-				angle_pitch_acc = asin((float)accel_y/acc_total_vector)* 57.296;       //Calculate the pitch angle
-				angle_roll_acc = asin((float)accel_x/acc_total_vector)* -57.296;       //Calculate the roll angle
-				uint16_t reg=angle_roll_acc;
+				/*uint16_t reg=angle_pitch;
 				printf(" ");
-				printf("accelvector= ");
+				printf("gyrox_angle= ");
 				print16(&reg);
 				reg=angle_roll;
 				printf(" ");
-				printf("gyro_angle= ");
+				printf("gyroy_angle= ");
 				print16(&reg);
-				reg=angle_roll_acc;
-				printf(" ");
-				printf("accel_angle= ");
-				print16ln(&reg);				
+				*/
+				
+				//reg=angle_roll_acc;
+				//printf(" ");
+				//printf("accel_angle= ");
+				//print16ln(&reg);	
+				
+							
 				#ifdef DRV8313
 					double final_angle=angle_roll*0.96+angle_roll_acc*0.04;
 					uint16_t reg_print=final_angle;
@@ -555,13 +573,44 @@ int main(void)
 			
 			#endif //PRINT_RAW_DATA			
 		#endif //GYRO
+		//while(micros()-timer1<4000);
+		//timer1=micros();
+		
 	}
 	return 0;
 }
 ISR(TIMER0_OVF_vect)//10 microsecconed timer interrupt
 {
-	++timer0_overflow_count;
+	unsigned long m = timer0_millis;
+	unsigned char f = timer0_fract;
+
+	m += MILLIS_INC;
+	f += FRACT_INC;
+	if (f >= FRACT_MAX) {
+		f -= FRACT_MAX;
+		m += 1;
+	}
+
+
+	timer0_fract = f;
+	timer0_millis = m;
+	timer0_overflow_count++;
 }
+void setup_timer0(void)
+{
+	sbi (TCCR0B, CS00);//only this 8
+	sbi (TCCR0B, CS01);
+	//sbi (TCCR2B,WGM02);
+	//sbi (TCCR2B,WGM22);
+	//sbi (TCCR2B, CS22);
+	//sbi (TCCR3B, CS31);//only this 256
+	//sbi (TCCR0B, WGM02);//OCR4A compare interrupt
+}
+void Enable_timer0_overflow_interrupt()
+{
+	sbi (TIMSK0, TOIE0);
+}
+
 unsigned long micros() {
 	unsigned long m;
 	uint8_t oldSREG = SREG, t;
@@ -569,26 +618,32 @@ unsigned long micros() {
 	cli();
 	m = timer0_overflow_count;
 	t = TCNT0;
-	
 
-	#ifdef TIFR0
+	
 	if ((TIFR0 & _BV(TOV0)) && (t < 255))
 	m++;
-	#else
-	if ((TIFR0 & _BV(TOV0)) && (t < 255))
-	m++;
-	#endif
 
 	SREG = oldSREG;
-
+	
 	return ((m << 8) + t) * (64 / clockCyclesPerMicrosecond());
 }
-ISR(TIMER5_COMPA_vect)//10 microsecconed timer interrupt
+
+unsigned long millis()
+{
+	unsigned long m;
+	uint8_t oldSREG = SREG;
+
+	cli();
+	m = timer0_millis;
+	SREG = oldSREG;
+
+	return m;
+}
+ISR(TIMER5_COMPA_vect)//motor update interrupt routine
 {
 	PWM_update();
-	//PWM_update();
 }
-void PWM_update()
+void PWM_update()//motor pwm update 
 {
 	U_PWM=pwmSin[U_step];
 	V_PWM=pwmSin[V_step];
