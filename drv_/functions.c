@@ -32,43 +32,48 @@ void init_gpio()
 }
 void getSinTable(uint16_t sinTableSize,uint8_t *pwmSin,uint16_t sineScale)
 {
-	for (int i = 0; i < sinTableSize; i++)
-	{
-		#ifdef SAPWM
-			double x = i * (2 * pi) / sinTableSize;
-			if (x>0 && x<pi/3)
-			{
-				pwmSin[i]=(1.7*sin(x) * sineScale) + sineScale;
-				uint16_t reg=pwmSin[i];
-				printf("x=");
-				uint16_t val=x;
-				print16(x);
-				printf("  ");
-				print16(&reg);
-				printf("\n");
-			}
-			else if(x>pi/3 && x<pi/2)
-			{
-				pwmSin[i]=(sin(x+pi/3) * sineScale) + sineScale;
-				uint16_t reg=pwmSin[i];
-				printf("x=");
-				uint16_t val=x;
-				print16(x);
-				printf("  ");
-				print16(&reg);
-				printf("\n");
-			}
-		#else
+	
+	#ifdef SVPWM
+		double wave1;
+		double wave2;
+		double wave3;
+		double radWave[SINE_TABLE_SZ];
+		for (int i = 0; i < sinTableSize; i++)
+		{
+			wave1=255*sin(i);
+			wave2=255*sin(i-phase);
+			wave3=255*sin(i+phase);
+			radWave[i]=(min(wave1,wave2,wave3)+max(wave1,wave2,wave3))/2;
+			pwmSin[i]=(radWave[i]/2)+128;
+			uint16_t reg=wave1;
+			print16(&reg);
+			printf("\n");		
+		}
+	
+		
+	#else
+		for (int i = 0; i < sinTableSize; i++)
+		{
 			double x = i * (2 * pi) / sinTableSize;
 			pwmSin[i] = (sin(x) * sineScale) + sineScale;
 			uint16_t reg=pwmSin[i];
 			print16(&reg);
 			printf("\n");
-		#endif
-	}
+		}
+	#endif
 }
 
-
-
+double min (double a,double b, double c)
+{
+	if (a<b && a<c) return a;
+	if (b<a && b<c) return b;
+	if (c<a && c<b) return c;
+}
+double max (double a,double b, double c)
+{
+	if (a>b && a>c) return a;
+	if (b>a && b>c) return b;
+	if (c>a && c>b) return c;
+}
 
 
