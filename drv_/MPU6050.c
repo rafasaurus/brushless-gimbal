@@ -8,7 +8,7 @@
 
 void mpu6050_calibrate_gyro(int32_t *x,int32_t *y, int32_t *z)
 {
-	printf("Calibrating Gyro...\n");
+	printf("\n Calibrating Gyro...\n");
 	for (int i=0;i<calibration_counter;i++)
 	{
 		(*x)+=mpu6050_read_gyroX();
@@ -30,8 +30,7 @@ void mpu6050_calibrate_gyro(int32_t *x,int32_t *y, int32_t *z)
 		(*z)=abs(*z)/calibration_counter;
 		else
 		(*z)=(*z)/calibration_counter;
-	/*
-	//------------do not delete----------
+		//------------do not delete----------
 	printf("gyro offsets are");
 	print16(x);
 	printf("  ");
@@ -40,7 +39,7 @@ void mpu6050_calibrate_gyro(int32_t *x,int32_t *y, int32_t *z)
 	print16ln(z);
 	_delay_ms(1000);
 	//-----------------------------------
-	*/			
+				
 	
 }
 

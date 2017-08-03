@@ -39,8 +39,8 @@ void mpu6050_getRawData(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int1
 	#define grX (gyro_x-=gyroX_calib)
 	#define grY (gyro_y-=gyroY_calib)
 	#define grZ (gyro_z-=gyroZ_calib)
-	#define calibration_counter 20
-	#define caliberation_wait_delay 0//in ms
+	#define calibration_counter 200
+	#define caliberation_wait_delay 2//in ms
 	void mpu6050_calibrate_gyro(int32_t *x,int32_t *y, int32_t *z);
 	void mpu6050_calibrate_accel(int32_t *x,int32_t *y, int32_t *z);
 
