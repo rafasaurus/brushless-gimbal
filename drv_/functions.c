@@ -34,11 +34,37 @@ void getSinTable(uint16_t sinTableSize,uint8_t *pwmSin,uint16_t sineScale)
 {
 	for (int i = 0; i < sinTableSize; i++)
 	{
-		double x = i * (2 * pi) / sinTableSize;
-		pwmSin[i] = (sin(x) * sineScale) + sineScale;
-		uint16_t reg=pwmSin[i];
-		print16(&reg);
-		printf("\n");
+		#ifdef SAPWM
+			double x = i * (2 * pi) / sinTableSize;
+			if (x>0 && x<pi/3)
+			{
+				pwmSin[i]=(1.7*sin(x) * sineScale) + sineScale;
+				uint16_t reg=pwmSin[i];
+				printf("x=");
+				uint16_t val=x;
+				print16(x);
+				printf("  ");
+				print16(&reg);
+				printf("\n");
+			}
+			else if(x>pi/3 && x<pi/2)
+			{
+				pwmSin[i]=(sin(x+pi/3) * sineScale) + sineScale;
+				uint16_t reg=pwmSin[i];
+				printf("x=");
+				uint16_t val=x;
+				print16(x);
+				printf("  ");
+				print16(&reg);
+				printf("\n");
+			}
+		#else
+			double x = i * (2 * pi) / sinTableSize;
+			pwmSin[i] = (sin(x) * sineScale) + sineScale;
+			uint16_t reg=pwmSin[i];
+			print16(&reg);
+			printf("\n");
+		#endif
 	}
 }
 
