@@ -484,9 +484,10 @@ int main(void)
 			
 			double dt = (double)((micros() - timer1));
 			timer1=micros();
-			double hz=1000000/dt;
-			double gyroXrate = gyro_x  / 65.5 / hz; // Convert to deg/s
-			double gyroYrate = gyro_y  / 65.5 / hz; // Convert to deg/s
+			//double hz=1000000/dt;
+			double pop=1/(65.5*1000000/dt);
+			double gyroXrate = gyro_x*pop;// / 65.5 / hz; // Convert to deg/s
+			double gyroYrate = gyro_y*pop;// / 65.5 / hz; // Convert to deg/s
 			//double tpel=gyroYrate;
 			////print16ln(&tpel);
 			//if(loop_bool)
@@ -505,9 +506,11 @@ int main(void)
 			}
 			
 			
+					
 					//0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
-			angle_pitch += angle_roll * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the roll angle to the pitch angel
-			angle_roll -= angle_pitch * sin(gyro_z * 0.000001066);               //If the IMU has yawed transfer the pitch angle to the roll angel
+			pop*=(3.142/180);	
+			angle_pitch += angle_roll * sin(gyro_z * pop);               //If the IMU has yawed transfer the roll angle to the pitch angel
+			angle_roll -= angle_pitch * sin(gyro_z * pop);               //If the IMU has yawed transfer the pitch angle to the roll angel
 			
 			double temporar_accel_x=accel_x/100;
 			double temporar_accel_y=accel_y/100;
@@ -521,20 +524,28 @@ int main(void)
 			
 			
 			
-			uint16_t reg=angle_roll_acc;
+			uint16_t reg=angle_pitch;
 			printf(" ");
-			printf("accelY= ");
+			printf("gyroX_angle= ");
 			print16(&reg);
 			reg=angle_roll;
 			printf(" ");
-			printf("gyroy_angle= ");
+			printf("gyroY_angle= ");
 			print16(&reg);
 			
-			double final_angle=angle_roll*0.996+angle_roll_acc*0.004;
+			double xff=angle_roll_acc;
+			double final_angle=(angle_roll*0.996)+(xff*0.004);
 			reg=final_angle;
-			printf(" ");
+			printf(" ");	
 			printf("final_angleY= ");
 			print16(&reg);
+			
+			//xff=angle_pitch_acc;			
+			//final_angle=(angle_pitch*0.996)+(xff*0.004);
+			//reg=final_angle;
+			//printf(" ");
+			//printf("final_angleX= ");
+			//print16(&reg);
 			
 			//reg=micros()-timer1;
 			//reg=dt;
