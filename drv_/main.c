@@ -22,8 +22,9 @@
 #include <string.h>
 #include <time.h>
 void PWM_update(void);
-void print16(uint16_t *value);
-void print16ln(uint16_t *value);
+void print16(int16_t *value);
+void print16ln(int16_t *value);
+
 /*----------------micros,millis functions---------------*/
 
 unsigned long micros();
@@ -52,8 +53,6 @@ uint8_t flag=0;
 
 bool direction;
 int incr=-1;//increment variable
-//sizeof(pwmSin)/sizeof(int); // Find lookup table size
-uint8_t phase = 60;//SINE_TABLE_SZ / 3;         // Find phase shift and initial A, B C phase values
 uint16_t pwm_delay=2000;
 bool loop_bool=true;
 
@@ -71,22 +70,14 @@ int main(void)
 			i2c_init();
 		#endif
 	USART_Init(MY_UBRR);
-	uart_str = fdevopen(uart_putchar, NULL);
-		
+	uart_str = fdevopen(uart_putchar, NULL);	
 	setup_timer0();
 	Enable_timer0_overflow_interrupt();//micros
-	
 	setup_timer4();//pwm
-	
 	setup_timer5();
 	Enable_timer5_compare_interrupt();//motor
-	getSinTable(SINE_TABLE_SZ,pwmSin,sinScale);
-
 	OCR5A=4000;
 	unsigned long timer1;
-	
-	//sbi(ADCSRA,ADSC);//start ADC conversion
-	
 	/*----------MPU6050 twi init---------*/
 	#ifdef GYRO
 		int16_t gyro_x;
@@ -126,7 +117,14 @@ int main(void)
 		mpu6050_writeByte(MPU6050_RA_ACCEL_CONFIG,0x10);//accel sensitivity -/+ 8g
 		mpu6050_writeByte(MPU6050_RA_PWR_MGMT_1,0x01);
 	#endif
-	/*-----------------end mpu definition -----------------*/
+	/*----------------------end mpu definition ----------------------*/
+	
+	/*----------------------------motor init-------------------------*/
+	getSinTable(SINE_TABLE_SZ,pwmSin,sinScale);
+	printf("U_step_predefine="); print16ln(&U_step);
+	printf("  V_step_predefine="); print16ln(&V_step);
+	printf("  W_step_predefine="); print16ln(&W_step);   
+	USART_Transmit(0xfe); 
 	sei();
     while (1) /*---------------------------while(1)---------------------------------*/
     {
@@ -197,10 +195,7 @@ int main(void)
 			else
 			{
 				loop_bool=false;
-			}
-			
-			
-					
+			}					
 					//0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
 			pop*=(3.142/180);	
 			angle_pitch += angle_roll * sin(gyro_z * pop);               //If the IMU has yawed transfer the roll angle to the pitch angel
@@ -215,9 +210,7 @@ int main(void)
 			acc_total_vector*=100;
 		    angle_pitch_acc = asin((double)accel_y/acc_total_vector)* 57.296;       //Calculate the pitch angle
 			angle_roll_acc = asin((double)accel_x/acc_total_vector)* -57.296;       //Calculate the roll angle
-			
-			
-			
+					
 			uint16_t reg=angle_pitch;
 			printf(" ");
 			printf("gyroX_angle= ");
@@ -236,8 +229,8 @@ int main(void)
 						
 			#ifdef DRV8313
 				uint16_t reg_print=final_angleY;
-				uint16_t learing_rate;
 				int absoulute_y=abs(final_angleY);
+				uint16_t learing_rate=200;				
 				uint16_t local_motor_delay=(32735-(absoulute_y*learing_rate));
 				if (local_motor_delay>2000)
 				{
@@ -341,18 +334,24 @@ void PWM_update()//motor pwm update
 	U_step=U_step+incr;
 	V_step=V_step+incr;
 	W_step=W_step+incr;
-	if(U_step > SINE_TABLE_SZ)  U_step = 0;
-	if(U_step < 0)  U_step = SINE_TABLE_SZ;
+	if(U_step > SINE_TABLE_SZ)  
+		U_step = 0;
+	if(U_step < 0)  
+		U_step = SINE_TABLE_SZ;
 	
-	if(V_step > SINE_TABLE_SZ)  V_step = 0;
-	if(V_step < 0)  V_step = SINE_TABLE_SZ;
+	if(V_step > SINE_TABLE_SZ)  
+		V_step = 0;
+	if(V_step < 0)  
+		V_step = SINE_TABLE_SZ;
 	
-	if(W_step > SINE_TABLE_SZ)  W_step = 0;
-	if(W_step < 0) W_step = SINE_TABLE_SZ;
+	if(W_step > SINE_TABLE_SZ)  
+		W_step = 0;
+	if(W_step < 0) 
+		W_step = SINE_TABLE_SZ;
 	//_delay_us(100);
 	OCR5A=pwm_delay;
 }
-void print16(uint16_t *value)
+void print16(int16_t *value)
 //this is pointer value, transmited value
 //must be reference type &
 {
@@ -362,7 +361,7 @@ void print16(uint16_t *value)
 	//printf("\n");
 }
 
-void print16ln(uint16_t *value)
+void print16ln(int16_t *value)
 //this is pointer value, transmited value
 //must be reference type &
 {
@@ -374,12 +373,10 @@ void print16ln(uint16_t *value)
 
 static int uart_putchar(char c, FILE *stream)
 {
-
 	if (c == '\n')
 	uart_putchar('\r', stream);
-	while ( !( UCSR0A & (1<<UDRE0)) )
-	;
-	/* Put data into buffer, sends the data */
+	while (!( UCSR0A & (1<<UDRE0)));
+
 	UDR0 = c;
 	return 0;
 }

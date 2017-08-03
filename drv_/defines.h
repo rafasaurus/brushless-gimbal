@@ -7,7 +7,7 @@
 
 #define  F_CPU 16000000UL
 //#define BAUD 74880UL
-#define BAUD 74880UL
+#define BAUD 57600
 #define MY_UBRR (F_CPU/16/BAUD-1)
 
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
@@ -71,8 +71,9 @@
 // about - 8 and 16 MHz - this doesn't lose precision.)
 #define pi (3.14159265359)
 
-#define SINE_TABLE_SZ 479
-#define sinScale 63
+#define SINE_TABLE_SZ 720
+#define sinScale 127//this value is mid range value
+#define phase (SINE_TABLE_SZ/3)
 #define U_step_predefine 0
-#define V_step_predefine 50
-#define W_step_predefine 300
+#define V_step_predefine (U_step_predefine+phase)
+#define W_step_predefine (V_step_predefine+phase)
