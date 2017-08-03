@@ -71,7 +71,7 @@
 // about - 8 and 16 MHz - this doesn't lose precision.)
 #define pi (3.14159265359)
 
-#define SINE_TABLE_SZ 360
+#define SINE_TABLE_SZ 720
 #define sinScale 127//this value is mid range value
 #define phase (SINE_TABLE_SZ/3)
 #define U_step_predefine 0

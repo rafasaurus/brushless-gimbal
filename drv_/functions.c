@@ -33,30 +33,31 @@ void init_gpio()
 void getSinTable(uint16_t sinTableSize,uint8_t *pwmSin,uint16_t sineScale)
 {
 	
-	#ifdef SVPWM
-		double wave1;
-		double wave2;
-		double wave3;
-		double radWave[SINE_TABLE_SZ];
-		for (int i = 0; i < sinTableSize; i++)
-		{
-			wave1=255*sin(i);
-			wave2=255*sin(i-phase);
-			wave3=255*sin(i+phase);
-			radWave[i]=(min(wave1,wave2,wave3)+max(wave1,wave2,wave3))/2;
-			pwmSin[i]=(radWave[i]/2)+128;
-			uint16_t reg=wave1;
-			print16(&reg);
-			printf("\n");		
-		}
-	
-		
+	#ifdef SVPWM	
+			double wave1;
+			double wave2;
+			double wave3;
+			double sub1;
+			double radWave;
+			for (int i = 0; i < SINE_TABLE_SZ; i++)
+			{
+				double x = i * (2 * 3.14) / SINE_TABLE_SZ;
+				wave1 = 255 * sin(x)+255;
+				wave2 = 255 * sin(x-phase) + 255;
+				wave3 = 255 * sin(x+phase) + 255;
+				radWave = (min(wave1, wave2, wave3) + max(wave1, wave2, wave3)) / 2;
+				sub1 = radWave - wave1;
+				pwmSin[i]=(int)(-1*sub1)/2+128;
+				uint16_t reg=pwmSin[i];
+				print16(&reg);
+				printf("\n");
+			}		
 	#else
 		for (int i = 0; i < sinTableSize; i++)
 		{
 			double x = i * (2 * pi) / sinTableSize;
 			pwmSin[i] = (sin(x) * sineScale) + sineScale;
-			uint16_t reg=pwmSin[i];
+			uint16_t reg=pwmSin[i];	
 			print16(&reg);
 			printf("\n");
 		}

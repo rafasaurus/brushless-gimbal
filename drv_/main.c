@@ -249,7 +249,7 @@ int main(void)
 					printf("\n");	
 				}
 				else 
-					if (absoulute_y>0.8)
+					if (final_angleY>0.8)
 					{
 						cli();
 						incr=1;
