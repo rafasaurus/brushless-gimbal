@@ -11,5 +11,5 @@
 #include <util/delay.h>
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
-
 void init_gpio();
+void getSinTable(uint16_t ,uint8_t *,uint16_t );

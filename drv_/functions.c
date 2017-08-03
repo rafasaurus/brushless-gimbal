@@ -30,7 +30,17 @@ void init_gpio()
 	sbi(DDRH,5);//digital 8 OC4C
 	//sbi(DDRH,6);//digital 9
 }
-
+void getSinTable(uint16_t sinTableSize,uint8_t *pwmSin,uint16_t sineScale)
+{
+	for (int i = 0; i < sinTableSize; i++)
+	{
+		double x = i * (2 * pi) / sinTableSize;
+		pwmSin[i] = (sin(x) * sineScale) + sineScale;
+		uint16_t reg=pwmSin[i];
+		print16(&reg);
+		printf("\n");
+	}
+}
 
 
 

@@ -17,7 +17,7 @@
 
 #define MPU6050_WRITE (0x68<<1) 
 #define MPU6050_READ ((0x68<<1)|1)
-#define SINE_TABLE_SZ 255
+
 
 #define HS_U OCR2A //pin11
 #define HS_V OCR0A //pin6
@@ -62,3 +62,17 @@
 //
 //#define LS_W_HIGH (PORTD|=(1<<2))
 //#define LS_W_LOW (PORTD&=~(1<<2))
+
+#define clockCyclesToMicroseconds(a) ( ((a) * 1000L) / (F_CPU / 1000L) )
+#define MICROSECONDS_PER_TIMER0_OVERFLOW (clockCyclesToMicroseconds(64 * 256))
+#define MILLIS_INC (MICROSECONDS_PER_TIMER0_OVERFLOW / 1000)
+// the fractional number of milliseconds per timer0 overflow. we shift right
+// by three to fit these numbers into a byte. (for the clock speeds we care
+// about - 8 and 16 MHz - this doesn't lose precision.)
+#define pi (3.14159265359)
+
+#define SINE_TABLE_SZ 479
+#define sinScale 63
+#define U_step_predefine 0
+#define V_step_predefine 50
+#define W_step_predefine 300
