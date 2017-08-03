@@ -10,10 +10,10 @@
 #define GYRO
 #define CALIBERATED_DATA
 
-//#define DRV8313
-#define SIN_TABLE_PRESCALER 11
+#define DRV8313
+#define SIN_TABLE_PRESCALER 9
 
-int sinTableSize = 449;
+int sinTableSize = 479;
 int U_step=0;
 int V_step=150;
 int W_step=300;
@@ -534,55 +534,32 @@ int main(void)
 			print16(&reg);
 			
 			double xff=angle_roll_acc;
-			double final_angle=(angle_roll*0.996)+(xff*0.004);
-			reg=final_angle;
+			double final_angleY=(angle_roll*0.996)+(xff*0.004);
+			reg=final_angleY;
 			printf(" ");	
 			printf("final_angleY= ");
 			print16(&reg);
-			
-			//xff=angle_pitch_acc;			
-			//final_angle=(angle_pitch*0.996)+(xff*0.004);
-			//reg=final_angle;
-			//printf(" ");
-			//printf("final_angleX= ");
-			//print16(&reg);
-			
-			//reg=micros()-timer1;
-			//reg=dt;
-			//printf(" ");
-			//printf("hz= ");
-			//print16(&reg);
-			printf("\n");
-			
-			//reg=angle_roll_acc;
-			//printf(" ");
-			//printf("accel_angle= ");
-			//print16ln(&reg);	
-			
 						
 			#ifdef DRV8313
-				double final_angle=angle_roll*0.96+angle_roll_acc*0.04;
-				uint16_t reg_print=final_angle;
-				printf(" ");
-				printf("angle_y= ");
-				print16(&reg_print);
-				printf(" ");
+				uint16_t reg_print=final_angleY;
 				uint16_t learing_rate;
-				int absoulute_y=abs(final_angle);
+				int absoulute_y=abs(final_angleY);
 				uint16_t local_motor_delay=(32735-(absoulute_y*learing_rate));
 				if (local_motor_delay>2000)
 				{
 					pwm_delay=local_motor_delay;
 				}
 				uint16_t reg_ = local_motor_delay;
+				printf("  ");
 				printf("ocr= ");
 				print16(&reg_);
-				if (reg==0)
+				if ((int)final_angleY==0)
 				{
 					incr=0;
 					printf("\n");	
 				}
-				else if (reg<0)
+				else 
+					if ((int)final_angleY>0)
 					{
 						cli();
 						incr=1;
