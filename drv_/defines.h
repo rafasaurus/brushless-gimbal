@@ -70,6 +70,7 @@
 // by three to fit these numbers into a byte. (for the clock speeds we care
 // about - 8 and 16 MHz - this doesn't lose precision.)
 #define pi (3.14159265359)
+#define RAD_TO_DEG (pi/180)
 
 //#define GENERATE_SIN
 #ifdef GENERATE_SIN
@@ -89,3 +90,4 @@
 	#define V_step_predefine (U_step_predefine+phase)
 	#define W_step_predefine (V_step_predefine+phase)
 #endif
+//#define COMPANGLE

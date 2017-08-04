@@ -177,7 +177,12 @@ int main(void)
 		printf("  V_step_predefine="); print16ln(&V_step);
 		printf("  W_step_predefine="); print16ln(&W_step);  
 	#endif 
-	USART_Transmit(0xfe); 
+	#ifdef COMPANGLE
+		double gyroXangle;
+		double gyroYangle;
+		double compAngleX;
+		double compAngleY;
+	#endif  
 	sei();
     while (1) /*---------------------------while(1)---------------------------------*/
     {
@@ -263,6 +268,20 @@ int main(void)
 			acc_total_vector*=100;
 		    angle_pitch_acc = asin((double)accel_y/acc_total_vector)* 57.296;       //Calculate the pitch angle
 			angle_roll_acc = asin((double)accel_x/acc_total_vector)* -57.296;       //Calculate the roll angle
+				
+			#ifdef COMPANGLE//comp noise reduction algorithm 
+				double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;
+				double pitch = atan(-accel_x / sqrt(accel_y * accel_y + accel_z * accel_z)) * RAD_TO_DEG;
+				compAngleX=roll;
+				double gyroXrate_ = gyro_x / 65.5; // Convert to deg/s
+				double gyroYrate_ = gyro_y / 65.5; // Convert to deg/s	
+				gyroXangle += gyroXrate_ * dt; // Calculate gyro angle without any filter
+				gyroYangle += gyroYrate_ * dt;
+				compAngleX = 0.93 * (compAngleX + gyroXrate * dt) + 0.07 * roll; // Calculate the angle using a Complimentary filter
+				compAngleY = 0.93 * (compAngleY + gyroYrate * dt) + 0.07 * pitch;
+			#endif
+			
+			
 					
 			uint16_t reg=angle_pitch;
 			printf(" ");
