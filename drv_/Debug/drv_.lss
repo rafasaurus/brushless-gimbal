@@ -15,19 +15,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   5 .debug_aranges 000001d0  00000000  00000000  000022c0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   000028f2  00000000  00000000  00002490  2**0
+  6 .debug_info   000028f9  00000000  00000000  00002490  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 000013d2  00000000  00000000  00004d82  2**0
+  7 .debug_abbrev 000013c3  00000000  00000000  00004d89  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000012c1  00000000  00000000  00006154  2**0
+  8 .debug_line   000012c1  00000000  00000000  0000614c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000005d4  00000000  00000000  00007418  2**2
+  9 .debug_frame  000005d4  00000000  00000000  00007410  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000b7e  00000000  00000000  000079ec  2**0
+ 10 .debug_str    00000b7e  00000000  00000000  000079e4  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00001adb  00000000  00000000  0000856a  2**0
+ 11 .debug_loc    00001af3  00000000  00000000  00008562  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000170  00000000  00000000  0000a045  2**0
+ 12 .debug_ranges 00000170  00000000  00000000  0000a055  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -703,11 +703,11 @@ int main(void)
      4b6:	38 ab       	std	Y+48, r19	; 0x30
 		mpu6050_writeByte(MPU6050_RA_CONFIG,0x00);
      4b8:	2f a7       	std	Y+47, r18	; 0x2f
-     4ba:	4d 89       	ldd	r20, Y+21	; 0x15
+     4ba:	8d 89       	ldd	r24, Y+21	; 0x15
 		mpu6050_writeByte(MPU6050_RA_GYRO_CONFIG,0x08);//gyro sensitivity set to 500 o/s
-     4bc:	5e 89       	ldd	r21, Y+22	; 0x16
-     4be:	5a ab       	std	Y+50, r21	; 0x32
-     4c0:	49 ab       	std	Y+49, r20	; 0x31
+     4bc:	9e 89       	ldd	r25, Y+22	; 0x16
+     4be:	9a ab       	std	Y+50, r25	; 0x32
+     4c0:	89 ab       	std	Y+49, r24	; 0x31
      4c2:	67 e0       	ldi	r22, 0x07	; 7
 		mpu6050_writeByte(MPU6050_RA_ACCEL_CONFIG,0x10);//accel sensitivity -/+ 8g
      4c4:	89 e1       	ldi	r24, 0x19	; 25
@@ -761,478 +761,478 @@ int main(void)
      4f0:	1c a2       	std	Y+36, r1	; 0x24
      4f2:	1d a2       	std	Y+37, r1	; 0x25
      4f4:	1e a2       	std	Y+38, r1	; 0x26
-     4f6:	ce 01       	movw	r24, r28
-     4f8:	05 96       	adiw	r24, 0x05	; 5
-     4fa:	7c 01       	movw	r14, r24
-     4fc:	8e 01       	movw	r16, r28
-     4fe:	0d 5f       	subi	r16, 0xFD	; 253
-     500:	1f 4f       	sbci	r17, 0xFF	; 255
-     502:	9e 01       	movw	r18, r28
-     504:	2f 5f       	subi	r18, 0xFF	; 255
-     506:	3f 4f       	sbci	r19, 0xFF	; 255
+     4f6:	9e 01       	movw	r18, r28
+     4f8:	2b 5f       	subi	r18, 0xFB	; 251
+     4fa:	3f 4f       	sbci	r19, 0xFF	; 255
+     4fc:	79 01       	movw	r14, r18
+     4fe:	8e 01       	movw	r16, r28
+     500:	0d 5f       	subi	r16, 0xFD	; 253
+     502:	1f 4f       	sbci	r17, 0xFF	; 255
+     504:	24 50       	subi	r18, 0x04	; 4
+     506:	31 09       	sbc	r19, r1
      508:	ae 01       	movw	r20, r28
      50a:	45 5f       	subi	r20, 0xF5	; 245
      50c:	5f 4f       	sbci	r21, 0xFF	; 255
+     50e:	be 01       	movw	r22, r28
 		#ifdef GYRO
 			#ifdef CALIBERATED_DATA
 				accX;
 				accY;
 				accZ;
 				grX;
-     50e:	be 01       	movw	r22, r28
      510:	67 5f       	subi	r22, 0xF7	; 247
      512:	7f 4f       	sbci	r23, 0xFF	; 255
-     514:	02 96       	adiw	r24, 0x02	; 2
-     516:	ac d3       	rcall	.+1880   	; 0xc70 <mpu6050_getRawData>
+     514:	ce 01       	movw	r24, r28
+     516:	07 96       	adiw	r24, 0x07	; 7
+     518:	ab d3       	rcall	.+1878   	; 0xc70 <mpu6050_getRawData>
 				grY;
-     518:	89 81       	ldd	r24, Y+1	; 0x01
-     51a:	9a 81       	ldd	r25, Y+2	; 0x02
-     51c:	82 19       	sub	r24, r2
-     51e:	93 09       	sbc	r25, r3
-     520:	9a 83       	std	Y+2, r25	; 0x02
+     51a:	89 81       	ldd	r24, Y+1	; 0x01
+     51c:	9a 81       	ldd	r25, Y+2	; 0x02
+     51e:	82 19       	sub	r24, r2
+     520:	93 09       	sbc	r25, r3
+     522:	9a 83       	std	Y+2, r25	; 0x02
 				grZ;
-     522:	89 83       	std	Y+1, r24	; 0x01
-     524:	8b 81       	ldd	r24, Y+3	; 0x03
-     526:	9c 81       	ldd	r25, Y+4	; 0x04
-     528:	2f a5       	ldd	r18, Y+47	; 0x2f
-     52a:	38 a9       	ldd	r19, Y+48	; 0x30
-     52c:	82 1b       	sub	r24, r18
-     52e:	93 0b       	sbc	r25, r19
+     524:	89 83       	std	Y+1, r24	; 0x01
+     526:	8b 81       	ldd	r24, Y+3	; 0x03
+     528:	9c 81       	ldd	r25, Y+4	; 0x04
+     52a:	2f a5       	ldd	r18, Y+47	; 0x2f
+     52c:	38 a9       	ldd	r19, Y+48	; 0x30
+     52e:	82 1b       	sub	r24, r18
+     530:	93 0b       	sbc	r25, r19
 			printf("  ");
 			printf("\n");
 			/*--------end------*/			
 		#else
 			
 			double dt = (double)((micros() - timer1));
-     530:	9c 83       	std	Y+4, r25	; 0x04
-     532:	8b 83       	std	Y+3, r24	; 0x03
-     534:	8d 81       	ldd	r24, Y+5	; 0x05
-     536:	9e 81       	ldd	r25, Y+6	; 0x06
-     538:	49 a9       	ldd	r20, Y+49	; 0x31
-     53a:	5a a9       	ldd	r21, Y+50	; 0x32
-     53c:	84 1b       	sub	r24, r20
-     53e:	95 0b       	sbc	r25, r21
+     532:	9c 83       	std	Y+4, r25	; 0x04
+     534:	8b 83       	std	Y+3, r24	; 0x03
+     536:	8d 81       	ldd	r24, Y+5	; 0x05
+     538:	9e 81       	ldd	r25, Y+6	; 0x06
+     53a:	29 a9       	ldd	r18, Y+49	; 0x31
+     53c:	3a a9       	ldd	r19, Y+50	; 0x32
+     53e:	82 1b       	sub	r24, r18
+     540:	93 0b       	sbc	r25, r19
 			timer1=micros();
-     540:	9e 83       	std	Y+6, r25	; 0x06
-     542:	8d 83       	std	Y+5, r24	; 0x05
-     544:	84 de       	rcall	.-760    	; 0x24e <micros>
-     546:	64 19       	sub	r22, r4
+     542:	9e 83       	std	Y+6, r25	; 0x06
+     544:	8d 83       	std	Y+5, r24	; 0x05
+     546:	83 de       	rcall	.-762    	; 0x24e <micros>
+     548:	64 19       	sub	r22, r4
 			//double hz=1000000/dt;
 			double pop=1/(65.5*1000000/dt);
-     548:	75 09       	sbc	r23, r5
-     54a:	86 09       	sbc	r24, r6
-     54c:	97 09       	sbc	r25, r7
-     54e:	08 d6       	rcall	.+3088   	; 0x1160 <__floatunsisf>
-     550:	6b 01       	movw	r12, r22
-     552:	7c 01       	movw	r14, r24
-     554:	7c de       	rcall	.-776    	; 0x24e <micros>
-     556:	2b 01       	movw	r4, r22
-     558:	3c 01       	movw	r6, r24
-     55a:	a7 01       	movw	r20, r14
-     55c:	96 01       	movw	r18, r12
-     55e:	68 ed       	ldi	r22, 0xD8	; 216
-     560:	7c ed       	ldi	r23, 0xDC	; 220
-     562:	89 e7       	ldi	r24, 0x79	; 121
-     564:	9c e4       	ldi	r25, 0x4C	; 76
-     566:	63 d5       	rcall	.+2758   	; 0x102e <__divsf3>
+     54a:	75 09       	sbc	r23, r5
+     54c:	86 09       	sbc	r24, r6
+     54e:	97 09       	sbc	r25, r7
+     550:	07 d6       	rcall	.+3086   	; 0x1160 <__floatunsisf>
+     552:	6b 01       	movw	r12, r22
+     554:	7c 01       	movw	r14, r24
+     556:	7b de       	rcall	.-778    	; 0x24e <micros>
+     558:	2b 01       	movw	r4, r22
+     55a:	3c 01       	movw	r6, r24
+     55c:	a7 01       	movw	r20, r14
+     55e:	96 01       	movw	r18, r12
+     560:	68 ed       	ldi	r22, 0xD8	; 216
+     562:	7c ed       	ldi	r23, 0xDC	; 220
+     564:	89 e7       	ldi	r24, 0x79	; 121
+     566:	9c e4       	ldi	r25, 0x4C	; 76
+     568:	62 d5       	rcall	.+2756   	; 0x102e <__divsf3>
 			//if(loop_bool)
 			//{
 			//	gyroYrate-=tpel;
 			//	loop_bool=false;
 			//}
 			if (!loop_bool)
-     568:	9b 01       	movw	r18, r22
-     56a:	ac 01       	movw	r20, r24
-     56c:	60 e0       	ldi	r22, 0x00	; 0
-     56e:	70 e0       	ldi	r23, 0x00	; 0
-     570:	80 e8       	ldi	r24, 0x80	; 128
+     56a:	9b 01       	movw	r18, r22
+     56c:	ac 01       	movw	r20, r24
+     56e:	60 e0       	ldi	r22, 0x00	; 0
+     570:	70 e0       	ldi	r23, 0x00	; 0
+     572:	80 e8       	ldi	r24, 0x80	; 128
 			{
 				angle_pitch += gyroXrate; //Calculate the traveled pitch angle and add this to the angle_pitch variable
-     572:	9f e3       	ldi	r25, 0x3F	; 63
-     574:	5c d5       	rcall	.+2744   	; 0x102e <__divsf3>
-     576:	6b 01       	movw	r12, r22
-     578:	7c 01       	movw	r14, r24
-     57a:	80 91 73 03 	lds	r24, 0x0373	; 0x800373 <loop_bool>
-     57e:	90 91 74 03 	lds	r25, 0x0374	; 0x800374 <loop_bool+0x1>
-     582:	89 2b       	or	r24, r25
-     584:	59 f5       	brne	.+86     	; 0x5dc <main+0x1a2>
-     586:	69 81       	ldd	r22, Y+1	; 0x01
-     588:	7a 81       	ldd	r23, Y+2	; 0x02
-     58a:	07 2e       	mov	r0, r23
-     58c:	00 0c       	add	r0, r0
-     58e:	88 0b       	sbc	r24, r24
-     590:	99 0b       	sbc	r25, r25
-     592:	e8 d5       	rcall	.+3024   	; 0x1164 <__floatsisf>
-     594:	a7 01       	movw	r20, r14
-     596:	96 01       	movw	r18, r12
-     598:	ea d6       	rcall	.+3540   	; 0x136e <__mulsf3>
-     59a:	9b 01       	movw	r18, r22
+     574:	9f e3       	ldi	r25, 0x3F	; 63
+     576:	5b d5       	rcall	.+2742   	; 0x102e <__divsf3>
+     578:	6b 01       	movw	r12, r22
+     57a:	7c 01       	movw	r14, r24
+     57c:	80 91 73 03 	lds	r24, 0x0373	; 0x800373 <loop_bool>
+     580:	90 91 74 03 	lds	r25, 0x0374	; 0x800374 <loop_bool+0x1>
+     584:	89 2b       	or	r24, r25
+     586:	59 f5       	brne	.+86     	; 0x5de <main+0x1a4>
+     588:	69 81       	ldd	r22, Y+1	; 0x01
+     58a:	7a 81       	ldd	r23, Y+2	; 0x02
+     58c:	07 2e       	mov	r0, r23
+     58e:	00 0c       	add	r0, r0
+     590:	88 0b       	sbc	r24, r24
+     592:	99 0b       	sbc	r25, r25
+     594:	e7 d5       	rcall	.+3022   	; 0x1164 <__floatsisf>
+     596:	a7 01       	movw	r20, r14
+     598:	96 01       	movw	r18, r12
+     59a:	e9 d6       	rcall	.+3538   	; 0x136e <__mulsf3>
+     59c:	9b 01       	movw	r18, r22
 				angle_roll += gyroYrate;  //Calculate the traveled roll angle and add this to the angle_roll variable			
-     59c:	ac 01       	movw	r20, r24
-     59e:	6b a1       	ldd	r22, Y+35	; 0x23
-     5a0:	7c a1       	ldd	r23, Y+36	; 0x24
-     5a2:	8d a1       	ldd	r24, Y+37	; 0x25
-     5a4:	9e a1       	ldd	r25, Y+38	; 0x26
-     5a6:	c4 d4       	rcall	.+2440   	; 0xf30 <__addsf3>
-     5a8:	6b a3       	std	Y+35, r22	; 0x23
-     5aa:	7c a3       	std	Y+36, r23	; 0x24
-     5ac:	8d a3       	std	Y+37, r24	; 0x25
-     5ae:	9e a3       	std	Y+38, r25	; 0x26
-     5b0:	6b 81       	ldd	r22, Y+3	; 0x03
-     5b2:	7c 81       	ldd	r23, Y+4	; 0x04
-     5b4:	07 2e       	mov	r0, r23
-     5b6:	00 0c       	add	r0, r0
-     5b8:	88 0b       	sbc	r24, r24
-     5ba:	99 0b       	sbc	r25, r25
-     5bc:	d3 d5       	rcall	.+2982   	; 0x1164 <__floatsisf>
-     5be:	a7 01       	movw	r20, r14
-     5c0:	96 01       	movw	r18, r12
-     5c2:	d5 d6       	rcall	.+3498   	; 0x136e <__mulsf3>
-     5c4:	9b 01       	movw	r18, r22
+     59e:	ac 01       	movw	r20, r24
+     5a0:	6b a1       	ldd	r22, Y+35	; 0x23
+     5a2:	7c a1       	ldd	r23, Y+36	; 0x24
+     5a4:	8d a1       	ldd	r24, Y+37	; 0x25
+     5a6:	9e a1       	ldd	r25, Y+38	; 0x26
+     5a8:	c3 d4       	rcall	.+2438   	; 0xf30 <__addsf3>
+     5aa:	6b a3       	std	Y+35, r22	; 0x23
+     5ac:	7c a3       	std	Y+36, r23	; 0x24
+     5ae:	8d a3       	std	Y+37, r24	; 0x25
+     5b0:	9e a3       	std	Y+38, r25	; 0x26
+     5b2:	6b 81       	ldd	r22, Y+3	; 0x03
+     5b4:	7c 81       	ldd	r23, Y+4	; 0x04
+     5b6:	07 2e       	mov	r0, r23
+     5b8:	00 0c       	add	r0, r0
+     5ba:	88 0b       	sbc	r24, r24
+     5bc:	99 0b       	sbc	r25, r25
+     5be:	d2 d5       	rcall	.+2980   	; 0x1164 <__floatsisf>
+     5c0:	a7 01       	movw	r20, r14
+     5c2:	96 01       	movw	r18, r12
+     5c4:	d4 d6       	rcall	.+3496   	; 0x136e <__mulsf3>
+     5c6:	9b 01       	movw	r18, r22
 			}
 			else
 			{
 				loop_bool=false;
-     5c6:	ac 01       	movw	r20, r24
-     5c8:	6f 8d       	ldd	r22, Y+31	; 0x1f
-     5ca:	78 a1       	ldd	r23, Y+32	; 0x20
-     5cc:	89 a1       	ldd	r24, Y+33	; 0x21
+     5c8:	ac 01       	movw	r20, r24
+     5ca:	6f 8d       	ldd	r22, Y+31	; 0x1f
+     5cc:	78 a1       	ldd	r23, Y+32	; 0x20
+     5ce:	89 a1       	ldd	r24, Y+33	; 0x21
 			}					
 					//0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
 			pop*=(3.142/180);	
 			angle_pitch += angle_roll * sin(gyro_z * pop);               //If the IMU has yawed transfer the roll angle to the pitch angel
-     5ce:	9a a1       	ldd	r25, Y+34	; 0x22
-     5d0:	af d4       	rcall	.+2398   	; 0xf30 <__addsf3>
-     5d2:	6f 8f       	std	Y+31, r22	; 0x1f
-     5d4:	78 a3       	std	Y+32, r23	; 0x20
-     5d6:	89 a3       	std	Y+33, r24	; 0x21
-     5d8:	9a a3       	std	Y+34, r25	; 0x22
-     5da:	04 c0       	rjmp	.+8      	; 0x5e4 <main+0x1aa>
-     5dc:	10 92 74 03 	sts	0x0374, r1	; 0x800374 <loop_bool+0x1>
-     5e0:	10 92 73 03 	sts	0x0373, r1	; 0x800373 <loop_bool>
-     5e4:	6d 81       	ldd	r22, Y+5	; 0x05
-     5e6:	7e 81       	ldd	r23, Y+6	; 0x06
-     5e8:	07 2e       	mov	r0, r23
-     5ea:	00 0c       	add	r0, r0
-     5ec:	88 0b       	sbc	r24, r24
-     5ee:	99 0b       	sbc	r25, r25
-     5f0:	b9 d5       	rcall	.+2930   	; 0x1164 <__floatsisf>
-     5f2:	4b 01       	movw	r8, r22
-     5f4:	5c 01       	movw	r10, r24
-     5f6:	24 ef       	ldi	r18, 0xF4	; 244
-     5f8:	3e ef       	ldi	r19, 0xFE	; 254
-     5fa:	4e e8       	ldi	r20, 0x8E	; 142
-     5fc:	5c e3       	ldi	r21, 0x3C	; 60
-     5fe:	c7 01       	movw	r24, r14
-     600:	b6 01       	movw	r22, r12
-     602:	b5 d6       	rcall	.+3434   	; 0x136e <__mulsf3>
-     604:	9b 01       	movw	r18, r22
-     606:	ac 01       	movw	r20, r24
-     608:	c5 01       	movw	r24, r10
-     60a:	b4 01       	movw	r22, r8
-     60c:	b0 d6       	rcall	.+3424   	; 0x136e <__mulsf3>
-     60e:	12 d7       	rcall	.+3620   	; 0x1434 <sin>
-     610:	6b 01       	movw	r12, r22
-     612:	7c 01       	movw	r14, r24
-     614:	9b 01       	movw	r18, r22
-     616:	ac 01       	movw	r20, r24
-     618:	6f 8d       	ldd	r22, Y+31	; 0x1f
-     61a:	78 a1       	ldd	r23, Y+32	; 0x20
-     61c:	89 a1       	ldd	r24, Y+33	; 0x21
-     61e:	9a a1       	ldd	r25, Y+34	; 0x22
+     5d0:	9a a1       	ldd	r25, Y+34	; 0x22
+     5d2:	ae d4       	rcall	.+2396   	; 0xf30 <__addsf3>
+     5d4:	6f 8f       	std	Y+31, r22	; 0x1f
+     5d6:	78 a3       	std	Y+32, r23	; 0x20
+     5d8:	89 a3       	std	Y+33, r24	; 0x21
+     5da:	9a a3       	std	Y+34, r25	; 0x22
+     5dc:	04 c0       	rjmp	.+8      	; 0x5e6 <main+0x1ac>
+     5de:	10 92 74 03 	sts	0x0374, r1	; 0x800374 <loop_bool+0x1>
+     5e2:	10 92 73 03 	sts	0x0373, r1	; 0x800373 <loop_bool>
+     5e6:	6d 81       	ldd	r22, Y+5	; 0x05
+     5e8:	7e 81       	ldd	r23, Y+6	; 0x06
+     5ea:	07 2e       	mov	r0, r23
+     5ec:	00 0c       	add	r0, r0
+     5ee:	88 0b       	sbc	r24, r24
+     5f0:	99 0b       	sbc	r25, r25
+     5f2:	b8 d5       	rcall	.+2928   	; 0x1164 <__floatsisf>
+     5f4:	4b 01       	movw	r8, r22
+     5f6:	5c 01       	movw	r10, r24
+     5f8:	24 ef       	ldi	r18, 0xF4	; 244
+     5fa:	3e ef       	ldi	r19, 0xFE	; 254
+     5fc:	4e e8       	ldi	r20, 0x8E	; 142
+     5fe:	5c e3       	ldi	r21, 0x3C	; 60
+     600:	c7 01       	movw	r24, r14
+     602:	b6 01       	movw	r22, r12
+     604:	b4 d6       	rcall	.+3432   	; 0x136e <__mulsf3>
+     606:	9b 01       	movw	r18, r22
+     608:	ac 01       	movw	r20, r24
+     60a:	c5 01       	movw	r24, r10
+     60c:	b4 01       	movw	r22, r8
+     60e:	af d6       	rcall	.+3422   	; 0x136e <__mulsf3>
+     610:	11 d7       	rcall	.+3618   	; 0x1434 <sin>
+     612:	6b 01       	movw	r12, r22
+     614:	7c 01       	movw	r14, r24
+     616:	9b 01       	movw	r18, r22
+     618:	ac 01       	movw	r20, r24
+     61a:	6f 8d       	ldd	r22, Y+31	; 0x1f
+     61c:	78 a1       	ldd	r23, Y+32	; 0x20
+     61e:	89 a1       	ldd	r24, Y+33	; 0x21
+     620:	9a a1       	ldd	r25, Y+34	; 0x22
 			angle_roll -= angle_pitch * sin(gyro_z * pop);               //If the IMU has yawed transfer the pitch angle to the roll angel
-     620:	a6 d6       	rcall	.+3404   	; 0x136e <__mulsf3>
-     622:	9b 01       	movw	r18, r22
-     624:	ac 01       	movw	r20, r24
-     626:	6b a1       	ldd	r22, Y+35	; 0x23
-     628:	7c a1       	ldd	r23, Y+36	; 0x24
-     62a:	8d a1       	ldd	r24, Y+37	; 0x25
-     62c:	9e a1       	ldd	r25, Y+38	; 0x26
-     62e:	80 d4       	rcall	.+2304   	; 0xf30 <__addsf3>
-     630:	6b a3       	std	Y+35, r22	; 0x23
-     632:	7c a3       	std	Y+36, r23	; 0x24
-     634:	8d a3       	std	Y+37, r24	; 0x25
-     636:	9e a3       	std	Y+38, r25	; 0x26
-     638:	9b 01       	movw	r18, r22
-     63a:	ac 01       	movw	r20, r24
-     63c:	c7 01       	movw	r24, r14
-     63e:	b6 01       	movw	r22, r12
+     622:	a5 d6       	rcall	.+3402   	; 0x136e <__mulsf3>
+     624:	9b 01       	movw	r18, r22
+     626:	ac 01       	movw	r20, r24
+     628:	6b a1       	ldd	r22, Y+35	; 0x23
+     62a:	7c a1       	ldd	r23, Y+36	; 0x24
+     62c:	8d a1       	ldd	r24, Y+37	; 0x25
+     62e:	9e a1       	ldd	r25, Y+38	; 0x26
+     630:	7f d4       	rcall	.+2302   	; 0xf30 <__addsf3>
+     632:	6b a3       	std	Y+35, r22	; 0x23
+     634:	7c a3       	std	Y+36, r23	; 0x24
+     636:	8d a3       	std	Y+37, r24	; 0x25
+     638:	9e a3       	std	Y+38, r25	; 0x26
+     63a:	9b 01       	movw	r18, r22
+     63c:	ac 01       	movw	r20, r24
+     63e:	c7 01       	movw	r24, r14
+     640:	b6 01       	movw	r22, r12
 			
 			double temporar_accel_x=accel_x/100;
-     640:	96 d6       	rcall	.+3372   	; 0x136e <__mulsf3>
-     642:	9b 01       	movw	r18, r22
-     644:	ac 01       	movw	r20, r24
-     646:	6f 8d       	ldd	r22, Y+31	; 0x1f
-     648:	78 a1       	ldd	r23, Y+32	; 0x20
-     64a:	89 a1       	ldd	r24, Y+33	; 0x21
-     64c:	9a a1       	ldd	r25, Y+34	; 0x22
-     64e:	6f d4       	rcall	.+2270   	; 0xf2e <__subsf3>
-     650:	6f 8f       	std	Y+31, r22	; 0x1f
-     652:	78 a3       	std	Y+32, r23	; 0x20
-     654:	89 a3       	std	Y+33, r24	; 0x21
-     656:	9a a3       	std	Y+34, r25	; 0x22
-     658:	0f 81       	ldd	r16, Y+7	; 0x07
+     642:	95 d6       	rcall	.+3370   	; 0x136e <__mulsf3>
+     644:	9b 01       	movw	r18, r22
+     646:	ac 01       	movw	r20, r24
+     648:	6f 8d       	ldd	r22, Y+31	; 0x1f
+     64a:	78 a1       	ldd	r23, Y+32	; 0x20
+     64c:	89 a1       	ldd	r24, Y+33	; 0x21
+     64e:	9a a1       	ldd	r25, Y+34	; 0x22
+     650:	6e d4       	rcall	.+2268   	; 0xf2e <__subsf3>
+     652:	6f 8f       	std	Y+31, r22	; 0x1f
+     654:	78 a3       	std	Y+32, r23	; 0x20
+     656:	89 a3       	std	Y+33, r24	; 0x21
+     658:	9a a3       	std	Y+34, r25	; 0x22
+     65a:	0f 81       	ldd	r16, Y+7	; 0x07
 			double temporar_accel_y=accel_y/100;
-     65a:	18 85       	ldd	r17, Y+8	; 0x08
-     65c:	c8 01       	movw	r24, r16
-     65e:	64 e6       	ldi	r22, 0x64	; 100
-     660:	70 e0       	ldi	r23, 0x00	; 0
-     662:	7e d7       	rcall	.+3836   	; 0x1560 <__divmodhi4>
-     664:	07 2e       	mov	r0, r23
-     666:	00 0c       	add	r0, r0
-     668:	88 0b       	sbc	r24, r24
-     66a:	99 0b       	sbc	r25, r25
-     66c:	7b d5       	rcall	.+2806   	; 0x1164 <__floatsisf>
-     66e:	4b 01       	movw	r8, r22
-     670:	5c 01       	movw	r10, r24
-     672:	89 85       	ldd	r24, Y+9	; 0x09
-     674:	9a 85       	ldd	r25, Y+10	; 0x0a
+     65c:	18 85       	ldd	r17, Y+8	; 0x08
+     65e:	c8 01       	movw	r24, r16
+     660:	64 e6       	ldi	r22, 0x64	; 100
+     662:	70 e0       	ldi	r23, 0x00	; 0
+     664:	7d d7       	rcall	.+3834   	; 0x1560 <__divmodhi4>
+     666:	07 2e       	mov	r0, r23
+     668:	00 0c       	add	r0, r0
+     66a:	88 0b       	sbc	r24, r24
+     66c:	99 0b       	sbc	r25, r25
+     66e:	7a d5       	rcall	.+2804   	; 0x1164 <__floatsisf>
+     670:	4b 01       	movw	r8, r22
+     672:	5c 01       	movw	r10, r24
+     674:	89 85       	ldd	r24, Y+9	; 0x09
+     676:	9a 85       	ldd	r25, Y+10	; 0x0a
 			double temporar_accel_z=accel_z/100;
-     676:	64 e6       	ldi	r22, 0x64	; 100
-     678:	70 e0       	ldi	r23, 0x00	; 0
-     67a:	72 d7       	rcall	.+3812   	; 0x1560 <__divmodhi4>
-     67c:	07 2e       	mov	r0, r23
-     67e:	00 0c       	add	r0, r0
-     680:	88 0b       	sbc	r24, r24
-     682:	99 0b       	sbc	r25, r25
-     684:	6f d5       	rcall	.+2782   	; 0x1164 <__floatsisf>
-     686:	6f a3       	std	Y+39, r22	; 0x27
-     688:	78 a7       	std	Y+40, r23	; 0x28
-     68a:	89 a7       	std	Y+41, r24	; 0x29
-     68c:	9a a7       	std	Y+42, r25	; 0x2a
-     68e:	8b 85       	ldd	r24, Y+11	; 0x0b
+     678:	64 e6       	ldi	r22, 0x64	; 100
+     67a:	70 e0       	ldi	r23, 0x00	; 0
+     67c:	71 d7       	rcall	.+3810   	; 0x1560 <__divmodhi4>
+     67e:	07 2e       	mov	r0, r23
+     680:	00 0c       	add	r0, r0
+     682:	88 0b       	sbc	r24, r24
+     684:	99 0b       	sbc	r25, r25
+     686:	6e d5       	rcall	.+2780   	; 0x1164 <__floatsisf>
+     688:	6f a3       	std	Y+39, r22	; 0x27
+     68a:	78 a7       	std	Y+40, r23	; 0x28
+     68c:	89 a7       	std	Y+41, r24	; 0x29
+     68e:	9a a7       	std	Y+42, r25	; 0x2a
+     690:	8b 85       	ldd	r24, Y+11	; 0x0b
 			
 			acc_total_vector = sqrt((temporar_accel_x*temporar_accel_x)+(temporar_accel_y*temporar_accel_y)+(temporar_accel_z*temporar_accel_z));  //Calculate the total accelerometer vector
-     690:	9c 85       	ldd	r25, Y+12	; 0x0c
-     692:	64 e6       	ldi	r22, 0x64	; 100
-     694:	70 e0       	ldi	r23, 0x00	; 0
-     696:	64 d7       	rcall	.+3784   	; 0x1560 <__divmodhi4>
-     698:	07 2e       	mov	r0, r23
-     69a:	00 0c       	add	r0, r0
-     69c:	88 0b       	sbc	r24, r24
-     69e:	99 0b       	sbc	r25, r25
-     6a0:	61 d5       	rcall	.+2754   	; 0x1164 <__floatsisf>
-     6a2:	6b 01       	movw	r12, r22
-     6a4:	7c 01       	movw	r14, r24
-     6a6:	a5 01       	movw	r20, r10
-     6a8:	94 01       	movw	r18, r8
-     6aa:	c5 01       	movw	r24, r10
-     6ac:	b4 01       	movw	r22, r8
-     6ae:	5f d6       	rcall	.+3262   	; 0x136e <__mulsf3>
-     6b0:	6b a7       	std	Y+43, r22	; 0x2b
-     6b2:	7c a7       	std	Y+44, r23	; 0x2c
-     6b4:	8d a7       	std	Y+45, r24	; 0x2d
-     6b6:	9e a7       	std	Y+46, r25	; 0x2e
-     6b8:	2f a1       	ldd	r18, Y+39	; 0x27
-     6ba:	38 a5       	ldd	r19, Y+40	; 0x28
-     6bc:	49 a5       	ldd	r20, Y+41	; 0x29
-     6be:	5a a5       	ldd	r21, Y+42	; 0x2a
-     6c0:	ca 01       	movw	r24, r20
-     6c2:	b9 01       	movw	r22, r18
-     6c4:	54 d6       	rcall	.+3240   	; 0x136e <__mulsf3>
-     6c6:	9b 01       	movw	r18, r22
-     6c8:	ac 01       	movw	r20, r24
-     6ca:	6b a5       	ldd	r22, Y+43	; 0x2b
-     6cc:	7c a5       	ldd	r23, Y+44	; 0x2c
-     6ce:	8d a5       	ldd	r24, Y+45	; 0x2d
-     6d0:	9e a5       	ldd	r25, Y+46	; 0x2e
-     6d2:	2e d4       	rcall	.+2140   	; 0xf30 <__addsf3>
-     6d4:	6b a7       	std	Y+43, r22	; 0x2b
-     6d6:	7c a7       	std	Y+44, r23	; 0x2c
-     6d8:	8d a7       	std	Y+45, r24	; 0x2d
-     6da:	9e a7       	std	Y+46, r25	; 0x2e
-     6dc:	a5 01       	movw	r20, r10
-     6de:	94 01       	movw	r18, r8
-     6e0:	c5 01       	movw	r24, r10
-     6e2:	b4 01       	movw	r22, r8
-     6e4:	44 d6       	rcall	.+3208   	; 0x136e <__mulsf3>
-     6e6:	4b 01       	movw	r8, r22
-     6e8:	5c 01       	movw	r10, r24
-     6ea:	2f a1       	ldd	r18, Y+39	; 0x27
-     6ec:	38 a5       	ldd	r19, Y+40	; 0x28
-     6ee:	49 a5       	ldd	r20, Y+41	; 0x29
-     6f0:	5a a5       	ldd	r21, Y+42	; 0x2a
-     6f2:	ca 01       	movw	r24, r20
-     6f4:	b9 01       	movw	r22, r18
-     6f6:	3b d6       	rcall	.+3190   	; 0x136e <__mulsf3>
-     6f8:	9b 01       	movw	r18, r22
-     6fa:	ac 01       	movw	r20, r24
-     6fc:	c5 01       	movw	r24, r10
+     692:	9c 85       	ldd	r25, Y+12	; 0x0c
+     694:	64 e6       	ldi	r22, 0x64	; 100
+     696:	70 e0       	ldi	r23, 0x00	; 0
+     698:	63 d7       	rcall	.+3782   	; 0x1560 <__divmodhi4>
+     69a:	07 2e       	mov	r0, r23
+     69c:	00 0c       	add	r0, r0
+     69e:	88 0b       	sbc	r24, r24
+     6a0:	99 0b       	sbc	r25, r25
+     6a2:	60 d5       	rcall	.+2752   	; 0x1164 <__floatsisf>
+     6a4:	6b 01       	movw	r12, r22
+     6a6:	7c 01       	movw	r14, r24
+     6a8:	a5 01       	movw	r20, r10
+     6aa:	94 01       	movw	r18, r8
+     6ac:	c5 01       	movw	r24, r10
+     6ae:	b4 01       	movw	r22, r8
+     6b0:	5e d6       	rcall	.+3260   	; 0x136e <__mulsf3>
+     6b2:	6b a7       	std	Y+43, r22	; 0x2b
+     6b4:	7c a7       	std	Y+44, r23	; 0x2c
+     6b6:	8d a7       	std	Y+45, r24	; 0x2d
+     6b8:	9e a7       	std	Y+46, r25	; 0x2e
+     6ba:	2f a1       	ldd	r18, Y+39	; 0x27
+     6bc:	38 a5       	ldd	r19, Y+40	; 0x28
+     6be:	49 a5       	ldd	r20, Y+41	; 0x29
+     6c0:	5a a5       	ldd	r21, Y+42	; 0x2a
+     6c2:	ca 01       	movw	r24, r20
+     6c4:	b9 01       	movw	r22, r18
+     6c6:	53 d6       	rcall	.+3238   	; 0x136e <__mulsf3>
+     6c8:	9b 01       	movw	r18, r22
+     6ca:	ac 01       	movw	r20, r24
+     6cc:	6b a5       	ldd	r22, Y+43	; 0x2b
+     6ce:	7c a5       	ldd	r23, Y+44	; 0x2c
+     6d0:	8d a5       	ldd	r24, Y+45	; 0x2d
+     6d2:	9e a5       	ldd	r25, Y+46	; 0x2e
+     6d4:	2d d4       	rcall	.+2138   	; 0xf30 <__addsf3>
+     6d6:	6b a7       	std	Y+43, r22	; 0x2b
+     6d8:	7c a7       	std	Y+44, r23	; 0x2c
+     6da:	8d a7       	std	Y+45, r24	; 0x2d
+     6dc:	9e a7       	std	Y+46, r25	; 0x2e
+     6de:	a5 01       	movw	r20, r10
+     6e0:	94 01       	movw	r18, r8
+     6e2:	c5 01       	movw	r24, r10
+     6e4:	b4 01       	movw	r22, r8
+     6e6:	43 d6       	rcall	.+3206   	; 0x136e <__mulsf3>
+     6e8:	4b 01       	movw	r8, r22
+     6ea:	5c 01       	movw	r10, r24
+     6ec:	2f a1       	ldd	r18, Y+39	; 0x27
+     6ee:	38 a5       	ldd	r19, Y+40	; 0x28
+     6f0:	49 a5       	ldd	r20, Y+41	; 0x29
+     6f2:	5a a5       	ldd	r21, Y+42	; 0x2a
+     6f4:	ca 01       	movw	r24, r20
+     6f6:	b9 01       	movw	r22, r18
+     6f8:	3a d6       	rcall	.+3188   	; 0x136e <__mulsf3>
+     6fa:	9b 01       	movw	r18, r22
+     6fc:	ac 01       	movw	r20, r24
+     6fe:	c5 01       	movw	r24, r10
 					//57.296 = 1 / (3.142 / 180) The Arduino asin function is in radians
 			acc_total_vector*=100;
 		    angle_pitch_acc = asin((double)accel_y/acc_total_vector)* 57.296;       //Calculate the pitch angle
 			angle_roll_acc = asin((double)accel_x/acc_total_vector)* -57.296;       //Calculate the roll angle
-     6fe:	b4 01       	movw	r22, r8
-     700:	17 d4       	rcall	.+2094   	; 0xf30 <__addsf3>
-     702:	4b 01       	movw	r8, r22
-     704:	5c 01       	movw	r10, r24
-     706:	a7 01       	movw	r20, r14
-     708:	96 01       	movw	r18, r12
-     70a:	c7 01       	movw	r24, r14
-     70c:	b6 01       	movw	r22, r12
-     70e:	2f d6       	rcall	.+3166   	; 0x136e <__mulsf3>
-     710:	9b 01       	movw	r18, r22
-     712:	ac 01       	movw	r20, r24
-     714:	c5 01       	movw	r24, r10
-     716:	b4 01       	movw	r22, r8
-     718:	0b d4       	rcall	.+2070   	; 0xf30 <__addsf3>
-     71a:	96 d6       	rcall	.+3372   	; 0x1448 <sqrt>
-     71c:	6b 01       	movw	r12, r22
-     71e:	7c 01       	movw	r14, r24
-     720:	b8 01       	movw	r22, r16
-     722:	11 0f       	add	r17, r17
-     724:	88 0b       	sbc	r24, r24
-     726:	99 0b       	sbc	r25, r25
-     728:	1d d5       	rcall	.+2618   	; 0x1164 <__floatsisf>
+     700:	b4 01       	movw	r22, r8
+     702:	16 d4       	rcall	.+2092   	; 0xf30 <__addsf3>
+     704:	4b 01       	movw	r8, r22
+     706:	5c 01       	movw	r10, r24
+     708:	a7 01       	movw	r20, r14
+     70a:	96 01       	movw	r18, r12
+     70c:	c7 01       	movw	r24, r14
+     70e:	b6 01       	movw	r22, r12
+     710:	2e d6       	rcall	.+3164   	; 0x136e <__mulsf3>
+     712:	9b 01       	movw	r18, r22
+     714:	ac 01       	movw	r20, r24
+     716:	c5 01       	movw	r24, r10
+     718:	b4 01       	movw	r22, r8
+     71a:	0a d4       	rcall	.+2068   	; 0xf30 <__addsf3>
+     71c:	95 d6       	rcall	.+3370   	; 0x1448 <sqrt>
+     71e:	6b 01       	movw	r12, r22
+     720:	7c 01       	movw	r14, r24
+     722:	b8 01       	movw	r22, r16
+     724:	11 0f       	add	r17, r17
+     726:	88 0b       	sbc	r24, r24
+     728:	99 0b       	sbc	r25, r25
+     72a:	1c d5       	rcall	.+2616   	; 0x1164 <__floatsisf>
 					
 			uint16_t reg=angle_pitch;
-     72a:	4b 01       	movw	r8, r22
-     72c:	5c 01       	movw	r10, r24
-     72e:	20 e0       	ldi	r18, 0x00	; 0
-     730:	30 e0       	ldi	r19, 0x00	; 0
-     732:	48 ec       	ldi	r20, 0xC8	; 200
-     734:	52 e4       	ldi	r21, 0x42	; 66
-     736:	c7 01       	movw	r24, r14
+     72c:	4b 01       	movw	r8, r22
+     72e:	5c 01       	movw	r10, r24
+     730:	20 e0       	ldi	r18, 0x00	; 0
+     732:	30 e0       	ldi	r19, 0x00	; 0
+     734:	48 ec       	ldi	r20, 0xC8	; 200
+     736:	52 e4       	ldi	r21, 0x42	; 66
+     738:	c7 01       	movw	r24, r14
 			printf(" ");
-     738:	b6 01       	movw	r22, r12
-     73a:	19 d6       	rcall	.+3122   	; 0x136e <__mulsf3>
-     73c:	9b 01       	movw	r18, r22
+     73a:	b6 01       	movw	r22, r12
+     73c:	18 d6       	rcall	.+3120   	; 0x136e <__mulsf3>
+     73e:	9b 01       	movw	r18, r22
 			printf("gyroX_angle= ");
-     73e:	ac 01       	movw	r20, r24
-     740:	c5 01       	movw	r24, r10
-     742:	b4 01       	movw	r22, r8
-     744:	74 d4       	rcall	.+2280   	; 0x102e <__divsf3>
+     740:	ac 01       	movw	r20, r24
+     742:	c5 01       	movw	r24, r10
+     744:	b4 01       	movw	r22, r8
+     746:	73 d4       	rcall	.+2278   	; 0x102e <__divsf3>
 			print16(&reg);
-     746:	58 d4       	rcall	.+2224   	; 0xff8 <asin>
-     748:	6b 01       	movw	r12, r22
+     748:	57 d4       	rcall	.+2222   	; 0xff8 <asin>
+     74a:	6b 01       	movw	r12, r22
 			reg=angle_roll;
-     74a:	7c 01       	movw	r14, r24
-     74c:	6b a1       	ldd	r22, Y+35	; 0x23
-     74e:	7c a1       	ldd	r23, Y+36	; 0x24
-     750:	8d a1       	ldd	r24, Y+37	; 0x25
-     752:	9e a1       	ldd	r25, Y+38	; 0x26
-     754:	d9 d4       	rcall	.+2482   	; 0x1108 <__fixunssfsi>
-     756:	7e 8f       	std	Y+30, r23	; 0x1e
+     74c:	7c 01       	movw	r14, r24
+     74e:	6b a1       	ldd	r22, Y+35	; 0x23
+     750:	7c a1       	ldd	r23, Y+36	; 0x24
+     752:	8d a1       	ldd	r24, Y+37	; 0x25
+     754:	9e a1       	ldd	r25, Y+38	; 0x26
+     756:	d8 d4       	rcall	.+2480   	; 0x1108 <__fixunssfsi>
+     758:	7e 8f       	std	Y+30, r23	; 0x1e
 			printf(" ");
-     758:	6d 8f       	std	Y+29, r22	; 0x1d
-     75a:	80 e2       	ldi	r24, 0x20	; 32
-     75c:	90 e0       	ldi	r25, 0x00	; 0
+     75a:	6d 8f       	std	Y+29, r22	; 0x1d
+     75c:	80 e2       	ldi	r24, 0x20	; 32
+     75e:	90 e0       	ldi	r25, 0x00	; 0
 			printf("gyroY_angle= ");
-     75e:	e5 d7       	rcall	.+4042   	; 0x172a <putchar>
-     760:	89 e7       	ldi	r24, 0x79	; 121
-     762:	93 e0       	ldi	r25, 0x03	; 3
-     764:	9f 93       	push	r25
+     760:	e4 d7       	rcall	.+4040   	; 0x172a <putchar>
+     762:	89 e7       	ldi	r24, 0x79	; 121
+     764:	93 e0       	ldi	r25, 0x03	; 3
+     766:	9f 93       	push	r25
 			print16(&reg);
-     766:	8f 93       	push	r24
-     768:	cd d7       	rcall	.+3994   	; 0x1704 <printf>
-     76a:	ce 01       	movw	r24, r28
-     76c:	4d 96       	adiw	r24, 0x1d	; 29
+     768:	8f 93       	push	r24
+     76a:	cc d7       	rcall	.+3992   	; 0x1704 <printf>
+     76c:	ce 01       	movw	r24, r28
+     76e:	4d 96       	adiw	r24, 0x1d	; 29
 			
 			double xff=angle_roll_acc;
 			double final_angleY=(angle_roll*0.996)+(xff*0.004);
-     76e:	3e de       	rcall	.-900    	; 0x3ec <print16>
-     770:	6f 8d       	ldd	r22, Y+31	; 0x1f
-     772:	78 a1       	ldd	r23, Y+32	; 0x20
-     774:	89 a1       	ldd	r24, Y+33	; 0x21
-     776:	9a a1       	ldd	r25, Y+34	; 0x22
-     778:	c7 d4       	rcall	.+2446   	; 0x1108 <__fixunssfsi>
-     77a:	7e 8f       	std	Y+30, r23	; 0x1e
-     77c:	6d 8f       	std	Y+29, r22	; 0x1d
-     77e:	80 e2       	ldi	r24, 0x20	; 32
-     780:	90 e0       	ldi	r25, 0x00	; 0
-     782:	d3 d7       	rcall	.+4006   	; 0x172a <putchar>
-     784:	47 e8       	ldi	r20, 0x87	; 135
-     786:	53 e0       	ldi	r21, 0x03	; 3
-     788:	5f 93       	push	r21
-     78a:	4f 93       	push	r20
-     78c:	bb d7       	rcall	.+3958   	; 0x1704 <printf>
-     78e:	ce 01       	movw	r24, r28
-     790:	4d 96       	adiw	r24, 0x1d	; 29
-     792:	2c de       	rcall	.-936    	; 0x3ec <print16>
-     794:	2b e1       	ldi	r18, 0x1B	; 27
-     796:	3f e2       	ldi	r19, 0x2F	; 47
-     798:	45 e6       	ldi	r20, 0x65	; 101
-     79a:	52 ec       	ldi	r21, 0xC2	; 194
-     79c:	c7 01       	movw	r24, r14
-     79e:	b6 01       	movw	r22, r12
-     7a0:	e6 d5       	rcall	.+3020   	; 0x136e <__mulsf3>
-     7a2:	2f e6       	ldi	r18, 0x6F	; 111
-     7a4:	32 e1       	ldi	r19, 0x12	; 18
-     7a6:	43 e8       	ldi	r20, 0x83	; 131
-     7a8:	5b e3       	ldi	r21, 0x3B	; 59
-     7aa:	e1 d5       	rcall	.+3010   	; 0x136e <__mulsf3>
-     7ac:	6b 01       	movw	r12, r22
+     770:	3d de       	rcall	.-902    	; 0x3ec <print16>
+     772:	6f 8d       	ldd	r22, Y+31	; 0x1f
+     774:	78 a1       	ldd	r23, Y+32	; 0x20
+     776:	89 a1       	ldd	r24, Y+33	; 0x21
+     778:	9a a1       	ldd	r25, Y+34	; 0x22
+     77a:	c6 d4       	rcall	.+2444   	; 0x1108 <__fixunssfsi>
+     77c:	7e 8f       	std	Y+30, r23	; 0x1e
+     77e:	6d 8f       	std	Y+29, r22	; 0x1d
+     780:	80 e2       	ldi	r24, 0x20	; 32
+     782:	90 e0       	ldi	r25, 0x00	; 0
+     784:	d2 d7       	rcall	.+4004   	; 0x172a <putchar>
+     786:	87 e8       	ldi	r24, 0x87	; 135
+     788:	93 e0       	ldi	r25, 0x03	; 3
+     78a:	9f 93       	push	r25
+     78c:	8f 93       	push	r24
+     78e:	ba d7       	rcall	.+3956   	; 0x1704 <printf>
+     790:	ce 01       	movw	r24, r28
+     792:	4d 96       	adiw	r24, 0x1d	; 29
+     794:	2b de       	rcall	.-938    	; 0x3ec <print16>
+     796:	2b e1       	ldi	r18, 0x1B	; 27
+     798:	3f e2       	ldi	r19, 0x2F	; 47
+     79a:	45 e6       	ldi	r20, 0x65	; 101
+     79c:	52 ec       	ldi	r21, 0xC2	; 194
+     79e:	c7 01       	movw	r24, r14
+     7a0:	b6 01       	movw	r22, r12
+     7a2:	e5 d5       	rcall	.+3018   	; 0x136e <__mulsf3>
+     7a4:	2f e6       	ldi	r18, 0x6F	; 111
+     7a6:	32 e1       	ldi	r19, 0x12	; 18
+     7a8:	43 e8       	ldi	r20, 0x83	; 131
+     7aa:	5b e3       	ldi	r21, 0x3B	; 59
+     7ac:	e0 d5       	rcall	.+3008   	; 0x136e <__mulsf3>
+     7ae:	6b 01       	movw	r12, r22
 			reg=final_angleY;
-     7ae:	7c 01       	movw	r14, r24
-     7b0:	2b ed       	ldi	r18, 0xDB	; 219
-     7b2:	39 ef       	ldi	r19, 0xF9	; 249
-     7b4:	4e e7       	ldi	r20, 0x7E	; 126
+     7b0:	7c 01       	movw	r14, r24
+     7b2:	2b ed       	ldi	r18, 0xDB	; 219
+     7b4:	39 ef       	ldi	r19, 0xF9	; 249
+     7b6:	4e e7       	ldi	r20, 0x7E	; 126
 			printf(" ");	
-     7b6:	5f e3       	ldi	r21, 0x3F	; 63
-     7b8:	6f 8d       	ldd	r22, Y+31	; 0x1f
-     7ba:	78 a1       	ldd	r23, Y+32	; 0x20
-     7bc:	89 a1       	ldd	r24, Y+33	; 0x21
+     7b8:	5f e3       	ldi	r21, 0x3F	; 63
+     7ba:	6f 8d       	ldd	r22, Y+31	; 0x1f
+     7bc:	78 a1       	ldd	r23, Y+32	; 0x20
+     7be:	89 a1       	ldd	r24, Y+33	; 0x21
 			printf("final_angleY= ");
-     7be:	9a a1       	ldd	r25, Y+34	; 0x22
-     7c0:	d6 d5       	rcall	.+2988   	; 0x136e <__mulsf3>
-     7c2:	9b 01       	movw	r18, r22
-     7c4:	ac 01       	movw	r20, r24
-     7c6:	c7 01       	movw	r24, r14
+     7c0:	9a a1       	ldd	r25, Y+34	; 0x22
+     7c2:	d5 d5       	rcall	.+2986   	; 0x136e <__mulsf3>
+     7c4:	9b 01       	movw	r18, r22
+     7c6:	ac 01       	movw	r20, r24
+     7c8:	c7 01       	movw	r24, r14
 			print16(&reg);
-     7c8:	b6 01       	movw	r22, r12
-     7ca:	b2 d3       	rcall	.+1892   	; 0xf30 <__addsf3>
-     7cc:	6b 01       	movw	r12, r22
-     7ce:	7c 01       	movw	r14, r24
+     7ca:	b6 01       	movw	r22, r12
+     7cc:	b1 d3       	rcall	.+1890   	; 0xf30 <__addsf3>
+     7ce:	6b 01       	movw	r12, r22
+     7d0:	7c 01       	movw	r14, r24
 						
 			#ifdef DRV8313
 				uint16_t reg_print=final_angleY;
 				int absoulute_y=abs(final_angleY);
-				uint16_t learing_rate=5;				
+				uint16_t learing_rate=500;				
 				uint16_t local_motor_delay=(32735-(absoulute_y*learing_rate));
-     7d0:	9b d4       	rcall	.+2358   	; 0x1108 <__fixunssfsi>
-     7d2:	7e 8f       	std	Y+30, r23	; 0x1e
-     7d4:	6d 8f       	std	Y+29, r22	; 0x1d
-     7d6:	80 e2       	ldi	r24, 0x20	; 32
-     7d8:	90 e0       	ldi	r25, 0x00	; 0
-     7da:	a7 d7       	rcall	.+3918   	; 0x172a <putchar>
-     7dc:	25 e9       	ldi	r18, 0x95	; 149
-     7de:	33 e0       	ldi	r19, 0x03	; 3
-     7e0:	3f 93       	push	r19
-     7e2:	2f 93       	push	r18
-     7e4:	8f d7       	rcall	.+3870   	; 0x1704 <printf>
-     7e6:	ce 01       	movw	r24, r28
-     7e8:	4d 96       	adiw	r24, 0x1d	; 29
-     7ea:	00 de       	rcall	.-1024   	; 0x3ec <print16>
-     7ec:	c7 01       	movw	r24, r14
-     7ee:	b6 01       	movw	r22, r12
-     7f0:	86 d4       	rcall	.+2316   	; 0x10fe <__fixsfsi>
-     7f2:	ab 01       	movw	r20, r22
-     7f4:	77 23       	and	r23, r23
-     7f6:	24 f4       	brge	.+8      	; 0x800 <main+0x3c6>
-     7f8:	44 27       	eor	r20, r20
-     7fa:	55 27       	eor	r21, r21
+     7d2:	9a d4       	rcall	.+2356   	; 0x1108 <__fixunssfsi>
+     7d4:	7e 8f       	std	Y+30, r23	; 0x1e
+     7d6:	6d 8f       	std	Y+29, r22	; 0x1d
+     7d8:	80 e2       	ldi	r24, 0x20	; 32
+     7da:	90 e0       	ldi	r25, 0x00	; 0
+     7dc:	a6 d7       	rcall	.+3916   	; 0x172a <putchar>
+     7de:	85 e9       	ldi	r24, 0x95	; 149
+     7e0:	93 e0       	ldi	r25, 0x03	; 3
+     7e2:	9f 93       	push	r25
+     7e4:	8f 93       	push	r24
+     7e6:	8e d7       	rcall	.+3868   	; 0x1704 <printf>
+     7e8:	ce 01       	movw	r24, r28
+     7ea:	4d 96       	adiw	r24, 0x1d	; 29
+     7ec:	ff dd       	rcall	.-1026   	; 0x3ec <print16>
+     7ee:	c7 01       	movw	r24, r14
+     7f0:	b6 01       	movw	r22, r12
+     7f2:	85 d4       	rcall	.+2314   	; 0x10fe <__fixsfsi>
+     7f4:	fb 01       	movw	r30, r22
+     7f6:	ff 23       	and	r31, r31
+     7f8:	24 f4       	brge	.+8      	; 0x802 <main+0x3c8>
+     7fa:	ee 27       	eor	r30, r30
 				if (local_motor_delay>2000)
-     7fc:	46 1b       	sub	r20, r22
-     7fe:	57 0b       	sbc	r21, r23
-     800:	9a 01       	movw	r18, r20
-     802:	22 0f       	add	r18, r18
-     804:	33 1f       	adc	r19, r19
-     806:	22 0f       	add	r18, r18
-     808:	33 1f       	adc	r19, r19
-     80a:	c9 01       	movw	r24, r18
-     80c:	84 0f       	add	r24, r20
+     7fc:	ff 27       	eor	r31, r31
+     7fe:	e6 1b       	sub	r30, r22
+     800:	f7 0b       	sbc	r31, r23
+     802:	44 ef       	ldi	r20, 0xF4	; 244
+     804:	51 e0       	ldi	r21, 0x01	; 1
+     806:	e4 9f       	mul	r30, r20
+     808:	90 01       	movw	r18, r0
+     80a:	e5 9f       	mul	r30, r21
+     80c:	30 0d       	add	r19, r0
 				{
 					pwm_delay=local_motor_delay;
-     80e:	95 1f       	adc	r25, r21
-     810:	2f ed       	ldi	r18, 0xDF	; 223
-     812:	3f e7       	ldi	r19, 0x7F	; 127
+     80e:	f4 9f       	mul	r31, r20
+     810:	30 0d       	add	r19, r0
+     812:	11 24       	eor	r1, r1
 				}
 				uint16_t reg_ = local_motor_delay;
-     814:	a9 01       	movw	r20, r18
+     814:	8f ed       	ldi	r24, 0xDF	; 223
 				printf("  ");
-     816:	48 1b       	sub	r20, r24
-     818:	59 0b       	sbc	r21, r25
-     81a:	ca 01       	movw	r24, r20
+     816:	9f e7       	ldi	r25, 0x7F	; 127
+     818:	82 1b       	sub	r24, r18
+     81a:	93 0b       	sbc	r25, r19
      81c:	0f 90       	pop	r0
      81e:	0f 90       	pop	r0
      820:	0f 90       	pop	r0
@@ -1241,9 +1241,9 @@ int main(void)
      824:	0f 90       	pop	r0
      826:	0f 90       	pop	r0
      828:	81 3d       	cpi	r24, 0xD1	; 209
-     82a:	57 e0       	ldi	r21, 0x07	; 7
+     82a:	37 e0       	ldi	r19, 0x07	; 7
 				print16(&reg_);
-     82c:	95 07       	cpc	r25, r21
+     82c:	93 07       	cpc	r25, r19
      82e:	20 f0       	brcs	.+8      	; 0x838 <main+0x3fe>
      830:	90 93 76 03 	sts	0x0376, r25	; 0x800376 <pwm_delay+0x1>
 				if (final_angleY>=-0.8 && final_angleY<=0.8  || final_angleY >90)

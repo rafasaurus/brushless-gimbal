@@ -1125,25 +1125,25 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x28f2
+.debug_info     0x00000000     0x28f9
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0xbbc C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega2560/avr6/crtatmega2560.o
  .debug_info    0x00000bbc      0x228 functions.o
- .debug_info    0x00000de4      0xd95 main.o
- .debug_info    0x00001b79      0x9a5 MPU6050.o
- .debug_info    0x0000251e       0xe5 TIMER.o
- .debug_info    0x00002603      0x22d twimastertimeout.o
- .debug_info    0x00002830       0xc2 USART.o
+ .debug_info    0x00000de4      0xd9c main.o
+ .debug_info    0x00001b80      0x9a5 MPU6050.o
+ .debug_info    0x00002525       0xe5 TIMER.o
+ .debug_info    0x0000260a      0x22d twimastertimeout.o
+ .debug_info    0x00002837       0xc2 USART.o
 
-.debug_abbrev   0x00000000     0x13d2
+.debug_abbrev   0x00000000     0x13c3
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0xb1a C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega2560/avr6/crtatmega2560.o
  .debug_abbrev  0x00000b1a      0x160 functions.o
- .debug_abbrev  0x00000c7a      0x369 main.o
- .debug_abbrev  0x00000fe3      0x200 MPU6050.o
- .debug_abbrev  0x000011e3       0x67 TIMER.o
- .debug_abbrev  0x0000124a       0xff twimastertimeout.o
- .debug_abbrev  0x00001349       0x89 USART.o
+ .debug_abbrev  0x00000c7a      0x35a main.o
+ .debug_abbrev  0x00000fd4      0x200 MPU6050.o
+ .debug_abbrev  0x000011d4       0x67 TIMER.o
+ .debug_abbrev  0x0000123b       0xff twimastertimeout.o
+ .debug_abbrev  0x0000133a       0x89 USART.o
 
 .debug_line     0x00000000     0x12c1
  *(.debug_line .debug_line.* .debug_line_end)
@@ -1180,13 +1180,13 @@ END GROUP
  .debug_str     0x00000b6c       0x12 USART.o
                                 0x187 (size before relaxing)
 
-.debug_loc      0x00000000     0x1adb
+.debug_loc      0x00000000     0x1af3
  *(.debug_loc)
  .debug_loc     0x00000000      0x4b1 functions.o
- .debug_loc     0x000004b1      0x7b0 main.o
- .debug_loc     0x00000c61      0xb3a MPU6050.o
- .debug_loc     0x0000179b      0x31a twimastertimeout.o
- .debug_loc     0x00001ab5       0x26 USART.o
+ .debug_loc     0x000004b1      0x7c8 main.o
+ .debug_loc     0x00000c79      0xb3a MPU6050.o
+ .debug_loc     0x000017b3      0x31a twimastertimeout.o
+ .debug_loc     0x00001acd       0x26 USART.o
 
 .debug_macinfo
  *(.debug_macinfo)

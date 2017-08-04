@@ -81,6 +81,7 @@
 	#define W_step_predefine (V_step_predefine+phase)
 	//#define SVPWM
 #else
+	#define SINPRESCALER 1
 	#define SINE_TABLE_SZ 360
 	#define sinScale 127//this value is mid range value
 	#define phase (SINE_TABLE_SZ/3)
