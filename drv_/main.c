@@ -240,7 +240,7 @@ int main(void)
 				printf("  ");
 				printf("ocr= ");
 				print16(&reg_);
-				if ((absoulute_y>=0.8) || (final_angleY >90))
+				if ((absoulute_y<=0.8) || (final_angleY >90))
 				{
 					incr=0;
 					printf("\n");	
