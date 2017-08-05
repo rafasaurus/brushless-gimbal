@@ -89,5 +89,4 @@
 		#define V_step_predefine (U_step_predefine+phase)
 		#define W_step_predefine (V_step_predefine+phase)
 	#endif
-	//#define COMPANGLE
 #endif //DEFINES

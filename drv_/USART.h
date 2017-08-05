@@ -9,4 +9,5 @@ FILE * uart_str;
 int uart_putchar(char c, FILE *stream);
 void print16(int16_t *value);
 void print16ln(int16_t *value);
+void printSI(char c[20],int16_t intToPrint);//print string and integer
 #endif

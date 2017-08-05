@@ -118,116 +118,50 @@ int main(void)
 			#endif
 		#ifdef PRINT_RAW_DATA
 			/*--------raw data gyro-accel------*/
-			
-			printf("x= ");
-			print16(&gyro_x);
-			printf("  ");
-			
-			printf("y= ");
-			print16(&gyro_y);
-			printf("  ");
-			
-			printf("Z= ");
-			print16(&gyro_z);
-			printf("  ");
-			
-			
-			printf("accX= ");
-			print16(&accel_x);
-			printf("  ");
-			
-			printf("accY= ");
-			print16(&accel_y);
-			printf("  ");
-			
-			printf("accZ= ");
-			print16(&accel_z);
-			printf("  ");
-			
-			printf("read= ");
-			printf("  ");
-			printf("\n");
+			printSI("gx=",gyro_x);
+			printSI("gy=",gyro_x);
+			printSI("gz=",gyro_x);
+			printSI("ax=",accel_x);
+			printSI("ay=",accel_y);
+			printSI("az=",accel_z);
 			/*--------end------*/			
 		#else
 			
-			double dt = (double)((micros() - timer1));
+			double dt = ((double)(micros() - timer1))/1000000;
 			timer1=micros();
-			//double hz=1000000/dt;
-			double pop=1/(65.5*1000000/dt);
-			double gyroXrate = gyro_x*pop;// / 65.5 / hz; 
-			double gyroYrate = gyro_y*pop;// / 65.5 / hz; 
-			//double tpel=gyroYrate;
-			////print16ln(&tpel);
-			//if(loop_bool)
-			//{
-			//	gyroYrate-=tpel;
-			//	loop_bool=false;
-			//}
-			if (!loop_bool)
-			{
-				angle_pitch += gyroXrate; //Calculate the traveled pitch angle and add this to the angle_pitch variable
-				angle_roll += gyroYrate;  //Calculate the traveled roll angle and add this to the angle_roll variable			
+			double gyroXrate = gyro_x/65.5;// deg/s 
+			double gyroYrate = gyro_y/65.5;// deg/s
+			if (!loop_bool) {
+				angle_pitch += gyroXrate*dt; //Calculate the traveled pitch angle and add this to the angle_pitch variable
+				angle_roll += gyroYrate*dt;  //Calculate the traveled roll angle and add this to the angle_roll variable			
 			}
-			else
-			{
-				loop_bool=false;
-			}					
-					//0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
-			pop*=(3.142/180);	
-			angle_pitch += angle_roll * sin(gyro_z * pop);               //If the IMU has yawed transfer the roll angle to the pitch angel
-			angle_roll -= angle_pitch * sin(gyro_z * pop);               //If the IMU has yawed transfer the pitch angle to the roll angel
+			else loop_bool=false;	
+			angle_pitch += angle_roll * sin(gyro_z * (dt/65.5*pi/180));               //If the IMU has yawed transfer the roll angle to the pitch angel
+			angle_roll -= angle_pitch * sin(gyro_z * (dt/65.5*pi/180));               //If the IMU has yawed transfer the pitch angle to the roll angel
 			
 			double temporar_accel_x=accel_x/100;
 			double temporar_accel_y=accel_y/100;
-			double temporar_accel_z=accel_z/100;
-			
+			double temporar_accel_z=accel_z/100;	
 			acc_total_vector = sqrt((temporar_accel_x*temporar_accel_x)+(temporar_accel_y*temporar_accel_y)+(temporar_accel_z*temporar_accel_z));  //Calculate the total accelerometer vector
-					//57.296 = 1 / (3.142 / 180) The Arduino asin function is in radians
 			acc_total_vector*=100;
 		    angle_pitch_acc = asin((double)accel_y/acc_total_vector)* 57.296;       //Calculate the pitch angle
 			angle_roll_acc = asin((double)accel_x/acc_total_vector)* -57.296;       //Calculate the roll angle
 				
-			#ifdef COMPANGLE//comp noise reduction algorithm 
-				double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;
-				double pitch = atan(-accel_x / sqrt(accel_y * accel_y + accel_z * accel_z)) * RAD_TO_DEG;
-				compAngleX=roll;
-				double gyroXrate_ = gyro_x / 65.5; // Convert to deg/s
-				double gyroYrate_ = gyro_y / 65.5; // Convert to deg/s	
-				gyroXangle += gyroXrate_ * dt; // Calculate gyro angle without any filter
-				gyroYangle += gyroYrate_ * dt;
-				compAngleX = 0.93 * (compAngleX + gyroXrate * dt) + 0.07 * roll; // Calculate the angle using a Complimentary filter
-				compAngleY = 0.93 * (compAngleY + gyroYrate * dt) + 0.07 * pitch;
-				
-				
-				
-			#endif
 			//kalman
 			double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;
-			//angle=roll;//setangle	
-			float kalman_dt=dt/1000000;
-			double kalman_gyroyRate=gyro_y/65.5;
-			float kalman_angle=getAngle(roll,kalman_gyroyRate,kalman_dt);
+			float kalman_angle=getAngle(roll,gyroYrate,dt);
 			//angle_roll_kalman+=pop*kalman_angle;	
 			
-			
-			
-			
-			int16_t reg=kalman_angle;
-			printf(" ");
-			printf("kalman_angle= ");
-			print16(&reg);
+			int16_t reg;
+			reg=kalman_angle;
+			printSI("kalman_angle=",reg);
 			reg=angle_roll;
-			printf(" ");
-			printf("gyroY_angle= ");
-			print16(&reg);
-			
+			printSI("gyroY_angle=",reg);
+				
 			double xff=angle_roll_acc;
 			double final_angleY=(angle_roll*0.996)+(xff*0.004);
 			reg=final_angleY;
-			printf(" ");	
-			printf("final_angleY= ");
-			print16(&reg);
-						
+			printSI("final_angleY=",reg);	
 			#ifdef DRV8313
 				int absoulute_y=abs(final_angleY);
 				uint16_t learing_rate=500;				
@@ -237,9 +171,7 @@ int main(void)
 					pwm_delay=local_motor_delay;
 				}
 				int16_t reg_ = local_motor_delay;
-				printf("  ");
-				printf("ocr= ");
-				print16(&reg_);
+				printSI("ocr=",reg_);
 				if ((absoulute_y<=0.8) || (final_angleY >90))
 				{
 					incr=0;
