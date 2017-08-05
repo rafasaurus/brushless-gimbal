@@ -57,8 +57,8 @@ int uart_putchar(char c, FILE *stream)
 }
 void printSI(char c[20],int16_t intToPrint)
 {
-	printf(" ");
 	printf(c);
 	//printf(" ");
 	print16(&intToPrint);
+	printf("  ");
 }

@@ -24,7 +24,7 @@ uint16_t mpu6050_read_accelX();
 uint16_t mpu6050_read_accelY();
 uint16_t mpu6050_read_accelZ();
 
-void print_double(double *value);
+void print_double(double *value);///////////////////
 uint8_t mpu6050_readByte(uint8_t byteToRead);//readbyte
 void mpu6050_writeByte(uint8_t wereToWrite,uint8_t byteToWrite);
 int8_t mpu6050_readBytes(uint8_t regAddr, uint8_t length, uint8_t *data);

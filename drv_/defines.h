@@ -89,4 +89,13 @@
 		#define V_step_predefine (U_step_predefine+phase)
 		#define W_step_predefine (V_step_predefine+phase)
 	#endif
+
+	//Your offsets:	-285	-2774	2135	58	115	309
+	#define gyro_offset_x 58
+	#define gyro_offset_y 115
+	#define gyro_offset_z 309
+	#define accel_offset_x -285
+	#define accel_offset_y -2774
+	#define accel_offset_z 2135
+	
 #endif //DEFINES
