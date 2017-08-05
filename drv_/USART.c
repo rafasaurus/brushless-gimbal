@@ -62,3 +62,10 @@ void printSI(char c[20],int16_t intToPrint)
 	print16(&intToPrint);
 	printf("  ");
 }
+void printDouble(double *value)
+{
+	char out_str[30] = {0};     // string to print to and transmit
+	float flt_num = 31.8394;    // float number to print to string
+	sprintf(out_str, "flt_num = %f\r\n", flt_num);
+	printf(out_str);
+}

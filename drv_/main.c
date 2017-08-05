@@ -108,6 +108,8 @@ int main(void)
 	sei();
     while (1) /*---------------------------while(1)---------------------------------*/
     {
+		double f;
+		printDouble(&f);
 		#ifdef GYRO
     		mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);//15us to do
 			accel_x-=accelX_calib;
@@ -127,7 +129,6 @@ int main(void)
 			printf("\n");
 			/*--------end------*/			
 		#else
-			
 			double dt = ((double)(micros() - timer1))/1000000;
 			timer1=micros();
 			double gyroXrate = gyro_x/65.5;// deg/s 
