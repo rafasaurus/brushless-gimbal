@@ -1,7 +1,4 @@
-//#define PRINT_RAW_DATA
-#define GYRO
-//#define CALIBERATED_DATA
-#define DRV8313
+
 #include "defines.h"
 #include "functions.h"
 #include "USART.h"
@@ -113,14 +110,12 @@ int main(void)
     {
 		#ifdef GYRO
     		mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);//15us to do
-		#endif
-		#ifdef GYRO
-				accX;//minusing offsets
-				accY;
-				accZ;
-				grX;
-				grY;
-				grZ;
+			accel_x-=accelX_calib;
+			accel_y-=accelY_calib;
+			accel_z-=accelZ_calib;
+			gyro_x-=gyroX_calib;
+			gyro_y-=gyroY_calib;
+			gyro_z-=gyroZ_calib;
 		#ifdef PRINT_RAW_DATA
 			/*--------raw data gyro-accel------*/
 			printSI("gx=",gyro_x);
@@ -129,6 +124,7 @@ int main(void)
 			printSI("ax=",accel_x);
 			printSI("ay=",accel_y);
 			printSI("az=",accel_z);
+			printf("\n");
 			/*--------end------*/			
 		#else
 			

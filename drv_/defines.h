@@ -1,5 +1,11 @@
 #ifndef DEFINES
 	#define DEFINES
+	/*******************global macros****************/
+	//#define PRINT_RAW_DATA
+	#define GYRO
+	//#define CALIBERATED_DATA
+	#define DRV8313
+
 	int pwm_delay;
 	typedef int bool;
 	enum { false, true };
@@ -90,12 +96,19 @@
 		#define W_step_predefine (V_step_predefine+phase)
 	#endif
 
-	//Your offsets:	-285	-2774	2135	58	115	309
-	#define gyro_offset_x 58
-	#define gyro_offset_y 115
-	#define gyro_offset_z 309
-	#define accel_offset_x -285
-	#define accel_offset_y -2774
-	#define accel_offset_z 2135
-	
+	//Your offsets:	-298	-2782	2134	59	114	311
+	#define gyro_offset_x -119
+	#define gyro_offset_y -228
+	#define gyro_offset_z -228
+	#define accel_offset_x -298
+	#define accel_offset_y -2782
+	#define accel_offset_z 2134
+	//#define accX (accel_x-=accelX_calib)
+	//#define accY (accel_y-=accelY_calib)
+	//#define accZ (accel_z-=accelZ_calib)
+	//#define grX  (gyro_x-=gyroX_calib)
+	//#define grY  (gyro_y-=gyroY_calib)
+	//#define grZ  (gyro_z-=gyroZ_calib)
+	#define calibration_counter 4000
+	#define caliberation_wait_delay 5//in ms
 #endif //DEFINES
