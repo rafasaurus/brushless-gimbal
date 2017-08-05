@@ -108,7 +108,7 @@ int main(void)
 	sei();
     while (1) /*---------------------------while(1)---------------------------------*/
     {
-		double f;
+		double f=34.2312;
 		printDouble(&f);
 		#ifdef GYRO
     		mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);//15us to do

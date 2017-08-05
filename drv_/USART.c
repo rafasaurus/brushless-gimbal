@@ -7,6 +7,7 @@
 #include "USART.h"
 #include <avr/io.h>
 #include <stdio.h>
+#include <stdlib.h>
 void USART_Init(unsigned int ubrr)
 {
 	/* Set baud rate */
@@ -64,8 +65,8 @@ void printSI(char c[20],int16_t intToPrint)
 }
 void printDouble(double *value)
 {
-	char out_str[30] = {0};     // string to print to and transmit
-	float flt_num = 31.8394;    // float number to print to string
-	sprintf(out_str, "flt_num = %f\r\n", flt_num);
-	printf(out_str);
+	char c[20]={0};
+	double val=90.2312;     // string to print to and transmit
+	sprintf(c, "%f", val);
+	printf(c);
 }
