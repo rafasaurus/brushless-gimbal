@@ -1,9 +1,3 @@
-/*
- * MPY6050.c
- *
- * Created: 7/24/2017 1:45:46 PM
- *  Author: HP
- */ 
 #include "MPU6050.h"
 
 void mpu6050_calibrate_gyro(int32_t *x,int32_t *y, int32_t *z)
@@ -32,11 +26,11 @@ void mpu6050_calibrate_gyro(int32_t *x,int32_t *y, int32_t *z)
 		(*z)=(*z)/calibration_counter;
 		//------------do not delete----------
 	printf("gyro offsets are");
-	print16(x);
+	print16((int16_t *)x);
 	printf("  ");
-	print16(y);
+	print16((int16_t *)y);
 	printf("  ");
-	print16ln(z);
+	print16ln((int16_t *)z);
 	_delay_ms(1000);
 	//-----------------------------------
 				

@@ -4,7 +4,11 @@
 
 ADC.c
 
+defines.c
+
 functions.c
+
+KALMAN.c
 
 main.c
 

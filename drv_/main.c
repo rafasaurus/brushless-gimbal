@@ -1,10 +1,7 @@
-#define FRACT_INC ((MICROSECONDS_PER_TIMER0_OVERFLOW % 1000) >> 3)
-#define FRACT_MAX (1000 >> 3)
 //#define PRINT_RAW_DATA
 #define GYRO
 #define CALIBERATED_DATA
 #define DRV8313
-
 #include "defines.h"
 #include "functions.h"
 #include "USART.h"
@@ -12,6 +9,7 @@
 #include "TIMER.h"
 #include "mpu6050registers.h"
 #include "MPU6050.h"
+#include "KALMAN.h"
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/pgmspace.h>
@@ -21,113 +19,30 @@
 #include <math.h>
 #include <string.h>
 #include <time.h>
-void PWM_update(void);
-void print16(int16_t *value);
-void print16ln(int16_t *value);
-
-/*----------------micros,millis functions---------------*/
-
-unsigned long micros();
-unsigned long millis();
-//volatile unsigned long timer2_overflow_count=0;
-volatile unsigned long timer0_overflow_count = 0;
-volatile unsigned long timer0_millis = 0;
-static unsigned char timer0_fract = 0;
-#define clockCyclesPerMicrosecond() (F_CPU / 1000000L)
-
-FILE * uart_str;
-typedef int bool; 
-enum { false, true };
-static int uart_putchar(char c, FILE *stream);
-//---------------------------------------------
-
-uint16_t ADC_value=0;
-uint8_t phase_state=1;//global state 1,2,3,4,5,6
-uint8_t reverse=0;
-uint8_t com=0;
-uint8_t ADC_set_max=0;
-uint16_t ADC_max=0;
 uint8_t buffer[14];
-uint8_t flag=0;
-
-
-bool direction;
-int incr=-1;//increment variable
-uint16_t pwm_delay=2000;
 bool loop_bool=true;
-
-int U_step=U_step_predefine;
-int V_step=V_step_predefine;
-int W_step=W_step_predefine;
-#ifdef GENERATE_SIN
-	uint8_t pwmSin[SINE_TABLE_SZ];
-#elif SINPRESCALER==1
-	uint8_t pwmSin[] ={128,131,135,138,141,145,148,151,155,158,161,
-		164,168,171,174,177,181,184,187,190,193,197,200,203,206,209,
-		212,215,218,221,224,225,225,226,227,228,229,230,230,231,232,
-		232,233,234,234,235,235,236,236,236,237,237,237,238,238,238,
-		238,238,238,238,238,238,238,238,238,238,238,238,237,237,237,
-		236,236,236,235,235,234,234,233,232,232,231,230,230,229,228,
-		227,226,225,225,224,225,225,226,227,228,229,230,230,231,232,
-		232,233,234,234,235,235,236,236,236,237,237,237,238,238,238,
-		238,238,238,238,238,238,238,238,238,238,238,238,237,237,237,
-		236,236,236,235,235,234,234,233,232,232,231,230,230,229,228,
-		227,226,225,225,224,221,218,215,212,209,206,203,200,197,193,
-		190,187,184,181,177,174,171,168,164,161,158,155,151,148,145,
-		141,138,135,131,128,125,121,118,115,111,108,105,101,98,95,92,
-		88,85,82,79,75,72,69,66,63,59,56,53,50,47,44,41,38,35,32,31,
-		31,30,29,28,27,26,26,25,24,24,23,22,22,21,21,20,20,20,19,19,
-		19,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,19,19,19,20,
-		20,20,21,21,22,22,23,24,24,25,26,26,27,28,29,30,31,31,32,31,
-		31,30,29,28,27,26,26,25,24,24,23,22,22,21,21,20,20,20,19,19,
-		19,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,19,19,19,20,
-		20,20,21,21,22,22,23,24,24,25,26,26,27,28,29,30,31,31,32,35,
-		38,41,44,47,50,53,56,59,63,66,69,72,75,79,82,85,88,92,95,98,
-		101,105,108,111,115,118,121,125,128
-	};
-	#else if SINPRESCALER==2
-	uint8_t pwmSin[]={64,65,67,69,70,72,73,75,77,78,80,82,83,85,87,
-		88,90,91,93,95,96,98,99,101,102,104,105,107,108,110,111,112,
-		112,113,113,114,114,114,115,115,115,116,116,116,117,117,117,
-		117,118,118,118,118,118,118,118,118,119,119,119,119,119,119,
-		119,119,119,118,118,118,118,118,118,118,118,117,117,117,117,
-		116,116,116,115,115,115,114,114,114,113,113,112,112,111,112,
-		112,113,113,114,114,114,115,115,115,116,116,116,117,117,117,
-		117,118,118,118,118,118,118,118,118,119,119,119,119,119,119,
-		119,119,119,118,118,118,118,118,118,118,118,117,117,117,117,
-		116,116,116,115,115,115,114,114,114,113,113,112,112,111,110,
-		108,107,105,104,102,101,99,98,96,95,93,91,90,88,87,85,83,82,
-		80,78,77,75,73,72,70,69,67,65,64,62,60,58,57,55,54,52,50,49,
-		47,45,44,42,40,39,37,36,34,32,31,29,28,26,25,23,22,20,19,17,
-		16,15,15,14,14,13,13,13,12,12,12,11,11,11,10,10,10,10,9,9,9,
-		9,9,9,9,9,8,8,8,8,8,8,8,8,8,9,9,9,9,9,9,9,9,10,10,10,10,11,
-		11,11,12,12,12,13,13,13,14,14,15,15,16,15,15,14,14,13,13,13,
-		12,12,12,11,11,11,10,10,10,10,9,9,9,9,9,9,9,9,8,8,8,8,8,8,8,
-		8,8,9,9,9,9,9,9,9,9,10,10,10,10,11,11,11,12,12,12,13,13,13,14,
-		14,15,15,16,17,19,20,22,23,25,26,28,29,31,32,34,36,37,39,40,
-		42,44,45,47,49,50,52,54,55,57,58,60,62,64
-	};
-#endif
-//uint8_t pwmSin[] = {128, 132, 136, 140, 143, 147, 151, 155, 159, 162, 166, 170, 174, 178, 181, 185, 189, 192, 196, 200, 203, 207, 211, 214, 218, 221, 225, 228, 232, 235, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 248, 249, 250, 250, 251, 252, 252, 253, 253, 253, 254, 254, 254, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 254, 254, 254, 253, 253, 253, 252, 252, 251, 250, 250, 249, 248, 248, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 248, 249, 250, 250, 251, 252, 252, 253, 253, 253, 254, 254, 254, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 254, 254, 254, 253, 253, 253, 252, 252, 251, 250, 250, 249, 248, 248, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 235, 232, 228, 225, 221, 218, 214, 211, 207, 203, 200, 196, 192, 189, 185, 181, 178, 174, 170, 166, 162, 159, 155, 151, 147, 143, 140, 136, 132, 128, 124, 120, 116, 113, 109, 105, 101, 97, 94, 90, 86, 82, 78, 75, 71, 67, 64, 60, 56, 53, 49, 45, 42, 38, 35, 31, 28, 24, 21, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 8, 7, 6, 6, 5, 4, 4, 3, 3, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 6, 6, 7, 8, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 8, 7, 6, 6, 5, 4, 4, 3, 3, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 6, 6, 7, 8, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 24, 28, 31, 35, 38, 42, 45, 49, 53, 56, 60, 64, 67, 71, 75, 78, 82, 86, 90, 94, 97, 101, 105, 109, 113, 116, 120, 124};
-
 /*-----------------------------------start of main----------------------------------*/
 int main(void)
-{				
-		
+{	
+	U_step=U_step_predefine;
+	V_step=V_step_predefine;
+	W_step=W_step_predefine;
+	incr=-1;
+	pwm_delay=2000;
 	cli();
 	init_gpio();
 		#ifdef GYRO
 			i2c_init();
 		#endif
 	USART_Init(MY_UBRR);
-	uart_str = fdevopen(uart_putchar, NULL);	
+	uart_str = fdevopen(uart_putchar, NULL);
 	setup_timer0();
 	Enable_timer0_overflow_interrupt();//micros
 	setup_timer4();//pwm
 	setup_timer5();
 	Enable_timer5_compare_interrupt();//motor
 	OCR5A=4000;
-	unsigned long timer1;
+	unsigned long timer1=micros();
 	/*----------MPU6050 twi init---------*/
 	#ifdef GYRO
 		int16_t gyro_x;
@@ -170,7 +85,6 @@ int main(void)
 	/*----------------------end mpu definition ----------------------*/
 	
 	/*----------------------------motor init-------------------------*/
-	
 	#ifdef GENERATE_SIN
 		getSinTable(SINE_TABLE_SZ,pwmSin,sinScale);
 		printf("U_step_predefine="); print16ln(&U_step);
@@ -183,6 +97,10 @@ int main(void)
 		double compAngleX;
 		double compAngleY;
 	#endif  
+	Kalman_init();
+	double angle_roll_kalman=0;
+	double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;
+	angle=roll;//set starting angle
 	sei();
     while (1) /*---------------------------while(1)---------------------------------*/
     {
@@ -236,8 +154,8 @@ int main(void)
 			timer1=micros();
 			//double hz=1000000/dt;
 			double pop=1/(65.5*1000000/dt);
-			double gyroXrate = gyro_x*pop;// / 65.5 / hz; // Convert to deg/s
-			double gyroYrate = gyro_y*pop;// / 65.5 / hz; // Convert to deg/s
+			double gyroXrate = gyro_x*pop;// / 65.5 / hz; 
+			double gyroYrate = gyro_y*pop;// / 65.5 / hz; 
 			//double tpel=gyroYrate;
 			////print16ln(&tpel);
 			//if(loop_bool)
@@ -279,13 +197,24 @@ int main(void)
 				gyroYangle += gyroYrate_ * dt;
 				compAngleX = 0.93 * (compAngleX + gyroXrate * dt) + 0.07 * roll; // Calculate the angle using a Complimentary filter
 				compAngleY = 0.93 * (compAngleY + gyroYrate * dt) + 0.07 * pitch;
+				
+				
+				
 			#endif
+			//kalman
+			double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;
+			//angle=roll;//setangle	
+			float kalman_dt=dt/1000000;
+			double kalman_gyroyRate=gyro_y/65.5;
+			float kalman_angle=getAngle(roll,kalman_gyroyRate,kalman_dt);
+			//angle_roll_kalman+=pop*kalman_angle;	
 			
 			
-					
-			uint16_t reg=angle_pitch;
+			
+			
+			int16_t reg=kalman_angle;
 			printf(" ");
-			printf("gyroX_angle= ");
+			printf("kalman_angle= ");
 			print16(&reg);
 			reg=angle_roll;
 			printf(" ");
@@ -300,7 +229,6 @@ int main(void)
 			print16(&reg);
 						
 			#ifdef DRV8313
-				uint16_t reg_print=final_angleY;
 				int absoulute_y=abs(final_angleY);
 				uint16_t learing_rate=500;				
 				uint16_t local_motor_delay=(32735-(absoulute_y*learing_rate));
@@ -308,11 +236,11 @@ int main(void)
 				{
 					pwm_delay=local_motor_delay;
 				}
-				uint16_t reg_ = local_motor_delay;
+				int16_t reg_ = local_motor_delay;
 				printf("  ");
 				printf("ocr= ");
 				print16(&reg_);
-				if (final_angleY>=-0.8 && final_angleY<=0.8  || final_angleY >90)
+				if ((absoulute_y>=0.8) || (final_angleY >90))
 				{
 					incr=0;
 					printf("\n");	
@@ -323,7 +251,7 @@ int main(void)
 						cli();
 						incr=1;
 						printf(" ");
-						uint16_t val=pwmSin[U_step];
+						int16_t val=pwmSin[U_step];
 						print16(&val);
 						printf(" yes\n");
 						
@@ -333,7 +261,7 @@ int main(void)
 					{	cli();
 						incr=-1;
 						printf(" ");
-						uint16_t val=pwmSin[U_step];
+						int16_t val=pwmSin[U_step];
 						print16(&val);
 						printf(" no\n");
 						sei();
@@ -353,108 +281,5 @@ int main(void)
 			#endif //PRINT_RAW_DATA			
 		#endif //GYRO
 	}
-	return 0;
-}
-ISR(TIMER0_OVF_vect)//10 microsecconed timer interrupt
-{
-	unsigned long m = timer0_millis;
-	unsigned char f = timer0_fract;
-
-	m += MILLIS_INC;
-	f += FRACT_INC;
-	if (f >= FRACT_MAX) {
-		f -= FRACT_MAX;
-		m += 1;
-	}
-
-
-	timer0_fract = f;
-	timer0_millis = m;
-	timer0_overflow_count++;
-}
-unsigned long micros() {
-	unsigned long m;
-	uint8_t oldSREG = SREG, t;
-	
-	cli();
-	m = timer0_overflow_count;
-	t = TCNT0;
-
-	
-	if ((TIFR0 & _BV(TOV0)) && (t < 255))
-	m++;
-
-	SREG = oldSREG;
-	
-	return ((m << 8) + t) * (64 / clockCyclesPerMicrosecond());
-}
-
-unsigned long millis()
-{
-	unsigned long m;
-	uint8_t oldSREG = SREG;
-
-	cli();
-	m = timer0_millis;
-	SREG = oldSREG;
-
-	return m;
-}
-ISR(TIMER5_COMPA_vect)//motor update interrupt routine
-{
-	PWM_update();
-}
-void PWM_update()//motor pwm update 
-{
-	U_PWM=pwmSin[U_step];
-	V_PWM=pwmSin[V_step];
-	W_PWM=pwmSin[W_step];
-	U_step=U_step+incr;
-	V_step=V_step+incr;
-	W_step=W_step+incr;
-	if(U_step > SINE_TABLE_SZ)  
-		U_step = 0;
-	if(U_step < 0)  
-		U_step = SINE_TABLE_SZ;
-	
-	if(V_step > SINE_TABLE_SZ)  
-		V_step = 0;
-	if(V_step < 0)  
-		V_step = SINE_TABLE_SZ;
-	
-	if(W_step > SINE_TABLE_SZ)  
-		W_step = 0;
-	if(W_step < 0) 
-		W_step = SINE_TABLE_SZ;
-	//_delay_us(100);
-	OCR5A=pwm_delay;
-}
-void print16(int16_t *value)
-//this is pointer value, transmited value
-//must be reference type &
-{
-	char c[10];
-	itoa(*value, c, 10);
-	printf(c);
-	//printf("\n");
-}
-
-void print16ln(int16_t *value)
-//this is pointer value, transmited value
-//must be reference type &
-{
-	char c[10];
-	itoa(*value, c, 10);
-	printf(c);
-	printf("\n");
-}
-
-static int uart_putchar(char c, FILE *stream)
-{
-	if (c == '\n')
-	uart_putchar('\r', stream);
-	while (!( UCSR0A & (1<<UDRE0)));
-
-	UDR0 = c;
 	return 0;
 }

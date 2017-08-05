@@ -1,9 +1,5 @@
-/*
- * MPU6050.h
- *
- * Created: 7/24/2017 1:45:06 PM
- *  Author: HP
- */ 
+#ifndef MPU6050_HEADER
+#define MPU6050_HEADER
 #include "defines.h"
 #include "functions.h"
 #include "USART.h"
@@ -19,6 +15,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include "i2cmaster.h"
 
 uint16_t mpu6050_read_gyroX();
 uint16_t mpu6050_read_gyroY();
@@ -43,4 +40,4 @@ void mpu6050_getRawData(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int1
 	#define caliberation_wait_delay 2//in ms
 	void mpu6050_calibrate_gyro(int32_t *x,int32_t *y, int32_t *z);
 	void mpu6050_calibrate_accel(int32_t *x,int32_t *y, int32_t *z);
-
+#endif

@@ -1,9 +1,4 @@
-/*
- * ADC.h
- *
- * Created: 7/16/2017 10:33:08 PM
- *  Author: rafa
- */ 
-
-
+#ifndef ADC_HEADER
+#define ADC_HEADER
 void ADC_Init();
+#endif

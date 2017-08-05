@@ -28,15 +28,15 @@
     <eraseonlaunchrule>0</eraseonlaunchrule>
     <AsfFrameworkConfig>
       <framework-data>
-  <options />
-  <configurations />
-  <files />
-  <documentation help="" />
-  <offline-documentation help="" />
-  <dependencies>
-    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.25.0" />
-  </dependencies>
-</framework-data>
+        <options />
+        <configurations />
+        <files />
+        <documentation help="" />
+        <offline-documentation help="" />
+        <dependencies>
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.25.0" />
+        </dependencies>
+      </framework-data>
     </AsfFrameworkConfig>
     <avrtool>com.atmel.avrdbg.tool.simulator</avrtool>
     <avrtoolserialnumber />
@@ -139,6 +139,9 @@
     <Compile Include="ADC.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="defines.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="defines.h">
       <SubType>compile</SubType>
     </Compile>
@@ -149,6 +152,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="i2cmaster.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="KALMAN.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="KALMAN.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.c">

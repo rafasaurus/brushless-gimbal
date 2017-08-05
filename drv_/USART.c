@@ -26,3 +26,32 @@ void USART_Transmit( unsigned char data )
 	/* Put data into buffer, sends the data */
 	UDR0 = data;
 }
+void print16(int16_t *value)
+//this is pointer value, transmited value
+//must be reference type &
+{
+	char c[10];
+	itoa(*value, c, 10);
+	printf(c);
+	//printf("\n");
+}
+
+void print16ln(int16_t *value)
+//this is pointer value, transmited value
+//must be reference type &
+{
+	char c[10];
+	itoa(*value, c, 10);
+	printf(c);
+	printf("\n");
+}
+
+int uart_putchar(char c, FILE *stream)
+{
+	if (c == '\n')
+	uart_putchar('\r', stream);
+	while (!( UCSR0A & (1<<UDRE0)));
+
+	UDR0 = c;
+	return 0;
+}

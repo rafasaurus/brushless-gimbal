@@ -38,7 +38,9 @@ SUBDIRS :=
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../ADC.c \
+../defines.c \
 ../functions.c \
+../KALMAN.c \
 ../main.c \
 ../MPU6050.c \
 ../TIMER.c \
@@ -54,7 +56,9 @@ ASM_SRCS +=
 
 OBJS +=  \
 ADC.o \
+defines.o \
 functions.o \
+KALMAN.o \
 main.o \
 MPU6050.o \
 TIMER.o \
@@ -63,7 +67,9 @@ USART.o
 
 OBJS_AS_ARGS +=  \
 ADC.o \
+defines.o \
 functions.o \
+KALMAN.o \
 main.o \
 MPU6050.o \
 TIMER.o \
@@ -72,7 +78,9 @@ USART.o
 
 C_DEPS +=  \
 ADC.d \
+defines.d \
 functions.d \
+KALMAN.d \
 main.d \
 MPU6050.d \
 TIMER.d \
@@ -81,7 +89,9 @@ USART.d
 
 C_DEPS_AS_ARGS +=  \
 ADC.d \
+defines.d \
 functions.d \
+KALMAN.d \
 main.d \
 MPU6050.d \
 TIMER.d \
@@ -102,6 +112,10 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
 
 
 
