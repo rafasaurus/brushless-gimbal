@@ -66,7 +66,14 @@ void printSI(char c[20],int16_t intToPrint)
 void printDouble(double *value)
 {
 	char c[20]={0};
-	double val=90.2312;     // string to print to and transmit
-	sprintf(c, "%f", val);
+	float val=90.2312;     // string to print to and transmit
+	sprintf(c, "%f", *value);
 	printf(c);
+}
+void printSD(char c[20],double doubleToPrint)
+{
+	printf(c);
+	//printf(" ");
+	printDouble(&doubleToPrint);
+	printf("  ");
 }

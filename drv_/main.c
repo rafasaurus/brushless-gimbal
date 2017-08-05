@@ -108,8 +108,6 @@ int main(void)
 	sei();
     while (1) /*---------------------------while(1)---------------------------------*/
     {
-		double f=34.2312;
-		printDouble(&f);
 		#ifdef GYRO
     		mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);//15us to do
 			accel_x-=accelX_calib;
@@ -155,16 +153,12 @@ int main(void)
 			//angle=roll;
 			float kalman_angle=getAngle(angle_roll,gyroYrate,dt);
 			
-			int16_t reg;
-			reg=kalman_angle;
-			printSI("",reg);
-			reg=angle_roll;
-			printSI("",reg);
+			printSD("kalman_angle=",kalman_angle);
+			printSD("angle_roll=",angle_roll);
 				
 			double xff=angle_roll_acc;
 			double final_angleY=(angle_roll*0.996)+(xff*0.004);
-			reg=final_angleY;
-			printSI("",reg);
+			printSD("final_angleY=",final_angleY);
 			printf("\n");		
 			#ifdef DRV8313
 				int absoulute_y=abs(kalman_angle);
