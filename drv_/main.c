@@ -153,12 +153,12 @@ int main(void)
 			//angle=roll;
 			float kalman_angle=getAngle(angle_roll,gyroYrate,dt);
 			
-			printSD("kalman_angle=",kalman_angle);
-			printSD("angle_roll=",angle_roll);
+			printSD("",kalman_angle);
+			printSD("",angle_roll);
 				
-			double xff=angle_roll_acc;
-			double final_angleY=(angle_roll*0.996)+(xff*0.004);
-			printSD("final_angleY=",final_angleY);
+			
+			double final_angleY=(angle_roll*0.996)+(angle_roll_acc*0.004);
+			printSD("",final_angleY);
 			printf("\n");		
 			#ifdef DRV8313
 				int absoulute_y=abs(kalman_angle);

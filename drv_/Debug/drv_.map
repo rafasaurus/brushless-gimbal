@@ -1013,7 +1013,7 @@ END GROUP
  *(.fini0)
                 0x000026f0                _etext = .
 
-.data           0x00800200      0x1a4 load address 0x000026f0
+.data           0x00800200      0x17c load address 0x000026f0
                 0x00800200                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800200        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6\libc.a(malloc.o)
@@ -1033,61 +1033,62 @@ END GROUP
  *(.rodata)
  *(.rodata*)
  .rodata.str1.1
-                0x00800375       0x28 main.o
+                0x00800375        0x0 main.o
+                                  0x1 (size before relaxing)
  .rodata.str1.1
-                0x0080039d        0x6 USART.o
+                0x00800375        0x6 USART.o
  *(.gnu.linkonce.d*)
-                0x008003a4                . = ALIGN (0x2)
- *fill*         0x008003a3        0x1 
-                0x008003a4                _edata = .
-                0x008003a4                PROVIDE (__data_end, .)
+                0x0080037c                . = ALIGN (0x2)
+ *fill*         0x0080037b        0x1 
+                0x0080037c                _edata = .
+                0x0080037c                PROVIDE (__data_end, .)
 
-.bss            0x008003a4       0x53
-                0x008003a4                PROVIDE (__bss_start, .)
+.bss            0x0080037c       0x53
+                0x0080037c                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
- .bss.U_step    0x008003a4        0x2 functions.o
-                0x008003a4                U_step
+ .bss.U_step    0x0080037c        0x2 functions.o
+                0x0080037c                U_step
  .bss.timer0_fract
-                0x008003a6        0x1 TIMER.o
+                0x0080037e        0x1 TIMER.o
  .bss.timer0_millis
-                0x008003a7        0x4 TIMER.o
-                0x008003a7                timer0_millis
+                0x0080037f        0x4 TIMER.o
+                0x0080037f                timer0_millis
  .bss.timer0_overflow_count
-                0x008003ab        0x4 TIMER.o
-                0x008003ab                timer0_overflow_count
+                0x00800383        0x4 TIMER.o
+                0x00800383                timer0_overflow_count
  *(COMMON)
- COMMON         0x008003af        0x2 ADC.o
-                0x008003af                pwm_delay
- COMMON         0x008003b1        0x4 defines.o
-                0x008003b1                direction
-                0x008003b3                incr
- COMMON         0x008003b5       0x28 KALMAN.o
-                0x008003b5                Q_bias
-                0x008003b9                rate
-                0x008003bd                Q_angle
-                0x008003c1                bias
-                0x008003c5                R_measure
-                0x008003c9                angle
-                0x008003cd                P
- COMMON         0x008003dd       0x10 main.o
-                0x008003dd                uart_str
-                0x008003df                buffer
- COMMON         0x008003ed        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6\libc.a(iob.o)
-                0x008003ed                __iob
- COMMON         0x008003f3        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6\libc.a(malloc.o)
-                0x008003f3                __brkval
-                0x008003f5                __flp
-                0x008003f7                PROVIDE (__bss_end, .)
+ COMMON         0x00800387        0x2 ADC.o
+                0x00800387                pwm_delay
+ COMMON         0x00800389        0x4 defines.o
+                0x00800389                direction
+                0x0080038b                incr
+ COMMON         0x0080038d       0x28 KALMAN.o
+                0x0080038d                Q_bias
+                0x00800391                rate
+                0x00800395                Q_angle
+                0x00800399                bias
+                0x0080039d                R_measure
+                0x008003a1                angle
+                0x008003a5                P
+ COMMON         0x008003b5       0x10 main.o
+                0x008003b5                uart_str
+                0x008003b7                buffer
+ COMMON         0x008003c5        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6\libc.a(iob.o)
+                0x008003c5                __iob
+ COMMON         0x008003cb        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr6\libc.a(malloc.o)
+                0x008003cb                __brkval
+                0x008003cd                __flp
+                0x008003cf                PROVIDE (__bss_end, .)
                 0x000026f0                __data_load_start = LOADADDR (.data)
-                0x00002894                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x0000286c                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x008003f7        0x0
+.noinit         0x008003cf        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x008003f7                _end = .
-                0x008003f7                PROVIDE (__heap_start, .)
+                0x008003cf                _end = .
+                0x008003cf                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)
@@ -1193,18 +1194,18 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x2de0
+.debug_info     0x00000000     0x2dd1
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0xbbc C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega2560/avr6/crtatmega2560.o
  .debug_info    0x00000bbc       0x94 ADC.o
  .debug_info    0x00000c50       0x9e defines.o
  .debug_info    0x00000cee      0x2df functions.o
  .debug_info    0x00000fcd      0x17e KALMAN.o
- .debug_info    0x0000114b      0x91e main.o
- .debug_info    0x00001a69      0x9ae MPU6050.o
- .debug_info    0x00002417      0x252 TIMER.o
- .debug_info    0x00002669      0x22d twimastertimeout.o
- .debug_info    0x00002896      0x54a USART.o
+ .debug_info    0x0000114b      0x90f main.o
+ .debug_info    0x00001a5a      0x9ae MPU6050.o
+ .debug_info    0x00002408      0x252 TIMER.o
+ .debug_info    0x0000265a      0x22d twimastertimeout.o
+ .debug_info    0x00002887      0x54a USART.o
 
 .debug_abbrev   0x00000000     0x171a
  *(.debug_abbrev)
@@ -1265,15 +1266,15 @@ END GROUP
  .debug_str     0x00000b2a       0x8d USART.o
                                 0x283 (size before relaxing)
 
-.debug_loc      0x00000000     0x1ea7
+.debug_loc      0x00000000     0x1e89
  *(.debug_loc)
  .debug_loc     0x00000000      0x419 functions.o
  .debug_loc     0x00000419      0x281 KALMAN.o
- .debug_loc     0x0000069a      0x358 main.o
- .debug_loc     0x000009f2      0xb44 MPU6050.o
- .debug_loc     0x00001536      0x21e TIMER.o
- .debug_loc     0x00001754      0x31a twimastertimeout.o
- .debug_loc     0x00001a6e      0x439 USART.o
+ .debug_loc     0x0000069a      0x33a main.o
+ .debug_loc     0x000009d4      0xb44 MPU6050.o
+ .debug_loc     0x00001518      0x21e TIMER.o
+ .debug_loc     0x00001736      0x31a twimastertimeout.o
+ .debug_loc     0x00001a50      0x439 USART.o
 
 .debug_macinfo
  *(.debug_macinfo)
