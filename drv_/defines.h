@@ -97,9 +97,9 @@
 	#endif
 
 	//Your offsets:	-298	-2782	2134	59	114	311
-	#define gyro_offset_x -119
-	#define gyro_offset_y -228
-	#define gyro_offset_z -228
+	#define gyro_offset_x -108
+	#define gyro_offset_y -224
+	#define gyro_offset_z -625
 	#define accel_offset_x -298
 	#define accel_offset_y -2782
 	#define accel_offset_z 2134

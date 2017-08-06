@@ -1091,7 +1091,7 @@ int main(void)
      8cc:	8b 87       	std	Y+11, r24	; 0x0b
      8ce:	89 81       	ldd	r24, Y+1	; 0x01
      8d0:	9a 81       	ldd	r25, Y+2	; 0x02
-     8d2:	89 58       	subi	r24, 0x89	; 137
+     8d2:	84 59       	subi	r24, 0x94	; 148
 			gyro_z-=gyroZ_calib;
      8d4:	9f 4f       	sbci	r25, 0xFF	; 255
      8d6:	9a 83       	std	Y+2, r25	; 0x02
@@ -1104,14 +1104,14 @@ int main(void)
 			/*--------end------*/			
 		#else
 			double dt = ((double)(micros() - timer1))/1000000;
-     8de:	8c 51       	subi	r24, 0x1C	; 28
+     8de:	80 52       	subi	r24, 0x20	; 32
      8e0:	9f 4f       	sbci	r25, 0xFF	; 255
      8e2:	9c 83       	std	Y+4, r25	; 0x04
      8e4:	8b 83       	std	Y+3, r24	; 0x03
      8e6:	8d 81       	ldd	r24, Y+5	; 0x05
      8e8:	9e 81       	ldd	r25, Y+6	; 0x06
-     8ea:	8c 51       	subi	r24, 0x1C	; 28
-     8ec:	9f 4f       	sbci	r25, 0xFF	; 255
+     8ea:	8f 58       	subi	r24, 0x8F	; 143
+     8ec:	9d 4f       	sbci	r25, 0xFD	; 253
      8ee:	9e 83       	std	Y+6, r25	; 0x06
      8f0:	8d 83       	std	Y+5, r24	; 0x05
      8f2:	ae d2       	rcall	.+1372   	; 0xe50 <micros>
