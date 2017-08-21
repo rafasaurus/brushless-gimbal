@@ -151,7 +151,7 @@ int main(void)
 			double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;
 			double pitch = atan(-accel_x / sqrt(accel_y * accel_y + accel_z * accel_z)) * RAD_TO_DEG;
 			//angle=roll;
-			float kalman_angle=getAngle(angle_roll,gyroYrate,dt);
+			float kalman_angle=getAngle(angle_roll,gyroXrate,dt);
 			
 			printSD("",kalman_angle);
 			printSD("",angle_roll);
