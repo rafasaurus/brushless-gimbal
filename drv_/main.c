@@ -1,4 +1,3 @@
-
 #include "defines.h"
 #include "functions.h"
 #include "USART.h"
@@ -7,6 +6,7 @@
 #include "mpu6050registers.h"
 #include "MPU6050.h"
 #include "KALMAN.h"
+#include "PID.h"
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/pgmspace.h>
