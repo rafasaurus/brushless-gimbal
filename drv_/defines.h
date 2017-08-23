@@ -73,7 +73,7 @@
 	// by three to fit these numbers into a byte. (for the clock speeds we care
 	// about - 8 and 16 MHz - this doesn't lose precision.)
 	#define pi (3.14159265359)
-	#define RAD_TO_DEG (pi/180)
+	#define RAD_TO_DEG (57.2957786)
 	#define FRACT_INC ((MICROSECONDS_PER_TIMER0_OVERFLOW % 1000) >> 3)
 	#define FRACT_MAX (1000 >> 3)
 	

@@ -101,10 +101,14 @@ int main(void)
 		double compAngleX;
 		double compAngleY;
 	#endif  
+	
+	
 	Kalman_init();
-	double angle_roll_kalman=0;
-	double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;
-	angle=0;//roll;//set starting angle
+	double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG; //calibration offset of angle by accelerometer data
+	angle_roll=roll;
+	angle=roll;//set starting angle
+	
+	
 	sei();
     while (1) /*---------------------------while(1)---------------------------------*/
     {
@@ -132,8 +136,8 @@ int main(void)
 			double gyroXrate = gyro_x/65.5;// deg/s 
 			double gyroYrate = gyro_y/65.5;// deg/s
 			if (!loop_bool) {
-				angle_pitch += gyroXrate*dt; //Calculate the traveled pitch angle and add this to the angle_pitch variable
-				angle_roll += gyroYrate*dt;  //Calculate the traveled roll angle and add this to the angle_roll variable			
+				angle_roll += gyroXrate*dt; //Calculate the traveled pitch angle and add this to the angle_pitch variable
+				angle_pitch += gyroYrate*dt;  //Calculate the traveled roll angle and add this to the angle_roll variable			
 			}
 			else loop_bool=false;	
 			//angle_pitch += angle_roll * sin(gyro_z * (dt/65.5*pi/180));               //If the IMU has yawed transfer the roll angle to the pitch angel
@@ -147,11 +151,8 @@ int main(void)
 		    angle_pitch_acc = asin((double)accel_y/acc_total_vector)* 57.296;       //Calculate the pitch angle
 			angle_roll_acc = asin((double)accel_x/acc_total_vector)* -57.296;       //Calculate the roll angle
 				
-			//kalman
-			//double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;
-			//double pitch = atan(-accel_x / sqrt(accel_y * accel_y + accel_z * accel_z)) * RAD_TO_DEG;
-			//angle=roll;
-			float kalman_angle=getAngle(angle_roll,gyroXrate,dt);
+			/*-------------------------Kalman--------------------------------*/		
+			float kalman_angle=getAngle(angle_roll_acc,gyroXrate,dt);
 			
 			printSD("",kalman_angle);
 			printSD("",angle_roll);
