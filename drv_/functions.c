@@ -145,4 +145,7 @@ void PWM_update()//motor pwm update
 	//_delay_us(100);
 	OCR5A=pwm_delay;
 }
-
+void init_motor_gpio()
+{
+	
+}
