@@ -28,6 +28,7 @@ int main(void)
 	pwm_delay=2000;
 	cli();
 	init_gpio();
+	init_motor_gpio();
 		#ifdef GYRO
 			i2c_init();
 		#endif
