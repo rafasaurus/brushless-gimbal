@@ -105,9 +105,16 @@ int main(void)
 	
 	
 	Kalman_init();
-	double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG; //calibration offset of angle by accelerometer data
-	angle_roll=roll;
-	angle=roll;//set starting angle
+	double temporar_accel_x=accel_x/100;
+	double temporar_accel_y=accel_y/100;
+	double temporar_accel_z=accel_z/100;
+	acc_total_vector = sqrt((temporar_accel_x*temporar_accel_x)+(temporar_accel_y*temporar_accel_y)+(temporar_accel_z*temporar_accel_z));  //Calculate the total accelerometer vector
+	acc_total_vector*=100;
+	angle_pitch_acc = asin((double)accel_y/acc_total_vector)* 57.296;       //Calculate the pitch angle
+	angle_roll_acc = asin((double)accel_x/acc_total_vector)* -57.296;       //Calculate the roll angle
+	//double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG; //calibration offset of angle by accelerometer data
+	angle_roll=angle_roll_acc;
+	angle=angle_roll_acc;//set starting angle
 	
 	
 	sei();
@@ -144,9 +151,9 @@ int main(void)
 			//angle_pitch += angle_roll * sin(gyro_z * (dt/65.5*pi/180));               //If the IMU has yawed transfer the roll angle to the pitch angel
 			//angle_roll -= angle_pitch * sin(gyro_z * (dt/65.5*pi/180));               //If the IMU has yawed transfer the pitch angle to the roll angel
 			
-			double temporar_accel_x=accel_x/100;
-			double temporar_accel_y=accel_y/100;
-			double temporar_accel_z=accel_z/100;	
+			/*double */temporar_accel_x=accel_x/100;
+			/*double */temporar_accel_y=accel_y/100;
+			/*double */temporar_accel_z=accel_z/100;	
 			acc_total_vector = sqrt((temporar_accel_x*temporar_accel_x)+(temporar_accel_y*temporar_accel_y)+(temporar_accel_z*temporar_accel_z));  //Calculate the total accelerometer vector
 			acc_total_vector*=100;
 		    angle_pitch_acc = asin((double)accel_y/acc_total_vector)* 57.296;       //Calculate the pitch angle
@@ -157,10 +164,13 @@ int main(void)
 			
 			printSD("",kalman_angle);
 			printSD("",angle_roll);
-				
+			printSD("totvec=",acc_total_vector);
 			
 			double final_angleY=(angle_roll*0.996)+(angle_roll_acc*0.004);
 			printSD("",final_angleY);
+			//double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG; //calibration offset of angle by accelerometer data
+			//printSD("",roll);
+			//printSD("",angle_roll_acc);
 			printf("\n");		
 			#ifdef DRV8313
 				int absoulute_y=abs(kalman_angle);
