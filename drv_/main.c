@@ -105,18 +105,7 @@ int main(void)
 	
 	
 	Kalman_init();
-	double temporar_accel_x=accel_x/100;
-	double temporar_accel_y=accel_y/100;
-	double temporar_accel_z=accel_z/100;
-	acc_total_vector = sqrt((temporar_accel_x*temporar_accel_x)+(temporar_accel_y*temporar_accel_y)+(temporar_accel_z*temporar_accel_z));  //Calculate the total accelerometer vector
-	acc_total_vector*=100;
-	angle_pitch_acc = asin((double)accel_y/acc_total_vector)* 57.296;       //Calculate the pitch angle
-	angle_roll_acc = asin((double)accel_x/acc_total_vector)* -57.296;       //Calculate the roll angle
-	//double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG; //calibration offset of angle by accelerometer data
-	angle_roll=angle_roll_acc;
-	angle=angle_roll_acc;//set starting angle
-	
-	
+
 	_delay_ms(1000);
 	double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;
 	double pitch = atan(-accel_x / sqrt(accel_y * accel_y + accel_z * accel_z)) * RAD_TO_DEG;
@@ -191,7 +180,7 @@ int main(void)
 					//printf("\n");	
 				}
 				else 
-					if (final_angleY>0.8)
+					if (kalman_angle>0.8)
 					{
 						cli();
 						incr=1;
