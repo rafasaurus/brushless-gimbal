@@ -109,7 +109,7 @@ int main(void)
 	_delay_ms(1000);
 	double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;
 	double pitch = atan(-accel_x / sqrt(accel_y * accel_y + accel_z * accel_z)) * RAD_TO_DEG;
-	angle=roll;
+	angle=0;
 	
 	
 	sei();
@@ -154,20 +154,20 @@ int main(void)
 			
 				
 			/*-------------------------Kalman--------------------------------*/		
-			//float kalman_angle=getAngle(angle_roll_acc,gyroXrate,dt);
+			
 			float kalman_angle=getAngle(roll,gyroXrate,dt);
 			printSD("",kalman_angle);
-			printSD("",angle_roll);
+			//printSD("",angle_roll);
 			//printSD("totvec=",acc_total_vector);
 			
 			double final_angleY=(angle_roll*0.996)+(roll*0.004);
-			printSD("",final_angleY);
+			printSD("",angle);
 			printSD("",roll);
 			printf("\n");		
 			#ifdef DRV8313
 				int absoulute_y=abs(kalman_angle);
 				uint16_t learing_rate=500;				
-				uint16_t local_motor_delay=(32735-(absoulute_y*learing_rate));
+				uint16_t local_motor_delay=(32735-(5000));
 				if (local_motor_delay>2000)
 				{
 					pwm_delay=local_motor_delay;
