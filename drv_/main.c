@@ -103,15 +103,31 @@ int main(void)
 		double compAngleY;
 	#endif  
 	
-	
+	/*---------------------------kalman_init----------------------*/
 	Kalman_init();
-
 	_delay_ms(1000);
 	double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;
 	double pitch = atan(-accel_x / sqrt(accel_y * accel_y + accel_z * accel_z)) * RAD_TO_DEG;
 	angle=0;
 	
-	
+	/*---------------------------PID_INIT-------------------------*/
+	double aggKp=4, aggKi=0.2, aggKd=1;
+	double consKp=1, consKi=0.05, consKd=0.25;
+	double Setpoint, Input, Output;
+	Setpoint = 0;
+	PID_SetMode(AUTOMATIC);
+	Input=angle;
+	*myOutput = Output;
+	*myInput = Input;
+	*mySetpoint = Setpoint;
+	inAuto = false;
+	PID_SetOutputLimits(0,90);
+	SampleTime=100;
+	PID_SetTunings(consKp,consKi,consKd);
+	lastTime = millis()-SampleTime;
+	printSI("myInput=",*myInput);
+	//_delay_ms(10000);
+	printf("restarted");
 	sei();
     while (1) /*---------------------------while(1)---------------------------------*/
     {
@@ -154,18 +170,33 @@ int main(void)
 			
 				
 			/*-------------------------Kalman--------------------------------*/		
-			
 			float kalman_angle=getAngle(roll,gyroXrate,dt);
 			printSD("",kalman_angle);
 			//printSD("",angle_roll);
 			//printSD("totvec=",acc_total_vector);
+		    
+			/*-------------------------PID-----------------------------------*/
+			*myInput=(int)kalman_angle;
+			double gap = abs(Setpoint-Input); //distance away from setpoint
+			if (gap < 10)
+			{  //we're close to setpoint, use conservative tuning parameters
+				PID_SetTunings(consKp, consKi, consKd);
+			}
+			else
+			{
+				//we're far from setpoint, use aggressive tuning parameters
+				PID_SetTunings(aggKp, aggKi, aggKd);
+			}
+			PID_Compute();
+			
 			
 			double final_angleY=(angle_roll*0.996)+(roll*0.004);
-			printSD("",angle);
-			printSD("",roll);
+			printSD("myoutput=",*myOutput);
+			//printSI("myInput=",myInput);
+			//printSD("",roll);
 			printf("\n");		
 			#ifdef DRV8313
-				int absoulute_y=abs(kalman_angle);
+				int absoulute_y=abs(*myOutput);
 				uint16_t learing_rate=500;				
 				uint16_t local_motor_delay=(32735-(5000));
 				if (local_motor_delay>2000)
@@ -180,7 +211,7 @@ int main(void)
 					//printf("\n");	
 				}
 				else 
-					if (kalman_angle>0.8)
+					if (*myOutput>0.8)
 					{
 						cli();
 						incr=1;
