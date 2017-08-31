@@ -1,3 +1,4 @@
+//#define ENABLE_PID_LIB
 #include "defines.h"
 #include "functions.h"
 #include "USART.h"
@@ -111,16 +112,29 @@ int main(void)
 	angle=0;
 	
 	/*---------------------------PID_INIT-------------------------*/
-	double aggKp=4, aggKi=0.2, aggKd=1;
-	double consKp=1, consKi=0.05, consKd=0.25;
-	
-	*mySetpoint = 0;
-	PID_SetMode(AUTOMATIC);
-	inAuto = false;
-	PID_SetOutputLimits(0,90);
-	SampleTime=100;
-	PID_SetTunings(consKp,consKi,consKd);
-	lastTime = millis()-SampleTime;
+	#ifdef ENABLE_PID_LIB
+		double aggKp=4, aggKi=0.2, aggKd=1;
+		double consKp=1, consKi=0.05, consKd=0.25;
+		
+		*mySetpoint = 0;
+		PID_SetMode(AUTOMATIC);
+		inAuto = false;
+		PID_SetOutputLimits(0,90);
+		SampleTime=100;
+		PID_SetTunings(consKp,consKi,consKd);
+		lastTime = millis()-SampleTime;
+	#else
+		
+		float PID, error, previous_error;
+		float pid_p=0;
+		float pid_i=0;
+		float pid_d=0;
+		/////////////////PID CONSTANTS/////////////////
+		double kp=3.55;//3.55
+		double ki=0.003;//0.003
+		double kd=0.05;//2.05
+		float desired_angle = 0;
+	#endif	
 	//printSI("myInput=",*myInput);
 	//_delay_ms(10000);
 	//printf("restarted");
@@ -170,50 +184,74 @@ int main(void)
 			printSD("",kalman_angle);
 			//printSD("",angle_roll);
 			//printSD("totvec=",acc_total_vector);
-		    double Input=kalman_angle;
-			double Setpoint=*mySetpoint;
-			/*-------------------------PID-----------------------------------*/
-			*myInput=(int)kalman_angle;
-			double gap = abs(Setpoint-Input); //distance away from setpoint
-			if (gap < 10)
-			{  //we're close to setpoint, use conservative tuning parameters
-				PID_SetTunings(consKp, consKi, consKd);
-			}
-			else
-			{
-				//we're far from setpoint, use aggressive tuning parameters
-				PID_SetTunings(aggKp, aggKi, aggKd);
-			}
-			PID_Compute();
 			
+			
+			
+			
+						#ifdef ENABLE_PID_LIB
+								double Input=kalman_angle;
+								double Setpoint=*mySetpoint;
+								/*-------------------------PID-----------------------------------*/
+								*myInput=(int)kalman_angle;
+								double gap = abs(Setpoint-Input); //distance away from setpoint
+								if (gap < 10)
+								{  //we're close to setpoint, use conservative tuning parameters
+									PID_SetTunings(consKp, consKi, consKd);
+								}
+								else
+								{
+									//we're far from setpoint, use aggressive tuning parameters
+									PID_SetTunings(aggKp, aggKi, aggKd);
+								}
+								PID_Compute();
+						#else
+								error = kalman_angle - desired_angle;
+								pid_p = kp*error;
+								if(-3 <error <3)
+								{
+									pid_i = pid_i+(ki*error);
+								}
+								
+								pid_d = kd*((error - previous_error)/dt);
+
+								/*The final PID values is the sum of each of this 3 parts*/
+								PID = pid_p + pid_i + pid_d;
+								double my_output=PID;
+								
+								printSD("",PID);
+								previous_error = error;
+								
+								
+						#endif
 			
 			double final_angleY=(angle_roll*0.996)+(roll*0.004);
-			printSD("myoutput=",*myOutput);
-			printSD("myInput=",*myInput);
+			//printSD("myoutput=",*myOutput);
+			//printSD("myInput=",*myInput);
 			//printSD("",roll);
 			printf("\n");		
 			#ifdef DRV8313
-				int absoulute_y=abs(*myOutput);
+				int absoulute_y=abs(THE_MAIN_OUTPUT);
 				uint16_t learing_rate=500;				
-				uint16_t local_motor_delay=(32735-(5000));
-				if (local_motor_delay>2000)
+				uint16_t local_motor_delay=(32735-10*THE_MAIN_OUTPUT);
+				if (local_motor_delay>20000)
 				{
 					pwm_delay=local_motor_delay;
+					printSI("pwm_delay = ",pwm_delay);
 				}
 				int16_t reg_ = local_motor_delay;
 				//printSI("ocr=",reg_);
-				if ((absoulute_y<=0.8) || (final_angleY >90))
+				if ((absoulute_y<=0.8) || (abs(kalman_angle) >90))
 				{
 					incr=0;
 					//printf("\n");	
 				}
 				else 
-					if (*myOutput>0.8)
+					if (THE_MAIN_OUTPUT<0.8)
 					{
 						cli();
 						incr=1;
-						printf(" ");
-						int16_t val=pwmSin[U_step];
+						//printf(" ");
+						//int16_t val=pwmSin[U_step];
 						//print16(&val);
 						//printf(" yes\n");					
 						sei();
@@ -221,8 +259,8 @@ int main(void)
 					else
 					{	cli();
 						incr=-1;
-						printf(" ");
-						int16_t val=pwmSin[U_step];
+						//printf(" ");
+						//int16_t val=pwmSin[U_step];
 						//print16(&val);
 						//printf(" no\n");
 						sei();

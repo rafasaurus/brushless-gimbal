@@ -149,14 +149,14 @@ void init_motor_gpio()
 {
 	//setting pin mode to output
 	sbi(DDRA,0);//digital 22 EN1
-	sbi(DDRA,1);//digital 23 EN2
-	sbi(DDRA,2);//digital 24 EN3
-	sbi(DDRA,3);//digital 25 sleep
-	sbi(DDRA,4);//digital 26 nf, see drv8313 
+	sbi(DDRA,2);//digital 24 EN2
+	sbi(DDRA,4);//digital 26 EN3
+	sbi(DDRA,6);//digital 28 sleep
+	sbi(DDRC,7);//digital 30 nf, see drv8313 
 	
-	sbi(PORTA,0);//EN1 HIGH
-	sbi(PORTA,1);//EN2 HIGH
-	sbi(PORTA,2);//EN3 HIGH
-	sbi(PORTA,3);//sleep HIGH
-	sbi(PORTA,4);//nf HIGH
+	sbi(PORTA,0);//sleep HIGH
+	sbi(PORTA,2);//nf HIGH
+	sbi(PORTA,4);//EN1 HIGH
+	sbi(PORTA,6);//EN2 HIGH
+	sbi(PORTC,7);//EN3 HIGH
 }
