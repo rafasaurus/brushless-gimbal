@@ -113,21 +113,17 @@ int main(void)
 	/*---------------------------PID_INIT-------------------------*/
 	double aggKp=4, aggKi=0.2, aggKd=1;
 	double consKp=1, consKi=0.05, consKd=0.25;
-	double Setpoint, Input, Output;
-	Setpoint = 0;
+	
+	*mySetpoint = 0;
 	PID_SetMode(AUTOMATIC);
-	Input=angle;
-	*myOutput = Output;
-	*myInput = Input;
-	*mySetpoint = Setpoint;
 	inAuto = false;
 	PID_SetOutputLimits(0,90);
 	SampleTime=100;
 	PID_SetTunings(consKp,consKi,consKd);
 	lastTime = millis()-SampleTime;
-	printSI("myInput=",*myInput);
+	//printSI("myInput=",*myInput);
 	//_delay_ms(10000);
-	printf("restarted");
+	//printf("restarted");
 	sei();
     while (1) /*---------------------------while(1)---------------------------------*/
     {
@@ -174,7 +170,8 @@ int main(void)
 			printSD("",kalman_angle);
 			//printSD("",angle_roll);
 			//printSD("totvec=",acc_total_vector);
-		    
+		    double Input=kalman_angle;
+			double Setpoint=*mySetpoint;
 			/*-------------------------PID-----------------------------------*/
 			*myInput=(int)kalman_angle;
 			double gap = abs(Setpoint-Input); //distance away from setpoint
@@ -192,7 +189,7 @@ int main(void)
 			
 			double final_angleY=(angle_roll*0.996)+(roll*0.004);
 			printSD("myoutput=",*myOutput);
-			//printSI("myInput=",myInput);
+			printSD("myInput=",*myInput);
 			//printSD("",roll);
 			printf("\n");		
 			#ifdef DRV8313
