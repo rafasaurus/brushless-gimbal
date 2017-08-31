@@ -218,7 +218,7 @@ int main(void)
 								PID = pid_p + pid_i + pid_d;
 								double my_output=PID;
 								
-								printSD("",PID);
+								//printSD("",PID);
 								previous_error = error;
 								
 								
@@ -227,7 +227,7 @@ int main(void)
 			double final_angleY=(angle_roll*0.996)+(roll*0.004);
 			//printSD("myoutput=",*myOutput);
 			//printSD("myInput=",*myInput);
-			//printSD("",roll);
+			printSD("roll = ",roll);
 			printf("\n");		
 			#ifdef DRV8313
 				int absoulute_y=abs(THE_MAIN_OUTPUT);
