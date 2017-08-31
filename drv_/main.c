@@ -228,7 +228,10 @@ int main(void)
 			//printSD("myoutput=",*myOutput);
 			//printSD("myInput=",*myInput);
 			printSD("roll = ",roll);
-			printf("\n");		
+			printSI("ax=",accel_x);
+			printSI("ay=",accel_y);
+			printSI("az=",accel_z);
+			printf("\n");	
 			#ifdef DRV8313
 				int absoulute_y=abs(THE_MAIN_OUTPUT);
 				uint16_t learing_rate=500;				
@@ -240,13 +243,13 @@ int main(void)
 				}
 				int16_t reg_ = local_motor_delay;
 				//printSI("ocr=",reg_);
-				if ((absoulute_y<=0.8) || (abs(kalman_angle) >90))
+				if ((absoulute_y<=1.5) || (abs(kalman_angle) >90))
 				{
 					incr=0;
 					//printf("\n");	
 				}
 				else 
-					if (kalman_angle<0.8)
+					if (kalman_angle<1.5)
 					{
 						cli();
 						incr=1;
