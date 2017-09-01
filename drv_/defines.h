@@ -111,5 +111,5 @@
 	//#define grZ  (gyro_z-=gyroZ_calib)
 	#define calibration_counter 4000
 	#define caliberation_wait_delay 5//in ms
-	#define THE_MAIN_OUTPUT kalman_angle
+	#define THE_MAIN_OUTPUT kalman_angle_x
 #endif //DEFINES

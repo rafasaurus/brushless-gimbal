@@ -175,12 +175,6 @@
     <Compile Include="MPU6050.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="PID.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="PID.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="TIMER.c">
       <SubType>compile</SubType>
     </Compile>

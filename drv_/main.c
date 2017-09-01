@@ -7,7 +7,6 @@
 #include "mpu6050registers.h"
 #include "MPU6050.h"
 #include "KALMAN.h"
-#include "PID.h"
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/pgmspace.h>
@@ -106,35 +105,25 @@ int main(void)
 	
 	/*---------------------------kalman_init----------------------*/
 	Kalman_init();
-	_delay_ms(1000);
+	Kalman_init_1();
+	_delay_ms(100);
 	double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;
-	double pitch = atan(-accel_x / sqrt(accel_y * accel_y + accel_z * accel_z)) * RAD_TO_DEG;
+	double pitch =  atan2(accel_x, sqrt(accel_y*accel_y + accel_z*accel_z)) * RAD_TO_DEG;// atan(-accel_x / sqrt(accel_y * accel_y + accel_z * accel_z)) * RAD_TO_DEG;
 	angle=0;
+	angle_1=0;
 	
 	/*---------------------------PID_INIT-------------------------*/
-	#ifdef ENABLE_PID_LIB
-		double aggKp=4, aggKi=0.2, aggKd=1;
-		double consKp=1, consKi=0.05, consKd=0.25;
-		
-		*mySetpoint = 0;
-		PID_SetMode(AUTOMATIC);
-		inAuto = false;
-		PID_SetOutputLimits(0,90);
-		SampleTime=100;
-		PID_SetTunings(consKp,consKi,consKd);
-		lastTime = millis()-SampleTime;
-	#else
 		
 		float PID, error, previous_error;
 		float pid_p=0;
 		float pid_i=0;
 		float pid_d=0;
 		/////////////////PID CONSTANTS/////////////////
-		double kp=1000.55;//3.55
-		double ki=3;//0.003
-		double kd=50.05;//2.05
+		double kp=500;//3.55
+		double ki=0;//0.003
+		double kd=10;//2.05
 		float desired_angle = 0;
-	#endif //ENABLE_PID_LIB
+	
 	//printSI("myInput=",*myInput);
 	//_delay_ms(10000);
 	//printf("restarted");
@@ -165,10 +154,10 @@ int main(void)
 			double dt = ((double)(micros() - timer1))/1000000;
 			timer1=micros();
 			double gyroXrate = gyro_x/65.5;// deg/s 
-			//double gyroYrate = gyro_y/65.5;// deg/s
+			double gyroYrate = gyro_y/65.5;// deg/s
 			if (!loop_bool) {
 				angle_roll += gyroXrate*dt; //Calculate the traveled pitch angle and add this to the angle_pitch variable
-				//angle_pitch += gyroYrate*dt;  //Calculate the traveled roll angle and add this to the angle_roll variable			
+				angle_pitch += gyroYrate*dt;  //Calculate the traveled roll angle and add this to the angle_roll variable			
 			}
 			else loop_bool=false;	
 			//angle_pitch += angle_roll * sin(gyro_z * (dt/65.5*pi/180));               //If the IMU has yawed transfer the roll angle to the pitch angel
@@ -177,37 +166,27 @@ int main(void)
 		
 			//-------------------------------NEW accel-----------------
 			roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;
-			//pitch = atan(-accel_x / sqrt(accel_y * accel_y + accel_z * accel_z)) * RAD_TO_DEG;
+			double temporar_accel_x=accel_x/100;
+			double temporar_accel_y=accel_y/100;
+			double temporar_accel_z=accel_z/100;
+			double temporar_var=sqrt(temporar_accel_y*temporar_accel_y + temporar_accel_z*temporar_accel_z);
+			temporar_var*=100;
+			pitch = atan2(accel_x, temporar_var) * RAD_TO_DEG;
 			//-------------------------------NEW ACCEL-----------------
 			
 				
 			/*-------------------------Kalman--------------------------------*/		
-			float kalman_angle=getAngle(roll,gyroXrate,dt);
-			printSD("",kalman_angle);
+			float kalman_angle_x=getAngle(roll,gyroXrate,dt);
+			float kalman_angle_y=getAngle_1(pitch,gyroYrate,dt);
+			
+			printSD("kro = ",kalman_angle_x);
+			printSD("kpi = ",kalman_angle_y);
+			printSD("roll = ",roll);
+			printSD("pitch = ",pitch);
 			//printSD("",angle_roll);
 			//printSD("totvec=",acc_total_vector);
 			
-			
-			
-			
-						#ifdef ENABLE_PID_LIB
-								double Input=kalman_angle;
-								double Setpoint=*mySetpoint;
-								/*-------------------------PID-----------------------------------*/
-								*myInput=(int)kalman_angle;
-								double gap = abs(Setpoint-Input); //distance away from setpoint
-								if (gap < 10)
-								{  //we're close to setpoint, use conservative tuning parameters
-									PID_SetTunings(consKp, consKi, consKd);
-								}
-								else
-								{
-									//we're far from setpoint, use aggressive tuning parameters
-									PID_SetTunings(aggKp, aggKi, aggKd);
-								}
-								PID_Compute();
-						#else
-								error = kalman_angle - desired_angle;
+								error = kalman_angle_x - desired_angle;
 								pid_p = kp*error;
 								if(-3 <error <3)
 								{
@@ -219,20 +198,20 @@ int main(void)
 								/*The final PID values is the sum of each of this 3 parts*/
 								PID = pid_p + pid_i + pid_d;
 								
-								if(PID < -30735)
-								{
-									PID=-30735;
-								}
-								if(PID > 30735)
-								{
-									PID=30735;
-								}
+								//if(PID < -27735)
+								//{
+								//	PID=-27735;
+								//}
+								//if(PID > 27735)
+								//{
+								//	PID=27735;
+								//}
 								double my_output=PID;
-								printSD("PID = ",PID);
+								//printSD("PID = ",PID);
 								previous_error = error;					
-						#endif
 			
-			double final_angleY=(angle_roll*0.996)+(roll*0.004);
+			//double final_angleY=(angle_roll*0.996)+(roll*0.004);
+			
 			//printSD("myoutput=",*myOutput);
 			//printSD("myInput=",*myInput);
 			//printSD("roll = ",roll);
@@ -247,23 +226,24 @@ int main(void)
 				int absoulute_y=abs(THE_MAIN_OUTPUT);
 				uint16_t learing_rate=500;				
 				uint16_t local_motor_delay=(32735-abs(my_output));
-				if (abs(local_motor_delay)>2000)
+				if (abs(local_motor_delay)>5000)
 				{
 					pwm_delay=abs(local_motor_delay);
-					printSI("pwm_delay = ",pwm_delay);
+					//printSI("pwm_delay = ",pwm_delay);
 				}
+				//printSI("pwm_delay = ",pwm_delay);
 				int16_t reg_ = local_motor_delay;
 				//printSI("ocr=",reg_);
-				if ((absoulute_y<=0.18) || (abs(kalman_angle) >90))
+				if ((absoulute_y<=0.18) || (abs(kalman_angle_x) >45))
 				{
 					incr=0;
 					//printf("\n");	
 				}
 				else 
-					if (kalman_angle<0.18)
+					if (kalman_angle_x<0.18)
 					{
 						cli();
-						incr=1;
+						incr=1;						
 						//printf(" ");
 						//int16_t val=pwmSin[U_step];
 						//print16(&val);
