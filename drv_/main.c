@@ -18,6 +18,7 @@
 #include <time.h>
 uint8_t buffer[14];
 bool loop_bool=true;
+double Compute_PID(double angle, double desired_angle,double *pid_i,double *previous_error, double dt,double kp, double ki, double kd);
 /*-----------------------------------start of main----------------------------------*/
 int main(void)
 {	
@@ -254,4 +255,16 @@ int main(void)
 		#endif //GYRO
 	}
 	return 0;
+}
+double Compute_PID(double angle, double desired_angle,double *pid_i,double *previous_error, double dt,double kp, double ki, double kd)
+{
+	double error =angle-desired_angle;
+	double pid_p=kp*error;
+	if (-3 <error <3)
+	{
+		*pid_i=*pid_i+(ki*error);
+	}
+	double pid_d = kd*((error - *previous_error)/dt);
+	*previous_error=error;
+	return pid_p + *pid_i + pid_d;
 }
