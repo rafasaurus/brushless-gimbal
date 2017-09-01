@@ -7,3 +7,4 @@
  */ 
 
 1. after each incr there is cli() and sei() , clear them.
+2.check pid_new

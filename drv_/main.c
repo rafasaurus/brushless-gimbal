@@ -124,7 +124,10 @@ int main(void)
 		double kp=500;//3.55
 		double ki=0;//0.003
 		double kd=10;//2.05
-		float desired_angle = 0;	
+		float desired_angle = 0;
+		//PID_TEST	
+		double pid_i_new;
+		double previous_error_new;
 	sei();
 	
 	
@@ -213,6 +216,11 @@ int main(void)
 			//printSI("ax=",accel_x);
 			//printSI("ay=",accel_y);
 			//printSI("az=",accel_z);
+
+
+			//PID_test
+			double PID_new=Compute_PID(kalman_angle_x,0,&pid_i_new,&previous_error_new,dt,kp,ki,kd);
+			printSD("PID_new = ",PID_new);
 			printf("\n");	
 			#ifdef DRV8313
 				int absoulute_y=abs(THE_MAIN_OUTPUT);
