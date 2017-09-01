@@ -87,7 +87,7 @@ int main(void)
 		mpu6050_writeByte(MPU6050_RA_ACCEL_CONFIG,0x10);//accel sensitivity -/+ 8g
 		mpu6050_writeByte(MPU6050_RA_PWR_MGMT_1,0x01);
 	#endif
-	/*----------------------end mpu definition ----------------------*/
+
 	
 	/*----------------------------motor init-------------------------*/
 	#ifdef GENERATE_SIN
@@ -103,6 +103,7 @@ int main(void)
 		double compAngleY;
 	#endif  
 	
+	
 	/*---------------------------kalman_init----------------------*/
 	Kalman_init();
 	Kalman_init_1();
@@ -112,8 +113,8 @@ int main(void)
 	angle=0;
 	angle_1=0;
 	
+	
 	/*---------------------------PID_INIT-------------------------*/
-		
 		float PID, error, previous_error;
 		float pid_p=0;
 		float pid_i=0;
@@ -122,14 +123,10 @@ int main(void)
 		double kp=500;//3.55
 		double ki=0;//0.003
 		double kd=10;//2.05
-		float desired_angle = 0;
-	
-	//printSI("myInput=",*myInput);
-	//_delay_ms(10000);
-	//printf("restarted");
-	
-	
+		float desired_angle = 0;	
 	sei();
+	
+	
     while (1) /*---------------------------while(1)---------------------------------*/
     {
 		#ifdef GYRO
@@ -172,9 +169,8 @@ int main(void)
 			double temporar_var=sqrt(temporar_accel_y*temporar_accel_y + temporar_accel_z*temporar_accel_z);
 			temporar_var*=100;
 			pitch = atan2(accel_x, temporar_var) * RAD_TO_DEG;
-			//-------------------------------NEW ACCEL-----------------
-			
-				
+
+						
 			/*-------------------------Kalman--------------------------------*/		
 			float kalman_angle_x=getAngle(roll,gyroXrate,dt);
 			float kalman_angle_y=getAngle_1(pitch,gyroYrate,dt);
@@ -183,38 +179,33 @@ int main(void)
 			printSD("kpi = ",kalman_angle_y);
 			printSD("roll = ",roll);
 			printSD("pitch = ",pitch);
-			//printSD("",angle_roll);
-			//printSD("totvec=",acc_total_vector);
 			
-								error = kalman_angle_x - desired_angle;
-								pid_p = kp*error;
-								if(-3 <error <3)
-								{
-									pid_i = pid_i+(ki*error);
-								}
-								
-								pid_d = kd*((error - previous_error)/dt);
+			
+			/*---------------------PID calculations--------------------------*/
+			error = kalman_angle_x - desired_angle;
+			pid_p = kp*error;
+			if(-3 <error <3)
+			{
+				pid_i = pid_i+(ki*error);
+			}
+			
+			pid_d = kd*((error - previous_error)/dt);
 
-								/*The final PID values is the sum of each of this 3 parts*/
-								PID = pid_p + pid_i + pid_d;
-								
-								//if(PID < -27735)
-								//{
-								//	PID=-27735;
-								//}
-								//if(PID > 27735)
-								//{
-								//	PID=27735;
-								//}
-								double my_output=PID;
-								//printSD("PID = ",PID);
-								previous_error = error;					
+			/*The final PID values is the sum of each of this 3 parts*/
+			PID = pid_p + pid_i + pid_d;
+			previous_error = error;	
+			//if(PID < -27735)
+			//{
+			//	PID=-27735;
+			//}
+			//if(PID > 27735)
+			//{
+			//	PID=27735;
+			//}
+			//printSD("PID = ",PID);
+							
 			
-			//double final_angleY=(angle_roll*0.996)+(roll*0.004);
-			
-			//printSD("myoutput=",*myOutput);
-			//printSD("myInput=",*myInput);
-			//printSD("roll = ",roll);
+
 			//printSI("gx=",gyro_x);
 			//printSI("gy=",gyro_x);
 			//printSI("gz=",gyro_x);
@@ -225,11 +216,10 @@ int main(void)
 			#ifdef DRV8313
 				int absoulute_y=abs(THE_MAIN_OUTPUT);
 				uint16_t learing_rate=500;				
-				uint16_t local_motor_delay=(32735-abs(my_output));
+				uint16_t local_motor_delay=(32735-abs(PID));
 				if (abs(local_motor_delay)>5000)
 				{
 					pwm_delay=abs(local_motor_delay);
-					//printSI("pwm_delay = ",pwm_delay);
 				}
 				//printSI("pwm_delay = ",pwm_delay);
 				int16_t reg_ = local_motor_delay;
@@ -259,16 +249,7 @@ int main(void)
 						//printf(" no\n");
 						sei();
 					}					
-			#endif	//DRV8313					 
-			//if(set_gyro_angles){                                                 //If the IMU is already started
-			//	 angle_pitch = angle_pitch * 0.9996 + angle_pitch_acc * 0.0004;     //Correct the drift of the gyro pitch angle with the accelerometer pitch angle
-			//	 angle_roll = angle_roll * 0.9996 + angle_roll_acc * 0.0004;        //Correct the drift of the gyro roll angle with the accelerometer roll angle
-			//}
-			//else{                                                                //At first start
-			//	 angle_pitch = angle_pitch_acc;                                     //Set the gyro pitch angle equal to the accelerometer pitch angle
-			//	 angle_roll = angle_roll_acc;                                       //Set the gyro roll angle equal to the accelerometer roll angle
-			//	 set_gyro_angles = true;                                            //Set the IMU started flag
-			//}			
+			#endif	//DRV8313					
 			#endif //PRINT_RAW_DATA			
 		#endif //GYRO
 	}

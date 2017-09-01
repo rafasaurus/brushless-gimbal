@@ -1189,18 +1189,18 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x3097
+.debug_info     0x00000000     0x308c
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0xbbc C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega2560/avr6/crtatmega2560.o
  .debug_info    0x00000bbc       0x94 ADC.o
  .debug_info    0x00000c50       0x9e defines.o
  .debug_info    0x00000cee      0x2f4 functions.o
  .debug_info    0x00000fe2      0x2a6 KALMAN.o
- .debug_info    0x00001288      0xa98 main.o
- .debug_info    0x00001d20      0x9ae MPU6050.o
- .debug_info    0x000026ce      0x252 TIMER.o
- .debug_info    0x00002920      0x22d twimastertimeout.o
- .debug_info    0x00002b4d      0x54a USART.o
+ .debug_info    0x00001288      0xa8d main.o
+ .debug_info    0x00001d15      0x9ae MPU6050.o
+ .debug_info    0x000026c3      0x252 TIMER.o
+ .debug_info    0x00002915      0x22d twimastertimeout.o
+ .debug_info    0x00002b42      0x54a USART.o
 
 .debug_abbrev   0x00000000     0x176b
  *(.debug_abbrev)
@@ -1239,7 +1239,7 @@ END GROUP
  .debug_frame   0x000005c8       0xa0 twimastertimeout.o
  .debug_frame   0x00000668      0x110 USART.o
 
-.debug_str      0x00000000      0xc7b
+.debug_str      0x00000000      0xc71
  *(.debug_str)
  .debug_str     0x00000000      0x3e6 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega2560/avr6/crtatmega2560.o
  .debug_str     0x000003e6      0x138 ADC.o
@@ -1250,15 +1250,15 @@ END GROUP
                                 0x227 (size before relaxing)
  .debug_str     0x000005ea       0xb4 KALMAN.o
                                 0x1c1 (size before relaxing)
- .debug_str     0x0000069e      0x2fa main.o
-                                0x590 (size before relaxing)
- .debug_str     0x00000998      0x17d MPU6050.o
+ .debug_str     0x0000069e      0x2f0 main.o
+                                0x586 (size before relaxing)
+ .debug_str     0x0000098e      0x17d MPU6050.o
                                 0x3d9 (size before relaxing)
- .debug_str     0x00000b15       0x5e TIMER.o
+ .debug_str     0x00000b0b       0x5e TIMER.o
                                 0x259 (size before relaxing)
- .debug_str     0x00000b73       0x4c twimastertimeout.o
+ .debug_str     0x00000b69       0x4c twimastertimeout.o
                                 0x1e6 (size before relaxing)
- .debug_str     0x00000bbf       0xbc USART.o
+ .debug_str     0x00000bb5       0xbc USART.o
                                 0x283 (size before relaxing)
 
 .debug_loc      0x00000000     0x21b1
