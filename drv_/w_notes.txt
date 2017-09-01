@@ -6,3 +6,4 @@
  *  Author: rafael2904
  */ 
 
+1. after each incr there is cli() and sei() , clear them.
