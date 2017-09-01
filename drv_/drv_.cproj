@@ -197,5 +197,10 @@
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="w_notes.txt">
+      <SubType>compile</SubType>
+    </None>
+  </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

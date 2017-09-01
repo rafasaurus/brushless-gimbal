@@ -130,14 +130,16 @@ int main(void)
 		float pid_i=0;
 		float pid_d=0;
 		/////////////////PID CONSTANTS/////////////////
-		double kp=100.55;//3.55
-		double ki=0.001;//0.003
-		double kd=0.00001;//2.05
+		double kp=1000.55;//3.55
+		double ki=3;//0.003
+		double kd=50.05;//2.05
 		float desired_angle = 0;
 	#endif //ENABLE_PID_LIB
 	//printSI("myInput=",*myInput);
 	//_delay_ms(10000);
 	//printf("restarted");
+	
+	
 	sei();
     while (1) /*---------------------------while(1)---------------------------------*/
     {
@@ -216,12 +218,18 @@ int main(void)
 
 								/*The final PID values is the sum of each of this 3 parts*/
 								PID = pid_p + pid_i + pid_d;
+								
+								if(PID < -30735)
+								{
+									PID=-30735;
+								}
+								if(PID > 30735)
+								{
+									PID=30735;
+								}
 								double my_output=PID;
-								
 								printSD("PID = ",PID);
-								previous_error = error;
-								
-								
+								previous_error = error;					
 						#endif
 			
 			double final_angleY=(angle_roll*0.996)+(roll*0.004);
@@ -238,7 +246,7 @@ int main(void)
 			#ifdef DRV8313
 				int absoulute_y=abs(THE_MAIN_OUTPUT);
 				uint16_t learing_rate=500;				
-				uint16_t local_motor_delay=(32735-10*abs(THE_MAIN_OUTPUT));
+				uint16_t local_motor_delay=(32735-abs(my_output));
 				if (abs(local_motor_delay)>2000)
 				{
 					pwm_delay=abs(local_motor_delay);
@@ -246,13 +254,13 @@ int main(void)
 				}
 				int16_t reg_ = local_motor_delay;
 				//printSI("ocr=",reg_);
-				if ((absoulute_y<=1.5) || (abs(kalman_angle) >90))
+				if ((absoulute_y<=0.18) || (abs(kalman_angle) >90))
 				{
 					incr=0;
 					//printf("\n");	
 				}
 				else 
-					if (kalman_angle<1.5)
+					if (kalman_angle<0.18)
 					{
 						cli();
 						incr=1;
