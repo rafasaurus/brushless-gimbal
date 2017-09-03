@@ -2,11 +2,11 @@
 volatile unsigned long timer0_overflow_count = 0;
 volatile unsigned long timer0_millis = 0;
 static unsigned char timer0_fract = 0;
-/*-----------Timter 4-----------*/
+/*-----------Timer 4-----------*/
 void setup_timer4(void){
+	//timer for motor 1 three phase pwm 
     sbi (TCCR4B, CS40);//prescakaer 256
     sbi (TCCR4A, WGM40);//8 bit phase correct PWM
-	
 	//sbi (TCCR4A,COM4A0);
 	sbi (TCCR4A,COM4A1);
 	//sbi (TCCR4A,COM4B0);
@@ -14,10 +14,10 @@ void setup_timer4(void){
 	//sbi (TCCR4A,COM4C0);
 	sbi (TCCR4A,COM4C1);	
 }
-void setup_timer3(void){//motor 2
+void setup_timer3(void){
+	//timer for motor 2 three phase pwm 
     sbi (TCCR3B, CS30);//prescakaer 256
-    sbi (TCCR3A, WGM30);//8 bit phase correct PWM
-	
+    sbi (TCCR3A, WGM30);//8 bit phase correct PWM	
 	//sbi (TCCR4A,COM4A0);
 	sbi (TCCR3A,COM3A1);
 	//sbi (TCCR4A,COM4B0);
@@ -27,25 +27,25 @@ void setup_timer3(void){//motor 2
 }
 /*-----------Timer 5-----------*/
 void setup_timer5(void){
+	//timer for controlling speed of motor 1
 	sbi (TCCR5B, CS50);//only this 8
-	//sbi (TCCR5B, CS52);//only this 256
 	sbi (TCCR5B, WGM52);//OCR4A compare interrupt
-	
 }
 void Enable_timer5_compare_interrupt(){
 	sbi (TIMSK5, OCIE5A);
 }
+/*-----------Timer 1-----------*/
 void setup_timer1(void){
+	//timer for controlling speed of motor 2
 	sbi (TCCR1B, CS10);//only this 8
-	//sbi (TCCR5B, CS52);//only this 256
 	sbi (TCCR1B, WGM12);//OCR4A compare interrupt
-	
 }
 void Enable_timer1_compare_interrupt(){
 	sbi (TIMSK1, OCIE1A);
 }
 /*-----------Timer 0-----------*/
 void setup_timer0(void){
+	//timer for calculating micros() and millis()
 	sbi(TCCR0B,CS00);
 	sbi(TCCR0B,CS01);;//prescaler 64 , 250khz timer
 }
@@ -68,7 +68,6 @@ unsigned long micros() {
 	
 	return ((m << 8) + t) * (64 / clockCyclesPerMicrosecond());
 }
-
 unsigned long millis()
 {
 	unsigned long m;
@@ -91,7 +90,6 @@ ISR(TIMER0_OVF_vect)//10 microsecconed timer interrupt
 		f -= FRACT_MAX;
 		m += 1;
 	}
-
 
 	timer0_fract = f;
 	timer0_millis = m;

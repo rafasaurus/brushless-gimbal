@@ -22,37 +22,15 @@
 	#define MPU6050_WRITE (0x68<<1) 
 	#define MPU6050_READ ((0x68<<1)|1)
 	
-	#define HS_U OCR2A //pin11
-	#define HS_V OCR0A //pin6
-	//#define HS_V OCR2B //pin 3
-	#define HS_W OCR0B //pin5
-	
-	
-	#define HS_U_HIGH	sbi(PORTB,4);//pin 10
-	#define HS_U_LOW	cbi(PORTB,4);
-	#define HS_V_HIGH	sbi(PORTB,5);//pin 11
-	#define HS_V_LOW	cbi(PORTB,5);
-	#define HS_W_HIGH	sbi(PORTB,6);//pin 12
-	#define HS_W_LOW	cbi(PORTB,6);
-	
-	#define HS_U_INVERSE (PORTB^=(1<<4))
-	#define HS_V_INVERSE (PORTB^=(1<<5))
-	#define HS_W_INVERSE (PORTB^=(1<<6))
-	
-	#define LS_U_HIGH sbi(PORTH,4)
-	#define LS_V_HIGH sbi(PORTH,5) 
-	#define LS_W_HIGH sbi(PORTH,6) 
-	#define LS_U_LOW cbi(PORTH,4)
-	#define LS_V_LOW cbi(PORTH,5)
-	#define LS_W_LOW cbi(PORTH,6)
-	
 	#define U_PWM OCR4A
 	#define V_PWM OCR4B
 	#define W_PWM OCR4C
 	#define U1_PWM OCR3A
 	#define V1_PWM OCR3B
 	#define W1_PWM OCR3C
-	
+	#define INT_MOTOR_SPEED1 OCR5A
+	#define INT_MOTOR_SPEED2 OCR1A
+
 	#define TIMER5_FREQ 250000//hz
 	#define TIMER5_TO_US(OCR_) ((F_CPU/(2*TIMER5_FREQ))-1)
 	//_delay_us();
@@ -96,7 +74,12 @@
 		#define U_step_predefine 0
 		#define V_step_predefine (U_step_predefine+phase)
 		#define W_step_predefine (V_step_predefine+phase)
-	#endif
+		
+		#define U1_step_predefine 0
+		#define V1_step_predefine (U_step_predefine+phase)
+		#define W1_step_predefine (V_step_predefine+phase)
+	
+		#endif
 
 	//Your offsets:	-298	-2782	2134	59	114	311
 	#define gyro_offset_x -108

@@ -25,7 +25,11 @@ int main(void)
 	U_step=U_step_predefine;
 	V_step=V_step_predefine;
 	W_step=W_step_predefine;
+	U_step_2=U_step_predefine;
+	V_step_2=V_step_predefine;
+	W_step_2=W_step_predefine;
 	incr=-1;
+	incr_2=-1;
 	pwm_delay=2000;
 	cli();
 	init_gpio();
@@ -43,8 +47,8 @@ int main(void)
 	Enable_timer5_compare_interrupt();//motor
 	setup_timer1();
 	Enable_timer1_compare_interrupt();
-	OCR5A=4000;
-	OCR1A=4000;
+	INT_MOTOR_SPEED1=32000;
+	INT_MOTOR_SPEED2=32000;
 	unsigned long timer1=micros();
 	/*----------MPU6050 twi init---------*/
 	#ifdef GYRO
@@ -261,7 +265,9 @@ int main(void)
 						//print16(&val);
 						//printf(" no\n");
 						sei();
-					}					
+					}
+				#ifdef MOTOR_2_UPDATE;
+				#endif //MOTOR_2_UPDATE;					
 			#endif	//DRV8313					
 			#endif //PRINT_RAW_DATA			
 		#endif //GYRO

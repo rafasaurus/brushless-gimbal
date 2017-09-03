@@ -2,6 +2,9 @@
 int U_step=U_step_predefine;
 int V_step=V_step_predefine;
 int W_step=W_step_predefine;
+int U_step_2=U_step_predefine;
+int V_step_2=V_step_predefine;
+int W_step_2=W_step_predefine;
 #if SINPRESCALER==1
 uint8_t pwmSin[]={128,131,135,138,141,145,148,151,155,158,161,
 	164,168,171,174,177,181,184,187,190,193,197,200,203,206,209,
@@ -124,8 +127,33 @@ void PWM_update()//motor pwm update
 	if(W_step < 0)
 	W_step = SINE_TABLE_SZ;
 	//_delay_us(100);
-	OCR5A=pwm_delay;
-	OCR1A=pwm_delay;
+	INT_MOTOR_SPEED1=pwm_delay;
+	INT_MOTOR_SPEED2=pwm_delay;
+}
+void PWM_update_2()//motor pwm update
+{
+	U1_PWM=pwmSin[U_step];
+	V1_PWM=pwmSin[V_step];
+	W1_PWM=pwmSin[W_step];
+	U_step_2=U_step_2+incr_2;
+	V_step_2=V_step_2+incr_2;
+	W_step_2=W_step_2+incr_2;
+	if(U_step_2 > SINE_TABLE_SZ)
+	U_step_2 = 0;
+	if(U_step_2 < 0)
+	U_step_2 = SINE_TABLE_SZ;
+	
+	if(V_step_2 > SINE_TABLE_SZ)
+	V_step_2 = 0;
+	if(V_step_2 < 0)
+	V_step = SINE_TABLE_SZ;
+	
+	if(W_step_2 > SINE_TABLE_SZ)
+	W_step_2 = 0;
+	if(W_step_2< 0)
+	W_step_2 = SINE_TABLE_SZ;
+	//_delay_us(100);
+	INT_MOTOR_SPEED2=pwm_delay;
 }
 void init_motor_gpio()
 {
