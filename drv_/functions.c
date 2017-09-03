@@ -51,26 +51,7 @@ uint8_t pwmSin[]={64,65,67,69,70,72,73,75,77,78,80,82,83,85,87,
 #endif
 void init_gpio()
 {
-	/*
-	DDRB|=(1<<PB1);//digital 9 timer1   OC1A 
-	DDRB|=(1<<PB2);//digital 10 timer1  OC1B
-	DDRD|=(1<<PD3);//digital 3 timer2   OC2B
-	DDRB|=(1<<PB3);//digital 11 timer2  OC2A
-	DDRD|=(1<<PD5);//digital 6 timer0   OC0A
-	DDRD|=(1<<PD6);//digital 5 timer0   OC0B
-	//for debugging not pwm 7,8,2 pins used
-	DDRD|=(1<<PD7);//enable 1 DIGITAL 7
-	DDRB|=(1<<PB0);//enable 2 DIGITAL 8
-	DDRD|=(1<<PD2);//enable 3 DIGITAL 2
-	*/
-	//DDRB|=(1<<PB5);//LED13
-	//sbi(DDRB,4);//digital 10
-	//sbi(DDRB,5);//digital 11
-	//sbi(DDRB,6);//digital 12
-	sbi(DDRH,3);//digital 6 OC4A
-	sbi(DDRH,4);//digital 7 OC4B
-	sbi(DDRH,5);//digital 8 OC4C
-	//sbi(DDRH,6);//digital 9
+	
 }
 void getSinTable(uint16_t sinTableSize,uint8_t *pwmSin,uint16_t sineScale)
 {
@@ -114,7 +95,7 @@ double min (double a,double b, double c)
 	return a;
 }
 double max (double a,double b, double c)
-{
+{	
 	if (a>b && a>c) return a;
 	if (b>a && b>c) return b;
 	if (c>a && c>b) return c;
@@ -147,7 +128,11 @@ void PWM_update()//motor pwm update
 }
 void init_motor_gpio()
 {
-	//setting pin mode to output
+	//setting pin mode to output for motor 1 
+	sbi(DDRH,3);//digital 6 OC4A
+	sbi(DDRH,4);//digital 7 OC4B
+	sbi(DDRH,5);//digital 8 OC4C
+	
 	sbi(DDRA,0);//digital 22 EN1
 	sbi(DDRA,2);//digital 24 EN2
 	sbi(DDRA,4);//digital 26 EN3
@@ -159,4 +144,18 @@ void init_motor_gpio()
 	sbi(PORTA,4);//EN1 HIGH
 	sbi(PORTA,6);//EN2 HIGH
 	sbi(PORTC,7);//EN3 HIGH
+	
+	
+	//setting pin mode to output for motor 2
+	sbi(DDRC,5);//digital 32 EN1
+	sbi(DDRC,3);//digital 34 EN2
+	sbi(DDRC,1);//digital 36 EN3
+	sbi(DDRD,7);//digital 38 sleep
+	sbi(DDRG,1);//digital 40 nf, see drv8313
+	
+	sbi(PORTC,5);//sleep HIGH
+	sbi(PORTC,3);//nf HIGH
+	sbi(PORTC,1);//EN1 HIGH
+	sbi(PORTD,7);//EN2 HIGH
+	sbi(PORTG,1);//EN3 HIGH
 }
