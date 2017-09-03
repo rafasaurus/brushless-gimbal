@@ -2,7 +2,7 @@
 volatile unsigned long timer0_overflow_count = 0;
 volatile unsigned long timer0_millis = 0;
 static unsigned char timer0_fract = 0;
-/*-----------Timter 1-----------*/
+/*-----------Timter 4-----------*/
 void setup_timer4(void){
     sbi (TCCR4B, CS40);//prescakaer 256
     sbi (TCCR4A, WGM40);//8 bit phase correct PWM
@@ -12,12 +12,20 @@ void setup_timer4(void){
 	//sbi (TCCR4A,COM4B0);
 	sbi (TCCR4A,COM4B1);
 	//sbi (TCCR4A,COM4C0);
-	sbi (TCCR4A,COM4C1);
-	
+	sbi (TCCR4A,COM4C1);	
 }
-
-
-/*-----------Timter 5-----------*/
+void setup_timer3(void){
+    sbi (TCCR3B, CS30);//prescakaer 256
+    sbi (TCCR3A, WGM30);//8 bit phase correct PWM
+	
+	//sbi (TCCR4A,COM4A0);
+	sbi (TCCR3A,COM3A1);
+	//sbi (TCCR4A,COM4B0);
+	sbi (TCCR3A,COM3B1);
+	//sbi (TCCR4A,COM4C0);
+	sbi (TCCR3A,COM3C1);	
+}
+/*-----------Timer 5-----------*/
 void setup_timer5(void){
 	sbi (TCCR5B, CS50);//only this 8
 	//sbi (TCCR5B, CS52);//only this 256
@@ -27,7 +35,7 @@ void setup_timer5(void){
 void Enable_timer5_compare_interrupt(){
 	sbi (TIMSK5, OCIE5A);
 }
-/*-----------Timter 2-----------*/
+/*-----------Timer 0-----------*/
 void setup_timer0(void){
 	sbi(TCCR0B,CS00);
 	sbi(TCCR0B,CS01);;//prescaler 64 , 250khz timer

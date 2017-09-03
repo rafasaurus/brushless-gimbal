@@ -194,6 +194,8 @@ Discarded input sections
  .text          0x00000000        0x0 TIMER.o
  .data          0x00000000        0x0 TIMER.o
  .bss           0x00000000        0x0 TIMER.o
+ .text.setup_timer3
+                0x00000000       0x28 TIMER.o
  .text.millis   0x00000000       0x18 TIMER.o
  .text          0x00000000        0x0 twimastertimeout.o
  .data          0x00000000        0x0 twimastertimeout.o
@@ -1167,7 +1169,7 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000      0x268
+.debug_aranges  0x00000000      0x270
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x20 ADC.o
@@ -1182,16 +1184,16 @@ END GROUP
  .debug_aranges
                 0x000000e0       0x78 MPU6050.o
  .debug_aranges
-                0x00000158       0x60 TIMER.o
+                0x00000158       0x68 TIMER.o
  .debug_aranges
-                0x000001b8       0x58 twimastertimeout.o
+                0x000001c0       0x58 twimastertimeout.o
  .debug_aranges
-                0x00000210       0x58 USART.o
+                0x00000218       0x58 USART.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x3299
+.debug_info     0x00000000     0x32af
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0xbbc C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega2560/avr6/crtatmega2560.o
  .debug_info    0x00000bbc       0x94 ADC.o
@@ -1200,9 +1202,9 @@ END GROUP
  .debug_info    0x00000fe2      0x2a6 KALMAN.o
  .debug_info    0x00001288      0xc9a main.o
  .debug_info    0x00001f22      0x9ae MPU6050.o
- .debug_info    0x000028d0      0x252 TIMER.o
- .debug_info    0x00002b22      0x22d twimastertimeout.o
- .debug_info    0x00002d4f      0x54a USART.o
+ .debug_info    0x000028d0      0x268 TIMER.o
+ .debug_info    0x00002b38      0x22d twimastertimeout.o
+ .debug_info    0x00002d65      0x54a USART.o
 
 .debug_abbrev   0x00000000     0x17bc
  *(.debug_abbrev)
@@ -1217,7 +1219,7 @@ END GROUP
  .debug_abbrev  0x00001472       0xff twimastertimeout.o
  .debug_abbrev  0x00001571      0x24b USART.o
 
-.debug_line     0x00000000     0x16fa
+.debug_line     0x00000000     0x1728
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x1f9 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega2560/avr6/crtatmega2560.o
  .debug_line    0x000001f9       0xb9 ADC.o
@@ -1226,22 +1228,22 @@ END GROUP
  .debug_line    0x000005ac      0x1ae KALMAN.o
  .debug_line    0x0000075a      0x379 main.o
  .debug_line    0x00000ad3      0x465 MPU6050.o
- .debug_line    0x00000f38      0x228 TIMER.o
- .debug_line    0x00001160      0x38c twimastertimeout.o
- .debug_line    0x000014ec      0x20e USART.o
+ .debug_line    0x00000f38      0x256 TIMER.o
+ .debug_line    0x0000118e      0x38c twimastertimeout.o
+ .debug_line    0x0000151a      0x20e USART.o
 
-.debug_frame    0x00000000      0x7d4
+.debug_frame    0x00000000      0x7e4
  *(.debug_frame)
  .debug_frame   0x00000000       0x24 ADC.o
  .debug_frame   0x00000024      0x144 functions.o
  .debug_frame   0x00000168      0x104 KALMAN.o
  .debug_frame   0x0000026c       0x90 main.o
  .debug_frame   0x000002fc      0x214 MPU6050.o
- .debug_frame   0x00000510      0x114 TIMER.o
- .debug_frame   0x00000624       0xa0 twimastertimeout.o
- .debug_frame   0x000006c4      0x110 USART.o
+ .debug_frame   0x00000510      0x124 TIMER.o
+ .debug_frame   0x00000634       0xa0 twimastertimeout.o
+ .debug_frame   0x000006d4      0x110 USART.o
 
-.debug_str      0x00000000      0xc76
+.debug_str      0x00000000      0xc83
  *(.debug_str)
  .debug_str     0x00000000      0x3e6 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega2560/avr6/crtatmega2560.o
  .debug_str     0x000003e6      0x13b ADC.o
@@ -1256,11 +1258,11 @@ END GROUP
                                 0x5ba (size before relaxing)
  .debug_str     0x000009c2      0x17d MPU6050.o
                                 0x3dc (size before relaxing)
- .debug_str     0x00000b3f       0x5e TIMER.o
-                                0x25c (size before relaxing)
- .debug_str     0x00000b9d       0x4c twimastertimeout.o
+ .debug_str     0x00000b3f       0x6b TIMER.o
+                                0x269 (size before relaxing)
+ .debug_str     0x00000baa       0x4c twimastertimeout.o
                                 0x1e9 (size before relaxing)
- .debug_str     0x00000be9       0x8d USART.o
+ .debug_str     0x00000bf6       0x8d USART.o
                                 0x283 (size before relaxing)
 
 .debug_loc      0x00000000     0x25eb
@@ -1291,16 +1293,16 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000      0x1e8
+.debug_ranges   0x00000000      0x1f0
  *(.debug_ranges)
  .debug_ranges  0x00000000       0x10 ADC.o
  .debug_ranges  0x00000010       0x38 functions.o
  .debug_ranges  0x00000048       0x28 KALMAN.o
  .debug_ranges  0x00000070       0x30 main.o
  .debug_ranges  0x000000a0       0x68 MPU6050.o
- .debug_ranges  0x00000108       0x50 TIMER.o
- .debug_ranges  0x00000158       0x48 twimastertimeout.o
- .debug_ranges  0x000001a0       0x48 USART.o
+ .debug_ranges  0x00000108       0x58 TIMER.o
+ .debug_ranges  0x00000160       0x48 twimastertimeout.o
+ .debug_ranges  0x000001a8       0x48 USART.o
 
 .debug_macro
  *(.debug_macro)
