@@ -103,9 +103,9 @@ double max (double a,double b, double c)
 }
 void PWM_update()//motor pwm update
 {
-	U_PWM=pwmSin[U_step];
-	V_PWM=pwmSin[V_step];
-	W_PWM=pwmSin[W_step];
+	U1_PWM=pwmSin[U_step];
+	V1_PWM=pwmSin[V_step];
+	W1_PWM=pwmSin[W_step];
 	U_step=U_step+incr;
 	V_step=V_step+incr;
 	W_step=W_step+incr;
@@ -147,6 +147,10 @@ void init_motor_gpio()
 	
 	
 	//setting pin mode to output for motor 2
+	sbi(DDRE,4);//digital 2 OC3B
+	sbi(DDRE,5);//digital 3 OC3C
+	sbi(DDRE,3);//digital 5 OC3A
+	
 	sbi(DDRC,5);//digital 32 EN1
 	sbi(DDRC,3);//digital 34 EN2
 	sbi(DDRC,1);//digital 36 EN3

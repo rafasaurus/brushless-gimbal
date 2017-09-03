@@ -37,7 +37,8 @@ int main(void)
 	uart_str = fdevopen(uart_putchar, NULL);
 	setup_timer0();
 	Enable_timer0_overflow_interrupt();//micros
-	setup_timer4();//pwm
+	setup_timer4();//pwm for motor1
+	setup_timer3();//pwm for motor2
 	setup_timer5();
 	Enable_timer5_compare_interrupt();//motor
 	OCR5A=4000;
