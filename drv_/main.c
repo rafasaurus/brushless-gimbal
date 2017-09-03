@@ -30,7 +30,8 @@ int main(void)
 	W_step_2=W_step_predefine;
 	incr=-1;
 	incr_2=-1;
-	pwm_delay=2000;
+	pwm_delay=32000;
+	pwm_delay_2=32000;
 	cli();
 	init_gpio();
 	init_motor_gpio();
@@ -45,10 +46,10 @@ int main(void)
 	setup_timer3();//pwm for motor2
 	setup_timer5();
 	Enable_timer5_compare_interrupt();//motor
-	setup_timer1();
-	Enable_timer1_compare_interrupt();
-	INT_MOTOR_SPEED1=32000;
-	INT_MOTOR_SPEED2=32000;
+	//setup_timer1();
+	//Enable_timer1_compare_interrupt();
+	INT_MOTOR_SPEED1=pwm_delay;
+	INT_MOTOR_SPEED2=pwm_delay_2;
 	unsigned long timer1=micros();
 	/*----------MPU6050 twi init---------*/
 	#ifdef GYRO
@@ -187,10 +188,11 @@ int main(void)
 			float kalman_angle_x=getAngle(roll,gyroXrate,dt);
 			float kalman_angle_y=getAngle_1(pitch,gyroYrate,dt);
 			
-			printSD("kro = ",kalman_angle_x);
-			printSD("kpi = ",kalman_angle_y);
-			printSD("roll = ",roll);
-			printSD("pitch = ",pitch);
+			//printSD("kro = ",kalman_angle_x);
+			//printSD("kpi = ",kalman_angle_y);
+			//printf("\n");
+			//printSD("roll = ",roll);
+			//printSD("pitch = ",pitch);
 			
 			
 			/*---------------------PID calculations--------------------------*/
@@ -214,7 +216,7 @@ int main(void)
 			//{
 			//	PID=27735;
 			//}
-			printSD("PID = ",PID);
+			//printSD("PID = ",PID);
 							
 			
 
@@ -228,10 +230,10 @@ int main(void)
 
 			//PID_test
 			double PID_new=Compute_PID(kalman_angle_x,0,&pid_i_new,&previous_error_new,dt,kp,ki,kd);
-			printSD("PID_new = ",PID_new);
-			printf("\n");	
+			//printSD("PID_new = ",PID_new);
+				
 			#ifdef DRV8313
-				int absoulute_y=abs(THE_MAIN_OUTPUT);
+				int absoulute_x=abs(THE_MAIN_OUTPUT);
 				uint16_t learing_rate=500;				
 				uint16_t local_motor_delay=(32735-abs(PID));
 				if (abs(local_motor_delay)>5000)
@@ -239,9 +241,8 @@ int main(void)
 					pwm_delay=abs(local_motor_delay);
 				}
 				//printSI("pwm_delay = ",pwm_delay);
-				int16_t reg_ = local_motor_delay;
 				//printSI("ocr=",reg_);
-				if ((absoulute_y<=0.18) || (abs(kalman_angle_x) >45))
+				if ((absoulute_x<=0.18) || (abs(kalman_angle_x) >45))
 				{
 					incr=0;
 					//printf("\n");	
@@ -266,7 +267,39 @@ int main(void)
 						//printf(" no\n");
 						sei();
 					}
-				#ifdef MOTOR_2_UPDATE;
+				#ifdef MOTOR_2_UPDATE
+					int absoulute_y=abs(THE_MAIN_OUTPUT_2);
+					uint16_t learing_rate_y=500;
+					uint16_t local_motor2_delay=(32735-kalman_angle_y*20000);//minus something here
+					if (abs(local_motor2_delay)>5000)
+					{
+						pwm_delay_2=1200;//abs(local_motor2_delay);
+					}
+					if ((absoulute_y<=0.18) || (abs(kalman_angle_y) >45))
+					{
+						incr=0;
+						//printf("\n");
+					}
+					else
+					if (kalman_angle_y<0.18)
+					{
+						cli();
+						incr_2=1;
+						//printf(" ");
+						//int16_t val=pwmSin[U_step];
+						//print16(&val);
+						//printf(" yes\n");
+						sei();
+					}
+					else
+					{	cli();
+						incr_2=-1;
+						//printf(" ");
+						//int16_t val=pwmSin[U_step];
+						//print16(&val);
+						//printf(" no\n");
+						sei();
+					}
 				#endif //MOTOR_2_UPDATE;					
 			#endif	//DRV8313					
 			#endif //PRINT_RAW_DATA			

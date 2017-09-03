@@ -7,6 +7,7 @@
 	#define DRV8313
 
 	int pwm_delay;
+	int pwm_delay_2;
 	typedef int bool;
 	enum { false, true };
 	#define  F_CPU 16000000UL
@@ -97,4 +98,7 @@
 	#define calibration_counter 4000
 	#define caliberation_wait_delay 5//in ms
 	#define THE_MAIN_OUTPUT kalman_angle_x
+	#define THE_MAIN_OUTPUT_2 kalman_angle_y
+	
+	#define MOTOR_2_UPDATE
 #endif //DEFINES

@@ -106,9 +106,9 @@ double max (double a,double b, double c)
 }
 void PWM_update()//motor pwm update
 {
-	U1_PWM=pwmSin[U_step];
-	V1_PWM=pwmSin[V_step];
-	W1_PWM=pwmSin[W_step];
+	U_PWM=pwmSin[U_step];
+	V_PWM=pwmSin[V_step];
+	W_PWM=pwmSin[W_step];
 	U_step=U_step+incr;
 	V_step=V_step+incr;
 	W_step=W_step+incr;
@@ -128,13 +128,12 @@ void PWM_update()//motor pwm update
 	W_step = SINE_TABLE_SZ;
 	//_delay_us(100);
 	INT_MOTOR_SPEED1=pwm_delay;
-	INT_MOTOR_SPEED2=pwm_delay;
 }
 void PWM_update_2()//motor pwm update
 {
-	U1_PWM=pwmSin[U_step];
-	V1_PWM=pwmSin[V_step];
-	W1_PWM=pwmSin[W_step];
+	U1_PWM=pwmSin[U_step_2];
+	V1_PWM=pwmSin[V_step_2];
+	W1_PWM=pwmSin[W_step_2];
 	U_step_2=U_step_2+incr_2;
 	V_step_2=V_step_2+incr_2;
 	W_step_2=W_step_2+incr_2;
@@ -153,7 +152,8 @@ void PWM_update_2()//motor pwm update
 	if(W_step_2< 0)
 	W_step_2 = SINE_TABLE_SZ;
 	//_delay_us(100);
-	INT_MOTOR_SPEED2=pwm_delay;
+	INT_MOTOR_SPEED2=pwm_delay_2;
+	//printf("i");
 }
 void init_motor_gpio()
 {
