@@ -14,7 +14,7 @@ void setup_timer4(void){
 	//sbi (TCCR4A,COM4C0);
 	sbi (TCCR4A,COM4C1);	
 }
-void setup_timer3(void){
+void setup_timer3(void){//motor 2
     sbi (TCCR3B, CS30);//prescakaer 256
     sbi (TCCR3A, WGM30);//8 bit phase correct PWM
 	
@@ -34,6 +34,15 @@ void setup_timer5(void){
 }
 void Enable_timer5_compare_interrupt(){
 	sbi (TIMSK5, OCIE5A);
+}
+void setup_timer1(void){
+	sbi (TCCR1B, CS10);//only this 8
+	//sbi (TCCR5B, CS52);//only this 256
+	sbi (TCCR1B, WGM12);//OCR4A compare interrupt
+	
+}
+void Enable_timer1_compare_interrupt(){
+	sbi (TIMSK1, OCIE1A);
 }
 /*-----------Timer 0-----------*/
 void setup_timer0(void){
@@ -90,6 +99,10 @@ ISR(TIMER0_OVF_vect)//10 microsecconed timer interrupt
 }
 
 ISR(TIMER5_COMPA_vect)//motor update interrupt routine
+{
+	//PWM_update();
+}
+ISR(TIMER1_COMPA_vect)//motor update interrupt routine
 {
 	PWM_update();
 }

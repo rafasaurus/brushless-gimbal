@@ -41,7 +41,10 @@ int main(void)
 	setup_timer3();//pwm for motor2
 	setup_timer5();
 	Enable_timer5_compare_interrupt();//motor
+	setup_timer1();
+	Enable_timer1_compare_interrupt();
 	OCR5A=4000;
+	OCR1A=4000;
 	unsigned long timer1=micros();
 	/*----------MPU6050 twi init---------*/
 	#ifdef GYRO

@@ -125,6 +125,7 @@ void PWM_update()//motor pwm update
 	W_step = SINE_TABLE_SZ;
 	//_delay_us(100);
 	OCR5A=pwm_delay;
+	OCR1A=pwm_delay;
 }
 void init_motor_gpio()
 {
