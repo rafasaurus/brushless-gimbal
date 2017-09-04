@@ -45,9 +45,9 @@ int main(void)
 	setup_timer4();//pwm for motor1
 	setup_timer3();//pwm for motor2
 	setup_timer5();
-	Enable_timer5_compare_interrupt();//motor
+	Enable_timer5_compare_interrupt();//motor 1
 	setup_timer1();
-	Enable_timer1_compare_interrupt();
+	Enable_timer1_compare_interrupt();//motor 2
 	INT_MOTOR_SPEED1=pwm_delay;
 	INT_MOTOR_SPEED2=pwm_delay_2;
 	unsigned long timer1=micros();
@@ -188,8 +188,8 @@ int main(void)
 			float kalman_angle_x=getAngle(roll,gyroXrate,dt);
 			float kalman_angle_y=getAngle_1(pitch,gyroYrate,dt);
 			
-			//printSD("kro = ",kalman_angle_x);
-			//printSD("kpi = ",kalman_angle_y);
+			printSD("kro = ",kalman_angle_x);
+			printSD("kpi = ",kalman_angle_y);
 			//printf("\n");
 			//printSD("roll = ",roll);
 			//printSD("pitch = ",pitch);
@@ -238,15 +238,15 @@ int main(void)
 				{
 					pwm_delay=abs(local_motor_delay);
 				}
-				printSI("pwm_delay = ",pwm_delay);
+				//printSI("pwm_delay = ",pwm_delay);
 				//printSI("ocr=",reg_);
-				if ((absoulute_x<=0.18) || (abs(kalman_angle_x) >45))
+				if ((absoulute_x>=0.18) || (abs(kalman_angle_x) >45))
 				{
 					incr=0;
 					//printf("\n");	
 				}
 				else 
-					if (kalman_angle_x<0.18)
+					if (kalman_angle_x>0.18)
 					{
 						//cli();
 						incr=1;										
@@ -265,7 +265,7 @@ int main(void)
 					{
 						pwm_delay_2=32000;//abs(local_motor2_delay);
 					}
-					printSI("pwm_delay_3= ",pwm_delay_2);
+					//printSI("pwm_delay_3= ",pwm_delay_2);
 					if ((absoulute_y<=0.18) || (abs(kalman_angle_y) >45))
 					{
 						incr=0;
