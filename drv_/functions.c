@@ -106,9 +106,12 @@ double max (double a,double b, double c)
 }
 void PWM_update()//motor pwm update
 {
-	U_PWM=pwmSin[U_step];
-	V_PWM=pwmSin[V_step];
-	W_PWM=pwmSin[W_step];
+	//U_PWM=pwmSin[U_step];
+	//V_PWM=pwmSin[V_step];
+	//W_PWM=pwmSin[W_step];
+	U_PWM=255;
+	V_PWM=255;
+	W_PWM=255;
 	U_step=U_step+incr;
 	V_step=V_step+incr;
 	W_step=W_step+incr;

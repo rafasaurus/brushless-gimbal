@@ -1,7 +1,7 @@
 #ifndef DEFINES
 	#define DEFINES
 	/*******************global macros****************/
-	//#define PRINT_RAW_DATA
+	#define PRINT_RAW_DATA
 	#define GYRO
 	//#define CALIBERATED_DATA
 	#define DRV8313

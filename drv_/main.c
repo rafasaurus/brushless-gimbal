@@ -30,8 +30,8 @@ int main(void)
 	W_step_2=W_step_predefine;
 	incr=-1;
 	incr_2=-1;
-	pwm_delay=32000;
-	pwm_delay_2=32000;
+	pwm_delay=15000;
+	pwm_delay_2=15000;
 	cli();
 	init_gpio();
 	init_motor_gpio();
@@ -218,73 +218,73 @@ int main(void)
 			//}
 			//printSD("PID = ",PID);
 					
-			//printSI("gx=",gyro_x);
-			//printSI("gy=",gyro_x);
-			//printSI("gz=",gyro_x);
-			//printSI("ax=",accel_x);
-			//printSI("ay=",accel_y);
-			//printSI("az=",accel_z);
+			printSI("gx=",gyro_x);
+			printSI("gy=",gyro_x);
+			printSI("gz=",gyro_x);
+			printSI("ax=",accel_x);
+			printSI("ay=",accel_y);
+			printSI("az=",accel_z);
 
 			printSD("",dt);
 			//PID_test
 			double PID_new=Compute_PID(kalman_angle_x,0,&pid_i_new,&previous_error_new,dt,kp,ki,kd);
 			//printSD("PID_new = ",PID_new);
 			printf("\n");	
-			#ifdef DRV8313
-				int absoulute_x=abs(THE_MAIN_OUTPUT);
-				uint16_t learing_rate=500;				
-				uint16_t local_motor_delay=(32735-abs(PID));
-				if (abs(local_motor_delay)>5000)
-				{
-					pwm_delay=abs(local_motor_delay);
-				}
-				//printSI("pwm_delay = ",pwm_delay);
-				//printSI("ocr=",reg_);
-				if ((absoulute_x>=0.18) || (abs(kalman_angle_x) >45))
-				{
-					incr=0;
-					//printf("\n");	
-				}
-				else 
-					if (kalman_angle_x>0.18)
-					{
-						//cli();
-						incr=1;										
-						//sei();
-					}
-					else
-					{	//cli();
-						incr=-1;
-						//sei();
-					}
-				#ifdef MOTOR_2_UPDATE
-					int absoulute_y=abs(THE_MAIN_OUTPUT_2);
-					uint16_t learing_rate_y=500;
-					uint16_t local_motor2_delay=(32735-kalman_angle_y*20000);//minus something here
-					if (abs(local_motor2_delay)>5000)
-					{
-						pwm_delay_2=32000;//abs(local_motor2_delay);
-					}
-					//printSI("pwm_delay_3= ",pwm_delay_2);
-					if ((absoulute_y<=0.18) || (abs(kalman_angle_y) >45))
-					{
-						incr=0;
-						//printf("\n");
-					}
-					else
-					if (kalman_angle_y<0.18)
-					{
-						//cli();
-						incr_2=1;
-						//sei();
-					}
-					else
-					{	//cli();
-						incr_2=-1;
-						//sei();
-					}
-				#endif //MOTOR_2_UPDATE;					
-			#endif	//DRV8313					
+			//#ifdef DRV8313
+			//	int absoulute_x=abs(THE_MAIN_OUTPUT);
+			//	uint16_t learing_rate=500;				
+			//	uint16_t local_motor_delay=(32735-abs(PID));
+			//	if (abs(local_motor_delay)>5000)
+			//	{
+			//		pwm_delay=abs(local_motor_delay);
+			//	}
+			//	//printSI("pwm_delay = ",pwm_delay);
+			//	//printSI("ocr=",reg_);
+			//	if ((absoulute_x>=0.18) || (abs(kalman_angle_x) >45))
+			//	{
+			//		incr=0;
+			//		//printf("\n");	
+			//	}
+			//	else 
+			//		if (kalman_angle_x>0.18)
+			//		{
+			//			//cli();
+			//			incr=1;										
+			//			//sei();
+			//		}
+			//		else
+			//		{	//cli();
+			//			incr=-1;
+			//			//sei();
+			//		}
+			//	#ifdef MOTOR_2_UPDATE
+			//		int absoulute_y=abs(THE_MAIN_OUTPUT_2);
+			//		uint16_t learing_rate_y=500;
+			//		uint16_t local_motor2_delay=(32735-kalman_angle_y*20000);//minus something here
+			//		if (abs(local_motor2_delay)>5000)
+			//		{
+			//			pwm_delay_2=32000;//abs(local_motor2_delay);
+			//		}
+			//		//printSI("pwm_delay_3= ",pwm_delay_2);
+			//		if ((absoulute_y<=0.18) || (abs(kalman_angle_y) >45))
+			//		{
+			//			incr=0;
+			//			//printf("\n");
+			//		}
+			//		else
+			//		if (kalman_angle_y<0.18)
+			//		{
+			//			//cli();
+			//			incr_2=1;
+			//			//sei();
+			//		}
+			//		else
+			//		{	//cli();
+			//			incr_2=-1;
+			//			//sei();
+			//		}
+			//	#endif //MOTOR_2_UPDATE;					
+			//#endif	//DRV8313					
 			#endif //PRINT_RAW_DATA			
 		#endif //GYRO
 	}
