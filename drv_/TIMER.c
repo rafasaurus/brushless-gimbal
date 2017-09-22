@@ -5,8 +5,9 @@ static unsigned char timer0_fract = 0;
 /*-----------Timer 4-----------*/
 void setup_timer4(void){
 	//timer for motor 1 three phase pwm 
-    sbi (TCCR4B, CS40);//prescakaer 256
-    sbi (TCCR4A, WGM40);//8 bit phase correct PWM
+    sbi (TCCR4B, CS40);//prescaler 256
+    sbi (TCCR4A, WGM40);
+	//sbi (TCCR4A, WGM42);//8 bit phase correct PWM
 	//sbi (TCCR4A,COM4A0);
 	sbi (TCCR4A,COM4A1);
 	//sbi (TCCR4A,COM4B0);
@@ -16,7 +17,7 @@ void setup_timer4(void){
 }
 void setup_timer3(void){
 	//timer for motor 2 three phase pwm 
-    sbi (TCCR3B, CS30);//prescakaer 256
+    sbi (TCCR3B, CS30);//prescaler 256
     sbi (TCCR3A, WGM30);//8 bit phase correct PWM	
 	//sbi (TCCR4A,COM4A0);
 	sbi (TCCR3A,COM3A1);
@@ -98,7 +99,7 @@ ISR(TIMER0_OVF_vect)//10 microsecconed timer interrupt
 
 ISR(TIMER5_COMPA_vect)//motor update interrupt routine
 {
-	PWM_update();
+	//PWM_update();
 }
 ISR(TIMER1_COMPA_vect)//motor update interrupt routine
 {
