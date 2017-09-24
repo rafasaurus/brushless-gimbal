@@ -8,16 +8,21 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "defines.h"
 void USART_Init(unsigned int ubrr)
 {
 	/* Set baud rate */
 	UBRR0H = (unsigned char)(ubrr>>8);
 	UBRR0L = (unsigned char)ubrr;
 	
-	UCSR0B = (1<<TXEN0);// | (1<<TXCIE0);
+	UCSR0B = (1<<TXEN0)| (1<<RXCIE0)|(1<<RXEN0);// | (1<<TXCIE0);
 	UCSR0C = (1<<USBS0) | (3<<UCSZ00);//2 stop bit 8 bit
 }
 
+unsigned char USART_receive(void){
+	while(!(UCSR0A & (1<<RXC0)));
+	return UDR0;
+}
 
 void USART_Transmit( unsigned char data )
 {

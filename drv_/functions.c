@@ -131,7 +131,6 @@ double max (double a,double b, double c)
 }
 void PWM_update()//motor pwm update
 {
-	
 	PID_roll=Compute_PID(kalman_angle_roll, 0 , &pid_i_roll, &previous_error_roll,dt,kp_roll,ki_roll,kd_roll);
 	//PID_pitch=Compute_PID(kalman_angle_pitch, 0 ,&pid_i_pitch,&previous_error_pitch,dt,kp_pitch,ki_pitch,kd_pitch);
 
@@ -151,13 +150,9 @@ void PWM_update()//motor pwm update
 			incr =-(uint8_t)(abs(PID_roll));
 			//printf("no");
 		}
-		
 	U_PWM=pwmSin[U_step];
 	V_PWM=pwmSin[V_step];
 	W_PWM=pwmSin[W_step];
-	//U_PWM=255;
-	//V_PWM=170;
-	//W_PWM=85;
 	U_step=U_step+incr;
 	V_step=V_step+incr;
 	W_step=W_step+incr;

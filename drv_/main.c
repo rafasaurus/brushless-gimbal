@@ -19,12 +19,10 @@
 #include <string.h>
 #include <time.h>
 
-
 uint8_t buffer[14];
 bool loop_bool=true;
-
-
-
+unsigned char receiveData;
+unsigned char receiveData_[20];
 /*-----------------------------------start of main----------------------------------*/
 int main(void)
 {	
@@ -105,7 +103,6 @@ int main(void)
 		mpu6050_writeByte(MPU6050_RA_PWR_MGMT_1,0x01);
 	#endif
 
-	
 	/*----------------------------motor init-------------------------*/
 	#ifdef GENERATE_SIN
 		getSinTable(SINE_TABLE_SZ,pwmSin,sinScale);
@@ -119,8 +116,7 @@ int main(void)
 		double compAngleX;
 		double compAngleY;
 	#endif  
-	
-	
+
 	/*---------------------------kalman_init----------------------*/
 	Kalman_init();
 	Kalman_init_1();
@@ -128,13 +124,11 @@ int main(void)
 	double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;
 	double pitch =  atan2(accel_x, sqrt(accel_y*accel_y + accel_z*accel_z)) * RAD_TO_DEG;// atan(-accel_x / sqrt(accel_y * accel_y + accel_z * accel_z)) * RAD_TO_DEG;
 	angle=0;
-	angle_1=0;
-			
+	angle_1=0;		
 	sei();
 	
-	
     while (1) /*---------------------------while(1)---------------------------------*/
-    {
+    {	
 		#ifdef GYRO
     		mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);//15us to do
 			//accel_x-=accelX_calib;
@@ -192,84 +186,21 @@ int main(void)
 			//printSI("ax=",accel_x);
 			//printSI("ay=",accel_y );
 			//printSI("az=",accel_z);
-			
-			
+				
 			printSD("PID_roll ",PID_roll);
 			//printSD("PID_pitch ",PID_pitch);
 			//printSD("pid_i ",pid_i_roll);
-			printf("\n");	
-			/*#ifdef DRV8313
-				//  int absoulute_x=abs(kalman_angle_x/ *THE_MAIN_OUTPUT* /);
-				//  uint16_t learing_rate=500;				
-				//  uint16_t local_motor_delay=(32735-abs(PID));
-				//  if (abs(local_motor_delay)>5000)
-				//  {
-				//  	//pwm_delay=local_motor_delay;//abs(local_motor_delay);
-				//  	//printf("def");
-				//  }
-				//PWM_update();
-				//printSI("pwm_delay = ",pwm_delay);
-				//printSI("ocr=",reg_);
-				//if (absoulute_x>=0.18 || abs(kalman_angle_x)>45)
-				if(abs(kalman_angle_roll)<=0.18 || abs(kalman_angle_roll)>45)
-				{
-					incr=0;
-				//	printf(" debug ");	
-				}
-				else 
-					if (kalman_angle_roll>0.18)
-					{
-						incr = (int)PID_roll/1000;
-						//printSI("incr = ",incr);	
-					}
-					else
-					{
-						incr = -1*(int)PID_roll/1000;
-						//printSI("incr = ",incr);
-					}
-					
-				#ifdef MOTOR_2_UPDATE
-					int absoulute_y=abs(THE_MAIN_OUTPUT_2);
-					uint16_t learing_rate_y=500;
-					uint16_t local_motor2_delay=(32735-kalman_angle_pitch*20000);//minus something here
-					if (abs(local_motor2_delay)>5000)
-					{
-						pwm_delay_2=32000;//abs(local_motor2_delay);
-					}
-					if (kalman_angle_pitch<0.18)
-					{
-						//cli();
-						incr_2=1;
-						//sei();
-					}
-					else
-					{	//cli();
-						incr_2=-1;
-						//sei();
-					}
-				#endif //MOTOR_2_UPDATE;					
-			#endif	//DRV8313*/					
+			printf("\n");							
 			#endif //PRINT_RAW_DATA			
 		#endif //GYRO
 	}
 	return 0;
 }
-
-
-
-
-/*---------------------PID calculations--------------------------*/
-/*
-error = kalman_angle_roll - desired_angle_roll;
-pid_p_roll = kp*error_roll;
-if(-3<error_roll<3)
+ISR (USART0_RX_vect)
 {
-	pid_i_roll = pid_i_roll+(ki_roll*error_roll);
+	printf("->");
+	receiveData=UDR0;
+	//strcat(receiveData,UDR0);
+	printf("%s",&receiveData);
+	_delay_ms(5000);
 }
-
-pid_d_roll = kd_roll*((error - previous_error_roll)/dt);
-
-/ *The final PID values is the sum of each of this 3 parts* /
-PID_roll = pid_p_roll + pid_i_roll + pid_d_roll;
-previous_error_roll = error_roll;
-*/	
