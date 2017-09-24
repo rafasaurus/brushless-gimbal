@@ -32,7 +32,7 @@ double ki=0.24;//0.003
 double kd=26;//2.05
 float desired_angle = 0;
 //PID_TEST
-double pid_i_new=0;
+double pid_i_new;
 double previous_error_new = 0;
 double dt;
 float kalman_angle_x;
@@ -220,7 +220,7 @@ int main(void)
 						
 						error = kalman_angle_x - desired_angle;
 						pid_p = kp*error;
-						if(-3 <error <3)
+						if(-3<error<3)
 						{
 							pid_i = pid_i+(ki*error);
 						}
@@ -237,6 +237,9 @@ int main(void)
 			//printSI("ax=",accel_x);
 			//printSI("ay=",accel_y );
 			//printSI("az=",accel_z);
+			
+			printSD("pid_i ",pid_i);
+			printSD("pid_i_new ",pid_i_new);
 			
 			//printSI("kal0 ",kalman_angle_x);
 			//printSI("pid_i_new0 ",pid_i_new);
