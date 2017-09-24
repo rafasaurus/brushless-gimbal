@@ -13,9 +13,12 @@ float pid_p_roll=0;
 float pid_i_roll=0;
 float pid_d_roll=0;
 //------------------PID roll CONSTANTS-------------------
-double kp_roll=0.5;//3.55
-double kd_roll=0.03;//2.05
-double ki_roll=0;//0.01;//0.003
+//first time tweak values kp=0.5 kd=0.03 ki=0
+//seccond time tweak values kp=0.41 kd=0.007 ki=0
+
+double kp_roll=0.41;//
+double kd_roll=0.007;//
+double ki_roll=0;//
 
 float desired_angle_roll = 0;
 

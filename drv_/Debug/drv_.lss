@@ -310,7 +310,7 @@ void PWM_update()//motor pwm update
      2fc:	90 93 b4 03 	sts	0x03B4, r25	; 0x8003b4 <PID_roll+0x3>
 	//PID_pitch=Compute_PID(kalman_angle_pitch, 0 ,&pid_i_pitch,&previous_error_pitch,dt,kp_pitch,ki_pitch,kd_pitch);
 
-	if (abs(kalman_angle_roll)<0.1 || abs(kalman_angle_roll>45))
+	if (abs(kalman_angle_roll)<0.04|| abs(kalman_angle_roll>45))
      300:	c0 90 21 04 	lds	r12, 0x0421	; 0x800421 <kalman_angle_roll>
      304:	d0 90 22 04 	lds	r13, 0x0422	; 0x800422 <kalman_angle_roll+0x1>
      308:	e0 90 23 04 	lds	r14, 0x0423	; 0x800423 <kalman_angle_roll+0x2>
@@ -339,9 +339,9 @@ void PWM_update()//motor pwm update
      33e:	3e bf       	out	0x3e, r19	; 62
      340:	0f be       	out	0x3f, r0	; 63
      342:	2d bf       	out	0x3d, r18	; 61
-     344:	2d ec       	ldi	r18, 0xCD	; 205
-     346:	3c ec       	ldi	r19, 0xCC	; 204
-     348:	4c ec       	ldi	r20, 0xCC	; 204
+     344:	2a e0       	ldi	r18, 0x0A	; 10
+     346:	37 ed       	ldi	r19, 0xD7	; 215
+     348:	43 e2       	ldi	r20, 0x23	; 35
      34a:	5d e3       	ldi	r21, 0x3D	; 61
      34c:	0e 94 dc 0c 	call	0x19b8	; 0x19b8 <__cmpsf2>
      350:	88 23       	and	r24, r24
@@ -367,10 +367,10 @@ void PWM_update()//motor pwm update
      380:	30 c0       	rjmp	.+96     	; 0x3e2 <PWM_update+0x18a>
 	}
 	else
-		if (kalman_angle_roll>0.1)
-     382:	2d ec       	ldi	r18, 0xCD	; 205
-     384:	3c ec       	ldi	r19, 0xCC	; 204
-     386:	4c ec       	ldi	r20, 0xCC	; 204
+		if (kalman_angle_roll>0.04)
+     382:	2a e0       	ldi	r18, 0x0A	; 10
+     384:	37 ed       	ldi	r19, 0xD7	; 215
+     386:	43 e2       	ldi	r20, 0x23	; 35
      388:	5d e3       	ldi	r21, 0x3D	; 61
      38a:	c7 01       	movw	r24, r14
      38c:	b6 01       	movw	r22, r12

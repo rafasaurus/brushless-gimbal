@@ -135,13 +135,13 @@ void PWM_update()//motor pwm update
 	PID_roll=Compute_PID(kalman_angle_roll, 0 , &pid_i_roll, &previous_error_roll,dt,kp_roll,ki_roll,kd_roll);
 	//PID_pitch=Compute_PID(kalman_angle_pitch, 0 ,&pid_i_pitch,&previous_error_pitch,dt,kp_pitch,ki_pitch,kd_pitch);
 
-	if (abs(kalman_angle_roll)<0.1 || abs(kalman_angle_roll>45))
+	if (abs(kalman_angle_roll)<0.04|| abs(kalman_angle_roll>45))
 	{
 		incr=0;
 		pid_i_roll=0;
 	}
 	else
-		if (kalman_angle_roll>0.1)
+		if (kalman_angle_roll>0.04)
 		{
 			incr=(uint8_t)(abs(PID_roll));
 			//printf("yes");
