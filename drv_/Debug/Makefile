@@ -43,6 +43,7 @@ C_SRCS +=  \
 ../KALMAN.c \
 ../main.c \
 ../MPU6050.c \
+../PID.c \
 ../TIMER.c \
 ../twimastertimeout.c \
 ../USART.c
@@ -61,6 +62,7 @@ functions.o \
 KALMAN.o \
 main.o \
 MPU6050.o \
+PID.o \
 TIMER.o \
 twimastertimeout.o \
 USART.o
@@ -72,6 +74,7 @@ functions.o \
 KALMAN.o \
 main.o \
 MPU6050.o \
+PID.o \
 TIMER.o \
 twimastertimeout.o \
 USART.o
@@ -83,6 +86,7 @@ functions.d \
 KALMAN.d \
 main.d \
 MPU6050.d \
+PID.d \
 TIMER.d \
 twimastertimeout.d \
 USART.d
@@ -94,6 +98,7 @@ functions.d \
 KALMAN.d \
 main.d \
 MPU6050.d \
+PID.d \
 TIMER.d \
 twimastertimeout.d \
 USART.d
@@ -112,6 +117,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

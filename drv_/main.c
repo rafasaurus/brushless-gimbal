@@ -1,4 +1,5 @@
 //#define ENABLE_PID_LIB
+#include "Variable.h"
 #include "defines.h"
 #include "functions.h"
 #include "USART.h"
@@ -7,6 +8,7 @@
 #include "mpu6050registers.h"
 #include "MPU6050.h"
 #include "KALMAN.h"
+#include "PID.h"
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/pgmspace.h>
@@ -16,9 +18,26 @@
 #include <math.h>
 #include <string.h>
 #include <time.h>
+
+
 uint8_t buffer[14];
 bool loop_bool=true;
-double Compute_PID(double angle, double desired_angle,double *pid_i,double *previous_error, double dt,double kp, double ki, double kd);
+float PID, error, previous_error;
+float pid_p=0;
+float pid_i=0;
+float pid_d=0;
+/////////////////PID CONSTANTS/////////////////
+double kp=20;//3.55
+double ki=0.24;//0.003
+double kd=26;//2.05
+float desired_angle = 0;
+//PID_TEST
+double pid_i_new=0;
+double previous_error_new = 0;
+double dt;
+float kalman_angle_x;
+float kalman_angle_y;
+
 /*-----------------------------------start of main----------------------------------*/
 int main(void)
 {	
@@ -125,6 +144,7 @@ int main(void)
 	
 	
 	/*---------------------------PID_INIT-------------------------*/
+		/*
 		float PID, error, previous_error;
 		float pid_p=0;
 		float pid_i=0;
@@ -135,8 +155,9 @@ int main(void)
 		double kd=26;//2.05
 		float desired_angle = 0;
 		//PID_TEST	
-		double pid_i_new;
-		double previous_error_new;
+		double ;
+		double previous_error_new;*/
+		
 	sei();
 	
 	
@@ -161,7 +182,7 @@ int main(void)
 			printf("\n");
 			/*--------end------*/			
 		#else
-			double dt = ((double)(micros() - timer1))/1000000;
+			dt = ((double)(micros() - timer1))/1000000;
 			timer1=micros();
 			double gyroXrate = gyro_x/65.5;// deg/s 
 			double gyroYrate = gyro_y/65.5;// deg/s
@@ -185,54 +206,56 @@ int main(void)
 
 						
 			/*-------------------------Kalman--------------------------------*/		
-			float kalman_angle_x=getAngle(roll,gyroXrate,dt);
-			float kalman_angle_y=getAngle_1(pitch,gyroYrate,dt);
+			kalman_angle_x=getAngle(roll,gyroXrate,dt);
+			kalman_angle_y=getAngle_1(pitch,gyroYrate,dt);
 			
 			printSD("kro = ",kalman_angle_x);
-			//printSD("kpi = ",kalman_angle_y);
-			//printf("\n");
-			printSD("roll = ",roll);
-			printSD("pitch = ",pitch);
+			////printSD("kpi = ",kalman_angle_y);
+			////printf("\n");
+			//printSD("roll = ",roll);
+			//printSD("pitch = ",pitch);
 			
 			
 			/*---------------------PID calculations--------------------------*/
-			error = kalman_angle_x - desired_angle;
-			pid_p = kp*error;
-			if(-3 <error <3)
-			{
-				pid_i = pid_i+(ki*error);
-			}
-			
-			pid_d = kd*((error - previous_error)/dt);
+						
+						error = kalman_angle_x - desired_angle;
+						pid_p = kp*error;
+						if(-3 <error <3)
+						{
+							pid_i = pid_i+(ki*error);
+						}
+						
+						pid_d = kd*((error - previous_error)/dt);
 
-			/*The final PID values is the sum of each of this 3 parts*/
-			PID = pid_p + pid_i + pid_d;
-			previous_error = error;	
-			//if(PID < -27735)
-			//{
-			//	PID=-27735;
-			//}
-			//if(PID > 27735)
-			//{
-			//	PID=27735;
-			//}
-			//printSD("PID = ",PID);
-					
+						/*The final PID values is the sum of each of this 3 parts*/
+						PID = pid_p + pid_i + pid_d;
+						previous_error = error;	
+			
 			//printSI("gx=",gyro_x);
 			//printSI("gy=",gyro_x);
 			//printSI("gz=",gyro_x);
 			//printSI("ax=",accel_x);
-			//printSI("ay=",accel_y);
+			//printSI("ay=",accel_y );
 			//printSI("az=",accel_z);
+			
+			//printSI("kal0 ",kalman_angle_x);
+			//printSI("pid_i_new0 ",pid_i_new);
+			//printSI("preverr0 ",previous_error_new);
+			//printSI("dt0 ",dt);
+			//printSI("kp0 ",kp );
+			//printSI("ki0 ",ki);
+			//printSI("kd0 ",kd);
 
 			//printSD("",dt);
 			//PID_test
-			double PID_new=Compute_PID(kalman_angle_x,0,&pid_i_new,&previous_error_new,dt,kp,ki,kd);
-			//printSD("PID_new = ",PID_new);
+			double PID_new=Compute_PID(kalman_angle_x, 0 ,&pid_i_new,&previous_error_new,dt,kp,ki,kd);
+			
+			printSD("PID = ",PID);
+			printSD("PIDNew = ",PID_new);
 			printf("\n");	
 			#ifdef DRV8313
-			PWM_update();
-				printSD("PID = ",PID);
+			//PWM_update();
+				
 				//  int absoulute_x=abs(kalman_angle_x/*THE_MAIN_OUTPUT*/);
 				//  uint16_t learing_rate=500;				
 				//  uint16_t local_motor_delay=(32735-abs(PID));
@@ -248,18 +271,18 @@ int main(void)
 				if(abs(kalman_angle_x)<=0.18 || abs(kalman_angle_x)>45)
 				{
 					incr=0;
-					printf(" debug ");	
+				//	printf(" debug ");	
 				}
 				else 
 					if (kalman_angle_x>0.18)
 					{
 						incr = (int)PID/1000;
-						printSI("incr = ",incr);	
+						//printSI("incr = ",incr);	
 					}
 					else
 					{
 						incr = -1*(int)PID/1000;
-						printSI("incr = ",incr);
+						//printSI("incr = ",incr);
 					}
 					
 				#ifdef MOTOR_2_UPDATE
@@ -287,16 +310,4 @@ int main(void)
 		#endif //GYRO
 	}
 	return 0;
-}
-double Compute_PID(double angle, double desired_angle,double *pid_i,double *previous_error, double dt,double kp, double ki, double kd)
-{
-	double error =angle-desired_angle;
-	double pid_p=kp*error;
-	if (-3 <error <3)
-	{
-		*pid_i=*pid_i+(ki*error);
-	}
-	double pid_d = kd*((error - *previous_error)/dt);
-	*previous_error=error;
-	return pid_p + *pid_i + pid_d;
 }

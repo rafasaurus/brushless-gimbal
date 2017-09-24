@@ -175,6 +175,12 @@
     <Compile Include="MPU6050.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="PID.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="PID.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="TIMER.c">
       <SubType>compile</SubType>
     </Compile>
@@ -188,6 +194,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="USART.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Variable.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

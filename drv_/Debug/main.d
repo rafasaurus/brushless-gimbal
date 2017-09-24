@@ -1,4 +1,5 @@
-main.d main.o: .././main.c .././defines.h .././functions.h \
+main.d main.o: .././main.c .././Variable.h .././defines.h \
+ .././functions.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\inttypes.h \
@@ -23,8 +24,10 @@ main.d main.o: .././main.c .././defines.h .././functions.h \
  .././MPU6050.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdlib.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\string.h \
- .././i2cmaster.h .././KALMAN.h \
+ .././i2cmaster.h .././KALMAN.h .././PID.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\time.h
+
+.././Variable.h:
 
 .././defines.h:
 
@@ -87,5 +90,7 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 .././i2cmaster.h:
 
 .././KALMAN.h:
+
+.././PID.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\time.h:

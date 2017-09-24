@@ -14,6 +14,8 @@ main.c
 
 MPU6050.c
 
+PID.c
+
 TIMER.c
 
 twimastertimeout.c
