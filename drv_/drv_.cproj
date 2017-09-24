@@ -196,6 +196,9 @@
     <Compile Include="USART.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Variable.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Variable.h">
       <SubType>compile</SubType>
     </Compile>

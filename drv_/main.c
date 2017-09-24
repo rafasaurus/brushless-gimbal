@@ -23,35 +23,12 @@
 uint8_t buffer[14];
 bool loop_bool=true;
 
-/*---------------------------PID_INIT-------------------------*/
-float error_roll, previous_error_roll;
-float pid_p_roll=0;
-float pid_i_roll=0;
-float pid_d_roll=0;
-//------------------PID roll CONSTANTS-------------------
-double kp_roll=20;//3.55
-double ki_roll=0.24;//0.003
-double kd_roll=26;//2.05
-float desired_angle_roll = 0;
 
-float error_pitch, previous_error_pitch;
-float pid_p_pitch=0;
-float pid_i_pitch=0;
-float pid_d_pitch=0;
-//------------------PID pitch CONSTANTS------------------
-double kp_pitch=20;//3.55
-double ki_pitch=0.24;//0.003
-double kd_pitch=26;//2.05
-float desired_angle_pitch = 0;
-/*------------------------PID init end------------------------*/
-
-double dt;
-float kalman_angle_roll;
-float kalman_angle_pitch;
 
 /*-----------------------------------start of main----------------------------------*/
 int main(void)
 {	
+	//variableInit();
 	U_step=U_step_predefine;
 	V_step=V_step_predefine;
 	W_step=W_step_predefine;
@@ -188,7 +165,7 @@ int main(void)
 			else loop_bool=false;	
 			//angle_pitch += angle_roll * sin(gyro_z * (dt/65.5*pi/180));               //If the IMU has yawed transfer the roll angle to the pitch angel
 			//angle_roll -= angle_pitch * sin(gyro_z * (dt/65.5*pi/180));
-			               //If the IMU has yawed transfer the pitch angle to the roll angel
+			//If the IMU has yawed transfer the pitch angle to the roll angel
 		
 			//-------------------------------NEW accel-----------------
 			roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;
@@ -208,24 +185,7 @@ int main(void)
 			////printSD("kpi = ",kalman_angle_y);
 			////printf("\n");
 			//printSD("roll = ",roll);
-			//printSD("pitch = ",pitch);
-			
-			
-			/*---------------------PID calculations--------------------------*/
-						
-						/*error = kalman_angle_roll - desired_angle_roll;
-						pid_p_roll = kp*error_roll;
-						if(-3<error_roll<3)
-						{
-							pid_i_roll = pid_i_roll+(ki_roll*error_roll);
-						}
-						
-						pid_d_roll = kd_roll*((error - previous_error_roll)/dt);
-
-						/ *The final PID values is the sum of each of this 3 parts* /
-						PID_roll = pid_p_roll + pid_i_roll + pid_d_roll;
-						previous_error_roll = error_roll;*/	
-			
+			//printSD("pitch = ",pitch);	
 			//printSI("gx=",gyro_x);
 			//printSI("gy=",gyro_x);
 			//printSI("gz=",gyro_x);
@@ -233,13 +193,10 @@ int main(void)
 			//printSI("ay=",accel_y );
 			//printSI("az=",accel_z);
 			
-			printSD("pid_i ",pid_i_roll);
-	
-			double PID_roll=Compute_PID(kalman_angle_roll, 0 ,&pid_i_roll,&previous_error_roll,dt,kp_roll,ki_roll,kd_roll);
-			double PID_pitch=Compute_PID(kalman_angle_pitch, 0 ,&pid_i_pitch,&previous_error_pitch,dt,kp_pitch,ki_pitch,kd_pitch);
-			printSD("PID_roll = ",PID_roll);
-			printSD("PID_pitch",PID_pitch);
 			
+			PWM_update();
+			printSD("PID_roll ",PID_roll);
+			printSD("pid_i ",pid_i_roll);
 			printf("\n");	
 			#ifdef DRV8313
 			//PWM_update();
@@ -299,3 +256,20 @@ int main(void)
 	}
 	return 0;
 }
+
+
+
+
+/*---------------------PID calculations--------------------------*/
+/*error = kalman_angle_roll - desired_angle_roll;
+						pid_p_roll = kp*error_roll;
+						if(-3<error_roll<3)
+						{
+							pid_i_roll = pid_i_roll+(ki_roll*error_roll);
+						}
+						
+						pid_d_roll = kd_roll*((error - previous_error_roll)/dt);
+
+						/ *The final PID values is the sum of each of this 3 parts* /
+						PID_roll = pid_p_roll + pid_i_roll + pid_d_roll;
+						previous_error_roll = error_roll;*/	

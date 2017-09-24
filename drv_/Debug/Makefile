@@ -46,7 +46,8 @@ C_SRCS +=  \
 ../PID.c \
 ../TIMER.c \
 ../twimastertimeout.c \
-../USART.c
+../USART.c \
+../Variable.c
 
 
 PREPROCESSING_SRCS += 
@@ -65,7 +66,8 @@ MPU6050.o \
 PID.o \
 TIMER.o \
 twimastertimeout.o \
-USART.o
+USART.o \
+Variable.o
 
 OBJS_AS_ARGS +=  \
 ADC.o \
@@ -77,7 +79,8 @@ MPU6050.o \
 PID.o \
 TIMER.o \
 twimastertimeout.o \
-USART.o
+USART.o \
+Variable.o
 
 C_DEPS +=  \
 ADC.d \
@@ -89,7 +92,8 @@ MPU6050.d \
 PID.d \
 TIMER.d \
 twimastertimeout.d \
-USART.d
+USART.d \
+Variable.d
 
 C_DEPS_AS_ARGS +=  \
 ADC.d \
@@ -101,7 +105,8 @@ MPU6050.d \
 PID.d \
 TIMER.d \
 twimastertimeout.d \
-USART.d
+USART.d \
+Variable.d
 
 OUTPUT_FILE_PATH +=drv_.elf
 
@@ -117,6 +122,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

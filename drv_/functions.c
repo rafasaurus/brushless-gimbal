@@ -1,4 +1,5 @@
 #include "functions.h"
+#include "Variable.h"
 int U_step=U_step_predefine;
 int V_step=V_step_predefine;
 int W_step=W_step_predefine;
@@ -6,6 +7,35 @@ int U_step_2=U_step_predefine;
 int V_step_2=V_step_predefine;
 int W_step_2=W_step_predefine;
 #if SINPRESCALER==1
+
+double PID_roll=0;
+double PID_pitch=0;
+/*---------------------------PID_INIT-------------------------*/
+float error_roll, previous_error_roll;
+float pid_p_roll=0;
+float pid_i_roll=0;
+float pid_d_roll=0;
+//------------------PID roll CONSTANTS-------------------
+double kp_roll=20;//3.55
+double ki_roll=0.24;//0.003
+double kd_roll=26;//2.05
+float desired_angle_roll = 0;
+
+float error_pitch, previous_error_pitch;
+float pid_p_pitch=0;
+float pid_i_pitch=0;
+float pid_d_pitch=0;
+//------------------PID pitch CONSTANTS------------------
+double kp_pitch=20;//3.55
+double ki_pitch=0.24;//0.003
+double kd_pitch=26;//2.05
+float desired_angle_pitch = 0;
+/*------------------------PID init end------------------------*/
+
+double dt;
+float kalman_angle_roll;
+float kalman_angle_pitch;
+
 uint8_t pwmSin[]={128,131,135,138,141,145,148,151,155,158,161,
 	164,168,171,174,177,181,184,187,190,193,197,200,203,206,209,
 	212,215,218,221,224,225,225,226,227,228,229,230,230,231,232,
@@ -108,6 +138,10 @@ double max (double a,double b, double c)
 }
 void PWM_update()//motor pwm update
 {
+	
+	PID_roll=Compute_PID(kalman_angle_roll, 0 , &pid_i_roll, &previous_error_roll,dt,kp_roll,ki_roll,kd_roll);
+	//double PID_pitch=Compute_PID(kalman_angle_pitch, 0 ,&pid_i_pitch,&previous_error_pitch,dt,kp_pitch,ki_pitch,kd_pitch);
+	//printSD("kal = ", previous_error_roll);
 	U_PWM=pwmSin[U_step];
 	V_PWM=pwmSin[V_step];
 	W_PWM=pwmSin[W_step];
