@@ -9,7 +9,7 @@ double Compute_PID(double angle, double desired_angle,double *pid_i,double *prev
 {
 	double error = angle-desired_angle;
 	double pid_p = kp*error;
-	if (abs(error)>3)
+	if (abs(error)<3)
 	{
 		*pid_i=*pid_i+(ki*error);	
 	}

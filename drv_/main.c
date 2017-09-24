@@ -22,18 +22,29 @@
 
 uint8_t buffer[14];
 bool loop_bool=true;
+
+/*---------------------------PID_INIT-------------------------*/
 float error_roll, previous_error_roll;
 float pid_p_roll=0;
 float pid_i_roll=0;
 float pid_d_roll=0;
-/////////////////PID CONSTANTS/////////////////
+//------------------PID roll CONSTANTS-------------------
 double kp_roll=20;//3.55
 double ki_roll=0.24;//0.003
 double kd_roll=26;//2.05
 float desired_angle_roll = 0;
-////--------------------PID_TEST
-//double pid_i_new;
-//double previous_error_new = 0;
+
+float error_pitch, previous_error_pitch;
+float pid_p_pitch=0;
+float pid_i_pitch=0;
+float pid_d_pitch=0;
+//------------------PID pitch CONSTANTS------------------
+double kp_pitch=20;//3.55
+double ki_pitch=0.24;//0.003
+double kd_pitch=26;//2.05
+float desired_angle_pitch = 0;
+
+
 double dt;
 float kalman_angle_roll;
 float kalman_angle_pitch;
@@ -141,23 +152,7 @@ int main(void)
 	double pitch =  atan2(accel_x, sqrt(accel_y*accel_y + accel_z*accel_z)) * RAD_TO_DEG;// atan(-accel_x / sqrt(accel_y * accel_y + accel_z * accel_z)) * RAD_TO_DEG;
 	angle=0;
 	angle_1=0;
-	
-	
-	/*---------------------------PID_INIT-------------------------*/
-		/*
-		float PID, error, previous_error;
-		float pid_p=0;
-		float pid_i=0;
-		float pid_d=0;
-		/////////////////PID CONSTANTS/////////////////
-		double kp=6;//3.55
-		double ki=0.24;//0.003
-		double kd=26;//2.05
-		float desired_angle = 0;
-		//PID_TEST	
-		double ;
-		double previous_error_new;*/
-		
+			
 	sei();
 	
 	
@@ -240,19 +235,11 @@ int main(void)
 			
 			printSD("pid_i ",pid_i_roll);
 	
-			
-			//printSI("kal0 ",kalman_angle_x);
-			//printSI("pid_i_new0 ",pid_i_new);
-			//printSI("preverr0 ",previous_error_new);
-			//printSI("dt0 ",dt);
-			//printSI("kp0 ",kp );
-			//printSI("ki0 ",ki);
-			//printSI("kd0 ",kd);
-
-			//printSD("",dt);
-			//PID_test
 			double PID_roll=Compute_PID(kalman_angle_roll, 0 ,&pid_i_roll,&previous_error_roll,dt,kp_roll,ki_roll,kd_roll);
-			printSD("PID = ",PID_roll);
+			double PID_pitch=Compute_PID(kalman_angle_pitch, 0 ,&pid_i_pitch,&previous_error_pitch,dt,kp_pitch,ki_pitch,kd_pitch);
+			printSD("PID_roll = ",PID_roll);
+			printSD("PID_pitch",PID_pitch);
+			
 			printf("\n");	
 			#ifdef DRV8313
 			//PWM_update();
