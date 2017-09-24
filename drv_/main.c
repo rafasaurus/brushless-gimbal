@@ -43,7 +43,7 @@ double kp_pitch=20;//3.55
 double ki_pitch=0.24;//0.003
 double kd_pitch=26;//2.05
 float desired_angle_pitch = 0;
-
+/*------------------------PID init end------------------------*/
 
 double dt;
 float kalman_angle_roll;

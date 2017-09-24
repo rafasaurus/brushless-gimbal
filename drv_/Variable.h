@@ -8,21 +8,26 @@
 
 #ifndef VARIABLE_H_
 #define VARIABLE_H_
-//
-//extern float PID, error, previous_error;
-//extern float pid_p;
-//extern float pid_i;
-//extern float pid_d;
-///////////////////PID CONSTANTS/////////////////
-//extern double kp;//3.55
-//extern double ki;//0.003
-//extern double kd;//2.05
-//
-////PID_TEST	
-//extern double pid_i_new;
-//extern double previous_error_new;
-//extern double dt;
-//extern float kalman_angle_x;
-//extern float kalman_angle_y;
+/*---------------------------PID_INIT-------------------------*/
+extern float error_roll, previous_error_roll;
+extern float pid_p_roll;
+extern float pid_i_roll;
+extern float pid_d_roll;
+//------------------PID roll CONSTANTS-------------------
+extern double kp_roll;
+extern double ki_roll;
+extern double kd_roll;
+extern float desired_angle_roll;
+
+extern float error_pitch, previous_error_pitch;
+extern float pid_p_pitch;
+extern float pid_i_pitch;
+extern float pid_d_pitch;
+//------------------PID pitch CONSTANTS------------------
+extern double kp_pitch;
+extern double ki_pitch;
+extern double kd_pitch;
+extern float desired_angle_pitch;
+/*------------------------PID init end------------------------*/
 
 #endif /* VARIABLE_H_ */
