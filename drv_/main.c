@@ -37,8 +37,8 @@ int main(void)
 	W_step_2=W_step_predefine;
 	incr=-1;
 	incr_2=-1;
-	pwm_delay=15000;
-	pwm_delay_2=15000;
+	pwm_delay=25000;
+	pwm_delay_2=32000;
 	cli();
 	init_gpio();
 	init_motor_gpio();
@@ -194,14 +194,12 @@ int main(void)
 			//printSI("az=",accel_z);
 			
 			
-			PWM_update();
 			printSD("PID_roll ",PID_roll);
-			printSD("pid_i ",pid_i_roll);
+			//printSD("PID_pitch ",PID_pitch);
+			//printSD("pid_i ",pid_i_roll);
 			printf("\n");	
-			#ifdef DRV8313
-			//PWM_update();
-				
-				//  int absoulute_x=abs(kalman_angle_x/*THE_MAIN_OUTPUT*/);
+			/*#ifdef DRV8313
+				//  int absoulute_x=abs(kalman_angle_x/ *THE_MAIN_OUTPUT* /);
 				//  uint16_t learing_rate=500;				
 				//  uint16_t local_motor_delay=(32735-abs(PID));
 				//  if (abs(local_motor_delay)>5000)
@@ -250,7 +248,7 @@ int main(void)
 						//sei();
 					}
 				#endif //MOTOR_2_UPDATE;					
-			#endif	//DRV8313					
+			#endif	//DRV8313*/					
 			#endif //PRINT_RAW_DATA			
 		#endif //GYRO
 	}
@@ -261,15 +259,17 @@ int main(void)
 
 
 /*---------------------PID calculations--------------------------*/
-/*error = kalman_angle_roll - desired_angle_roll;
-						pid_p_roll = kp*error_roll;
-						if(-3<error_roll<3)
-						{
-							pid_i_roll = pid_i_roll+(ki_roll*error_roll);
-						}
-						
-						pid_d_roll = kd_roll*((error - previous_error_roll)/dt);
+/*
+error = kalman_angle_roll - desired_angle_roll;
+pid_p_roll = kp*error_roll;
+if(-3<error_roll<3)
+{
+	pid_i_roll = pid_i_roll+(ki_roll*error_roll);
+}
 
-						/ *The final PID values is the sum of each of this 3 parts* /
-						PID_roll = pid_p_roll + pid_i_roll + pid_d_roll;
-						previous_error_roll = error_roll;*/	
+pid_d_roll = kd_roll*((error - previous_error_roll)/dt);
+
+/ *The final PID values is the sum of each of this 3 parts* /
+PID_roll = pid_p_roll + pid_i_roll + pid_d_roll;
+previous_error_roll = error_roll;
+*/	

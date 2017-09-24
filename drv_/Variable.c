@@ -13,9 +13,10 @@ float pid_p_roll=0;
 float pid_i_roll=0;
 float pid_d_roll=0;
 //------------------PID roll CONSTANTS-------------------
-double kp_roll=20;//3.55
-double ki_roll=0.24;//0.003
-double kd_roll=26;//2.05
+double kp_roll=0.5;//3.55
+double kd_roll=0.03;//2.05
+double ki_roll=0;//0.01;//0.003
+
 float desired_angle_roll = 0;
 
 float error_pitch, previous_error_pitch;
