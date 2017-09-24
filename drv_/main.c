@@ -22,21 +22,21 @@
 
 uint8_t buffer[14];
 bool loop_bool=true;
-float PID, error, previous_error;
-float pid_p=0;
-float pid_i=0;
-float pid_d=0;
+float error_roll, previous_error_roll;
+float pid_p_roll=0;
+float pid_i_roll=0;
+float pid_d_roll=0;
 /////////////////PID CONSTANTS/////////////////
-double kp=20;//3.55
-double ki=0.24;//0.003
-double kd=26;//2.05
-float desired_angle = 0;
-//PID_TEST
-double pid_i_new;
-double previous_error_new = 0;
+double kp_roll=20;//3.55
+double ki_roll=0.24;//0.003
+double kd_roll=26;//2.05
+float desired_angle_roll = 0;
+////--------------------PID_TEST
+//double pid_i_new;
+//double previous_error_new = 0;
 double dt;
-float kalman_angle_x;
-float kalman_angle_y;
+float kalman_angle_roll;
+float kalman_angle_pitch;
 
 /*-----------------------------------start of main----------------------------------*/
 int main(void)
@@ -206,10 +206,10 @@ int main(void)
 
 						
 			/*-------------------------Kalman--------------------------------*/		
-			kalman_angle_x=getAngle(roll,gyroXrate,dt);
-			kalman_angle_y=getAngle_1(pitch,gyroYrate,dt);
+			kalman_angle_roll=getAngle(roll,gyroXrate,dt);
+			kalman_angle_pitch=getAngle_1(pitch,gyroYrate,dt);
 			
-			printSD("kro = ",kalman_angle_x);
+			printSD("kro = ",kalman_angle_roll);
 			////printSD("kpi = ",kalman_angle_y);
 			////printf("\n");
 			//printSD("roll = ",roll);
@@ -218,18 +218,18 @@ int main(void)
 			
 			/*---------------------PID calculations--------------------------*/
 						
-						error = kalman_angle_x - desired_angle;
-						pid_p = kp*error;
-						if(-3<error<3)
+						/*error = kalman_angle_roll - desired_angle_roll;
+						pid_p_roll = kp*error_roll;
+						if(-3<error_roll<3)
 						{
-							pid_i = pid_i+(ki*error);
+							pid_i_roll = pid_i_roll+(ki_roll*error_roll);
 						}
 						
-						pid_d = kd*((error - previous_error)/dt);
+						pid_d_roll = kd_roll*((error - previous_error_roll)/dt);
 
-						/*The final PID values is the sum of each of this 3 parts*/
-						PID = pid_p + pid_i + pid_d;
-						previous_error = error;	
+						/ *The final PID values is the sum of each of this 3 parts* /
+						PID_roll = pid_p_roll + pid_i_roll + pid_d_roll;
+						previous_error_roll = error_roll;*/	
 			
 			//printSI("gx=",gyro_x);
 			//printSI("gy=",gyro_x);
@@ -238,8 +238,8 @@ int main(void)
 			//printSI("ay=",accel_y );
 			//printSI("az=",accel_z);
 			
-			printSD("pid_i ",pid_i);
-			printSD("pid_i_new ",pid_i_new);
+			printSD("pid_i ",pid_i_roll);
+	
 			
 			//printSI("kal0 ",kalman_angle_x);
 			//printSI("pid_i_new0 ",pid_i_new);
@@ -251,10 +251,8 @@ int main(void)
 
 			//printSD("",dt);
 			//PID_test
-			double PID_new=Compute_PID(kalman_angle_x, 0 ,&pid_i_new,&previous_error_new,dt,kp,ki,kd);
-			
-			printSD("PID = ",PID);
-			printSD("PIDNew = ",PID_new);
+			double PID_roll=Compute_PID(kalman_angle_roll, 0 ,&pid_i_roll,&previous_error_roll,dt,kp_roll,ki_roll,kd_roll);
+			printSD("PID = ",PID_roll);
 			printf("\n");	
 			#ifdef DRV8313
 			//PWM_update();
@@ -271,32 +269,32 @@ int main(void)
 				//printSI("pwm_delay = ",pwm_delay);
 				//printSI("ocr=",reg_);
 				//if (absoulute_x>=0.18 || abs(kalman_angle_x)>45)
-				if(abs(kalman_angle_x)<=0.18 || abs(kalman_angle_x)>45)
+				if(abs(kalman_angle_roll)<=0.18 || abs(kalman_angle_roll)>45)
 				{
 					incr=0;
 				//	printf(" debug ");	
 				}
 				else 
-					if (kalman_angle_x>0.18)
+					if (kalman_angle_roll>0.18)
 					{
-						incr = (int)PID/1000;
+						incr = (int)PID_roll/1000;
 						//printSI("incr = ",incr);	
 					}
 					else
 					{
-						incr = -1*(int)PID/1000;
+						incr = -1*(int)PID_roll/1000;
 						//printSI("incr = ",incr);
 					}
 					
 				#ifdef MOTOR_2_UPDATE
 					int absoulute_y=abs(THE_MAIN_OUTPUT_2);
 					uint16_t learing_rate_y=500;
-					uint16_t local_motor2_delay=(32735-kalman_angle_y*20000);//minus something here
+					uint16_t local_motor2_delay=(32735-kalman_angle_pitch*20000);//minus something here
 					if (abs(local_motor2_delay)>5000)
 					{
 						pwm_delay_2=32000;//abs(local_motor2_delay);
 					}
-					if (kalman_angle_y<0.18)
+					if (kalman_angle_pitch<0.18)
 					{
 						//cli();
 						incr_2=1;
