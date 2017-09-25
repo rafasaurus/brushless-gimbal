@@ -35,8 +35,8 @@ int main(void)
 	W_step_2=W_step_predefine;
 	incr=-1;
 	incr_2=-1;
-	pwm_delay=25000;//25000;
-	pwm_delay_2=10000;
+	pwm_delay=30000;//25000;
+	//pwm_delay_2=57000;
 	cli();
 	init_gpio();
 	init_motor_gpio();
@@ -52,9 +52,9 @@ int main(void)
 	setup_timer5();
 	Enable_timer5_compare_interrupt();//motor 1
 	setup_timer1();
-	Enable_timer1_compare_interrupt();//motor 2
+	//Enable_timer1_compare_interrupt();//motor 2
 	INT_MOTOR_SPEED1=pwm_delay;
-	INT_MOTOR_SPEED2=pwm_delay_2;
+	//INT_MOTOR_SPEED2=pwm_delay_2;
 	unsigned long timer1=micros();
 	/*----------MPU6050 twi init---------*/
 	#ifdef GYRO

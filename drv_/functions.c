@@ -141,12 +141,12 @@ void PWM_update()//motor pwm update
 	else
 		if (kalman_angle_roll>0.04)
 		{
-			incr=(uint8_t)(abs(PID_roll));
+			incr=1;//(uint8_t)(abs(PID_roll));
 			//printf("yes");
 		}
 		else 
 		{
-			incr =-(uint8_t)(abs(PID_roll));
+			incr =-1;//(uint8_t)(abs(PID_roll));
 			//printf("no");
 		}
 	U_PWM=pwmSin[U_step];
@@ -208,7 +208,7 @@ void PWM_update_2()//motor pwm update
 	if(V_step_2 > SINE_TABLE_SZ)
 	V_step_2 = 0;
 	if(V_step_2 < 0)
-	V_step = SINE_TABLE_SZ;
+	V_step_2 = SINE_TABLE_SZ;
 	
 	if(W_step_2 > SINE_TABLE_SZ)
 	W_step_2 = 0;
