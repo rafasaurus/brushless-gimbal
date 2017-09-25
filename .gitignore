@@ -1,6 +1,6 @@
-.hex
-.o
-.d
-.elf
-.lss
-.srec
+*.hex
+*.o
+*.d
+*.elf
+*.lss
+*.srec
