@@ -35,8 +35,8 @@ int main(void)
 	W_step_2=W_step_predefine;
 	incr=-1;
 	incr_2=-1;
-	pwm_delay=25000;
-	pwm_delay_2=32000;
+	pwm_delay=25000;//25000;
+	pwm_delay_2=10000;
 	cli();
 	init_gpio();
 	init_motor_gpio();
@@ -52,7 +52,7 @@ int main(void)
 	setup_timer5();
 	Enable_timer5_compare_interrupt();//motor 1
 	setup_timer1();
-	//Enable_timer1_compare_interrupt();//motor 2
+	Enable_timer1_compare_interrupt();//motor 2
 	INT_MOTOR_SPEED1=pwm_delay;
 	INT_MOTOR_SPEED2=pwm_delay_2;
 	unsigned long timer1=micros();
@@ -180,6 +180,7 @@ int main(void)
 			////printf("\n");
 			//printSD("roll = ",roll);
 			printSD("pitch = ",pitch);	
+			printSD("dt=",dt);
 			//printSI("gx=",gyro_x);
 			//printSI("gy=",gyro_x);
 			//printSI("gz=",gyro_x);
@@ -197,11 +198,11 @@ int main(void)
 	}
 	return 0;
 }
-ISR (USART0_RX_vect)
-{
-	printf("->");
-	receiveData=UDR0;
-	//strcat(receiveData,UDR0);
-	printf("%s",&receiveData);
-	_delay_ms(5000);
-}
+//ISR (USART0_RX_vect)
+//{
+//	printf("->");
+//	receiveData=UDR0;
+//	//strcat(receiveData,UDR0);
+//	printf("%s",&receiveData);
+//	_delay_ms(5000);
+//}

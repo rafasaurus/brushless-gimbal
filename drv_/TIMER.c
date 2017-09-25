@@ -100,6 +100,7 @@ ISR(TIMER0_OVF_vect)//10 microsecconed timer interrupt
 ISR(TIMER5_COMPA_vect)//motor update interrupt routine
 {
 	PWM_update();
+	
 }
 ISR(TIMER1_COMPA_vect)//motor update interrupt routine
 {

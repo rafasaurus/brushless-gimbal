@@ -132,7 +132,6 @@ double max (double a,double b, double c)
 void PWM_update()//motor pwm update
 {
 	PID_roll=Compute_PID(kalman_angle_roll, 0 , &pid_i_roll, &previous_error_roll,dt,kp_roll,ki_roll,kd_roll);
-	//PID_pitch=Compute_PID(kalman_angle_pitch, 0 ,&pid_i_pitch,&previous_error_pitch,dt,kp_pitch,ki_pitch,kd_pitch);
 
 	if (abs(kalman_angle_roll)<0.04|| abs(kalman_angle_roll>45))
 	{
@@ -171,13 +170,33 @@ void PWM_update()//motor pwm update
 	if(W_step < 0)
 	W_step = SINE_TABLE_SZ;
 	//printf("debug 0000000");
-	INT_MOTOR_SPEED1=pwm_delay;
+
 }
 void PWM_update_2()//motor pwm update
 {
+	PID_pitch=Compute_PID(kalman_angle_pitch, 0 ,&pid_i_pitch,&previous_error_pitch,dt,kp_pitch,ki_pitch,kd_pitch);
+	if (abs(kalman_angle_pitch)<0.04|| abs(kalman_angle_pitch>45))
+	{
+		incr_2=0;
+		pid_i_pitch=0;
+	}
+	else
+	if (kalman_angle_pitch>0.04)
+	{
+		incr_2=1;//(uint8_t)(abs(PID_pitch));
+		//printf("yes");
+	}
+	else
+	{
+		incr_2=-1;//-(uint8_t)(abs(PID_pitch));
+		//printf("no");
+	}
 	U1_PWM=pwmSin[U_step_2];
 	V1_PWM=pwmSin[V_step_2];
 	W1_PWM=pwmSin[W_step_2];
+	//U1_PWM = 85;
+	//V1_PWM = 170;
+	//W1_PWM = 255;
 	U_step_2=U_step_2+incr_2;
 	V_step_2=V_step_2+incr_2;
 	W_step_2=W_step_2+incr_2;
@@ -196,7 +215,7 @@ void PWM_update_2()//motor pwm update
 	if(W_step_2< 0)
 	W_step_2 = SINE_TABLE_SZ;
 	//_delay_us(100);
-	INT_MOTOR_SPEED2=pwm_delay_2;
+	
 	//printf("oopooo");
 }
 void init_motor_gpio()

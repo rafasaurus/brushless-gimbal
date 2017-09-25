@@ -26,7 +26,7 @@
 	#define U_PWM OCR4A
 	#define V_PWM OCR4B
 	#define W_PWM OCR4C
-	#define U1_PWM OCR3A
+	#define U1_PWM OCR3A//pins 2 3 5
 	#define V1_PWM OCR3B
 	#define W1_PWM OCR3C
 	#define INT_MOTOR_SPEED1 OCR5A
