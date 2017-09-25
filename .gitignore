@@ -1,6 +1,1 @@
-*.hex
-*.o
-*.d
-*.elf
-*.lss
-*.srec
+/Debug
