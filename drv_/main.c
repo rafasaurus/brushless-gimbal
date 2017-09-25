@@ -35,7 +35,7 @@ int main(void)
 	W_step_2=W_step_predefine;
 	incr=-1;
 	incr_2=-1;
-	pwm_delay=30000;//25000;
+	pwm_delay=25000;//25000;
 	//pwm_delay_2=57000;
 	cli();
 	init_gpio();
@@ -180,7 +180,8 @@ int main(void)
 			////printf("\n");
 			//printSD("roll = ",roll);
 			printSD("pitch = ",pitch);	
-			printSD("dt=",dt);
+			printSI("ir ",incr_2);
+			//printSD("dt=",dt);
 			//printSI("gx=",gyro_x);
 			//printSI("gy=",gyro_x);
 			//printSI("gz=",gyro_x);

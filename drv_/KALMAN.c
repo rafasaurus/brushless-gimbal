@@ -108,7 +108,7 @@ float getAngle_1(float newAngle, float newRate, float dt) {
 };
 void Kalman_init_1() {
 	/* We will set the variables like so, these can also be tuned by the user */
-	Q_angle_1 =0.01;
+	Q_angle_1 =0.02;
 	Q_bias_1 = 0.003f;
 	R_measure_1 = 0.03f;
 
