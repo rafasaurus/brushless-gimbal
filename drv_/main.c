@@ -175,14 +175,15 @@ int main(void)
 			kalman_angle_roll=getAngle(roll,gyroXrate,dt);
 			kalman_angle_pitch=getAngle_1(pitch,gyroYrate,dt);
 			
-			//printSD("kro = ",kalman_angle_roll);
-			printSD("kalPitch = ",kalman_angle_pitch);
+			printSD("kro = ",kalman_angle_roll);
+			printSD("kpi = ",kalman_angle_pitch);
 			////printf("\n");
 			//printSD("roll = ",roll);
 			printSD("pitch = ",pitch);	
-			printSI("ir ",incr_2);
+			printSI("ir ",incr);
+			printSI("ir2 ",incr_2);
 			//printSD("dt=",dt);
-			//printSI("gx=",gyro_x);
+			//printSI("gx=",gyro_x);	
 			//printSI("gy=",gyro_x);
 			//printSI("gz=",gyro_x);
 			//printSI("ax=",accel_x);

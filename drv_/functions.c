@@ -76,6 +76,8 @@ uint8_t pwmSin[]={128,131,135,138,141,145,148,151,155,158,161,164,
 	,21,21,22,22,23,24,24,25,26,26,27,28,29,30,31,31,32,35,38,41,44
 	,47,50,53,56,59,63,66,69,72,75,79,82,85,88,92,95,98,101,105,108
 	,111,115,118,121,125,128};
+#elif SINPRESCALER==4
+
 #endif
 void init_gpio()
 {
@@ -133,16 +135,16 @@ void PWM_update()//motor pwm update
 {
 	PID_roll=Compute_PID(kalman_angle_roll, 0 , &pid_i_roll, &previous_error_roll,dt,kp_roll,ki_roll,kd_roll);
 
-	if (abs(kalman_angle_roll)<0.04|| abs(kalman_angle_roll>45))
+	if (abs(kalman_angle_roll)<0.1|| abs(kalman_angle_roll>75))
 	{
 		incr=0;
 		pid_i_roll=0;
 	}
 	else
-		if (kalman_angle_roll>0.04)
+		if (kalman_angle_roll>0.1)
 		{
-			incr=(uint8_t)(abs(PID_roll));
 			//printf("yes");
+			incr=(uint8_t)(abs(PID_roll));
 		}
 		else 
 		{
@@ -196,12 +198,12 @@ void PWM_update_2()//motor pwm update
 		//printSI("in ",incr_2);
 		//printf("no");
 	}
-	U1_PWM=pwmSin[U_step_2];
-	V1_PWM=pwmSin[V_step_2];
-	W1_PWM=pwmSin[W_step_2];
-	//U1_PWM = 85;
-	//V1_PWM = 170;
-	//W1_PWM = 255;
+	//U1_PWM=pwmSin[U_step_2];
+	//V1_PWM=pwmSin[V_step_2];
+	//W1_PWM=pwmSin[W_step_2];
+	U1_PWM = 85;
+	V1_PWM = 170;
+	W1_PWM = 255;
 	U_step_2=U_step_2+incr_2;
 	V_step_2=V_step_2+incr_2;
 	W_step_2=W_step_2+incr_2;
