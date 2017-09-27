@@ -38,13 +38,16 @@ void Init_Pid_Roll_Vars()
 	ki_roll=0.00262*pid_roll_const;//0.00062
 	kd_roll=0.015*pid_roll_const;//.015;//0.0095;//
 }*/
+
+
 void Init_Pid_Roll_Vars()
 {
-	double pid_roll_const=0.118;
-	kp_roll=0.659*pid_roll_const;//0.115;//609
-	ki_roll=0.00262*pid_roll_const;//0.00062
-	kd_roll=0.015*pid_roll_const;//.015;//0.0095;//
+	double pid_roll_const=0.13;
+	kp_roll=0.709*pid_roll_const;//0.115;//609
+	ki_roll=0.00062*pid_roll_const;//0.00062
+	kd_roll=0.008*pid_roll_const;//.015;//0.0095;//
 }
+
 
 //pupush tver
 /*
