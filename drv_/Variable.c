@@ -16,8 +16,8 @@ float pid_d_roll=0;
 //first time tweak values kp=0.5 kd=0.03 ki=0
 //seccond time tweak values kp=0.41 kd=0.007 ki=0
 
-double kp_roll=0.18;//0.115;//
-double kd_roll=0.015;//0.0095;//
+double kp_roll=0.085;//0.115;//
+double kd_roll=0.005;//.015;//0.0095;//
 double ki_roll=0;//
 
 float desired_angle_roll = 0;
