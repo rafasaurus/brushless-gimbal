@@ -16,11 +16,13 @@ void init_motor_gpio();
 void getSinTable(uint16_t ,uint8_t *,uint16_t );
 double min(double, double, double);
 double max(double, double, double);
-void PWM_update();
+void PWM_update(void);
 void PWM_update_2(void);
+void PWM_update_3(void);
 bool direction;
 int incr;//increment variable
 int incr_2;
+int incr_3;
 extern int U_step;
 extern int V_step;
 extern int W_step;

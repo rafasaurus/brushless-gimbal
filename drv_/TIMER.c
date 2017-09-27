@@ -27,23 +27,31 @@ void setup_timer3(void){
 	sbi (TCCR3A,COM3C1);	
 }
 /*-----------Timer 5-----------*/
-void setup_timer5(void){
-	//timer for controlling speed of motor 1
-	sbi (TCCR5B, CS50);//only this 8
-	sbi (TCCR5B, WGM52);//OCR4A compare interrupt
-}
-void Enable_timer5_compare_interrupt(){
-	sbi (TIMSK5, OCIE5A);
-}
-/*-----------Timer 1-----------*/
 void setup_timer1(void){
-	//timer for controlling speed of motor 2
+	//timer for controlling speed of motor 1
 	sbi (TCCR1B, CS10);//only this 8
-	sbi (TCCR1B, WGM12);//OCR4A compare interrupt
+	sbi (TCCR1B, WGM12);
 }
 void Enable_timer1_compare_interrupt(){
 	sbi (TIMSK1, OCIE1A);
 }
+/*-----------Timer 1-----------*/
+void setup_timer5(void)
+{
+	//timer for motor 3
+	sbi (TCCR5B, CS50);//prescaler 256
+	sbi (TCCR5A, WGM50);
+	sbi (TCCR5A, WGM52);//8 bit phase correct PWM
+	//sbi (TCCR4A,COM4A0);
+	sbi (TCCR5A,COM5A1);
+	//sbi (TCCR4A,COM4B0);
+	sbi (TCCR5A,COM5B1);
+	//sbi (TCCR4A,COM4C0);
+	sbi (TCCR5A,COM5C1);
+}
+//void Enable_timer1_compare_interrupt(){
+//	sbi (TIMSK1, OCIE1A);
+//}
 /*-----------Timer 0-----------*/
 void setup_timer0(void){
 	//timer for calculating micros() and millis()
@@ -97,12 +105,14 @@ ISR(TIMER0_OVF_vect)//10 microsecconed timer interrupt
 	timer0_overflow_count++;
 }
 
-ISR(TIMER5_COMPA_vect)//motor update interrupt routine
+ISR(TIMER1_COMPA_vect)//motor update interrupt routine
 {
 	PWM_update();
 	PWM_update_2();
-	
+	PWM_update_3();
 }
+
+
 //ISR(TIMER1_COMPA_vect)//motor update interrupt routine
 //{
 //	PWM_update_2();

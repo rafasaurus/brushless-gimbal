@@ -49,11 +49,16 @@ int main(void)
 	Enable_timer0_overflow_interrupt();//micros
 	setup_timer4();//pwm for motor1
 	setup_timer3();//pwm for motor2
-	setup_timer5();
-	Enable_timer5_compare_interrupt();//motor 1
+	setup_timer5();//pwm for motor3
 	setup_timer1();
-	//Enable_timer1_compare_interrupt();//motor 2
-	INT_MOTOR_SPEED1=pwm_delay;
+	Enable_timer1_compare_interrupt();//motor 1
+	
+
+	//OCR1A=127;
+	//OCR1B=127;
+	//OCR1C=127;
+	//();//motor 2
+	INT_MOTOR_SPEED=pwm_delay;
 	//INT_MOTOR_SPEED2=pwm_delay_2;
 	unsigned long timer1=micros();
 	/*----------MPU6050 twi init---------*/

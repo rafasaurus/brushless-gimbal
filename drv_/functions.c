@@ -6,6 +6,9 @@ int W_step=W_step_predefine;
 int U_step_2=U_step_predefine;
 int V_step_2=V_step_predefine;
 int W_step_2=W_step_predefine;
+int U_step_3=U_step_predefine;
+int V_step_3=V_step_predefine;
+int W_step_3=W_step_predefine;
 
 
 #if SINPRESCALER==1
@@ -225,6 +228,51 @@ void PWM_update_2()//motor pwm update
 	
 	//printf("oopooo");
 }
+void PWM_update_3()
+{
+	//PID_roll=Compute_PID(kalman_angle_roll, 0 , &pid_i_roll, &previous_error_roll,dt,kp_roll,ki_roll,kd_roll);
+	//
+	//if (abs(kalman_angle_roll)<0.1 || abs(kalman_angle_roll>75))
+	//{
+	//	incr=0;
+	//	pid_i_roll=0;
+	//}
+	//else
+	//if (kalman_angle_roll>0.1)
+	//{
+	//	//printf("yes");
+	//	incr = (uint8_t)(abs(PID_roll));
+	//}
+	//else
+	//{
+	//	incr = -(uint8_t)(abs(PID_roll));
+	//	//printf("no");
+	//}
+	//U2_PWM=pwmSin[U_step_3];
+	//V2_PWM=pwmSin[V_step_3];
+	//W2_PWM=pwmSin[W_step_3];
+	U2_PWM=85;
+	V2_PWM=170;
+	W2_PWM=255;
+	U_step_3=U_step_3+incr_3;
+	V_step_3=V_step_3+incr_3;
+	W_step_3=W_step_3+incr_3;
+	if(U_step_3 > SINE_TABLE_SZ)
+	U_step_3 = 0;
+	if(U_step_3 < 0)
+	U_step_3 = SINE_TABLE_SZ;
+	
+	if(V_step_3 > SINE_TABLE_SZ)
+	V_step_3 = 0;
+	if(V_step_3 < 0)
+	V_step_3 = SINE_TABLE_SZ;
+	
+	if(W_step_3 > SINE_TABLE_SZ)
+	W_step_3 = 0;
+	if(W_step_3 < 0)
+	W_step_3 = SINE_TABLE_SZ;
+	//printf("debug 0000000");	
+}
 void init_motor_gpio()
 {
 	//setting pin mode to output for motor 1 
@@ -232,33 +280,14 @@ void init_motor_gpio()
 	sbi(DDRH,4);//digital 7 OC4B
 	sbi(DDRH,5);//digital 8 OC4C
 	
-	sbi(DDRA,0);//digital 22 EN1
-	sbi(DDRA,2);//digital 24 EN2
-	sbi(DDRA,4);//digital 26 EN3
-	sbi(DDRA,6);//digital 28 sleep
-	sbi(DDRC,7);//digital 30 nf, see drv8313 
-	
-	sbi(PORTA,0);//sleep HIGH
-	sbi(PORTA,2);//nf HIGH
-	sbi(PORTA,4);//EN1 HIGH
-	sbi(PORTA,6);//EN2 HIGH
-	sbi(PORTC,7);//EN3 HIGH
-	
-	
 	//setting pin mode to output for motor 2
 	sbi(DDRE,4);//digital 2 OC3B
 	sbi(DDRE,5);//digital 3 OC3C
 	sbi(DDRE,3);//digital 5 OC3A
 	
-	sbi(DDRC,5);//digital 32 EN1
-	sbi(DDRC,3);//digital 34 EN2
-	sbi(DDRC,1);//digital 36 EN3
-	sbi(DDRD,7);//digital 38 sleep
-	sbi(DDRG,1);//digital 40 nf, see drv8313
-	
-	sbi(PORTC,5);//sleep HIGH
-	sbi(PORTC,3);//nf HIGH
-	sbi(PORTC,1);//EN1 HIGH
-	sbi(PORTD,7);//EN2 HIGH
-	sbi(PORTG,1);//EN3 HIGH
+	//setting pin mode to output for motor 3
+	//timer5
+	sbi(DDRL,3);
+	sbi(DDRL,4);
+	sbi(DDRL,5);
 }

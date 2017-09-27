@@ -29,8 +29,11 @@
 	#define U1_PWM OCR3A//pins 2 3 5
 	#define V1_PWM OCR3B
 	#define W1_PWM OCR3C
-	#define INT_MOTOR_SPEED1 OCR5A
-	#define INT_MOTOR_SPEED2 OCR1A
+	#define U2_PWM OCR5A//pins 11 12 13
+	#define V2_PWM OCR5B
+	#define W2_PWM OCR5C
+	#define INT_MOTOR_SPEED OCR1A
+	//#define INT_MOTOR_SPEED2 OCR1A
 
 	#define TIMER5_FREQ 250000//hz
 	#define TIMER5_TO_US(OCR_) ((F_CPU/(2*TIMER5_FREQ))-1)
