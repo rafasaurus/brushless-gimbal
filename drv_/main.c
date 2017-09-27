@@ -52,8 +52,11 @@ int main(void)
 	setup_timer5();//pwm for motor3
 	setup_timer1();
 	Enable_timer1_compare_interrupt();//motor 1
-	
-
+	U2_PWM=85;
+	V2_PWM=170;
+	W2_PWM=255;
+	Init_Pid_Roll_Vars();
+	Init_Pid_Pitch_Vars();
 	//OCR1A=127;
 	//OCR1B=127;
 	//OCR1C=127;

@@ -160,23 +160,23 @@ void PWM_update()//motor pwm update
 	//U_PWM=85;
 	//V_PWM=170;
 	//W_PWM=255;
-	U_step=U_step+incr;
+	U_step=U_step+incr;  //370 u -10
 	V_step=V_step+incr;
 	W_step=W_step+incr;
 	if(U_step > SINE_TABLE_SZ)
-	U_step = 0;
+	U_step-=SINE_TABLE_SZ ;
 	if(U_step < 0)
-	U_step = SINE_TABLE_SZ;
+	U_step=SINE_TABLE_SZ+U_step;
 	
 	if(V_step > SINE_TABLE_SZ)
-	V_step = 0;
+	V_step-=SINE_TABLE_SZ;
 	if(V_step < 0)
-	V_step = SINE_TABLE_SZ;
+	V_step=SINE_TABLE_SZ+V_step;
 	
 	if(W_step > SINE_TABLE_SZ)
-	W_step = 0;
+	W_step-=SINE_TABLE_SZ;
 	if(W_step < 0)
-	W_step = SINE_TABLE_SZ;
+	W_step=SINE_TABLE_SZ+W_step;
 	//printf("debug 0000000");
 
 }
@@ -187,7 +187,7 @@ void PWM_update_2()//motor pwm update
 	if (abs(kalman_angle_pitch)<0.1|| abs(kalman_angle_pitch>45))
 	{
 		incr_2=0;
-		pid_i_pitch=0;
+		//pid_i_pitch=0;
 	}
 	else
 	if (kalman_angle_pitch>0.1)
@@ -211,23 +211,24 @@ void PWM_update_2()//motor pwm update
 	V_step_2=V_step_2+incr_2;
 	W_step_2=W_step_2+incr_2;
 	if(U_step_2 > SINE_TABLE_SZ)
-	U_step_2 = 0;
+	U_step_2-=SINE_TABLE_SZ ;
 	if(U_step_2 < 0)
-	U_step_2 = SINE_TABLE_SZ;
+	U_step_2=SINE_TABLE_SZ+U_step_2;
 	
 	if(V_step_2 > SINE_TABLE_SZ)
-	V_step_2 = 0;
+	V_step_2-=SINE_TABLE_SZ;
 	if(V_step_2 < 0)
-	V_step_2 = SINE_TABLE_SZ;
+	V_step_2=SINE_TABLE_SZ+V_step_2;
 	
 	if(W_step_2 > SINE_TABLE_SZ)
-	W_step_2 = 0;
-	if(W_step_2< 0)
-	W_step_2 = SINE_TABLE_SZ;
+	W_step_2-=SINE_TABLE_SZ;
+	if(W_step_2 < 0)
+	W_step_2=SINE_TABLE_SZ+W_step_2;
 	//_delay_us(100);
 	
 	//printf("oopooo");
 }
+/*
 void PWM_update_3()
 {
 	//PID_roll=Compute_PID(kalman_angle_roll, 0 , &pid_i_roll, &previous_error_roll,dt,kp_roll,ki_roll,kd_roll);
@@ -251,9 +252,9 @@ void PWM_update_3()
 	//U2_PWM=pwmSin[U_step_3];
 	//V2_PWM=pwmSin[V_step_3];
 	//W2_PWM=pwmSin[W_step_3];
-	U2_PWM=85;
-	V2_PWM=170;
-	W2_PWM=255;
+	U2_PWM=512;
+	V2_PWM=521;
+	W2_PWM=512;
 	U_step_3=U_step_3+incr_3;
 	V_step_3=V_step_3+incr_3;
 	W_step_3=W_step_3+incr_3;
@@ -272,7 +273,7 @@ void PWM_update_3()
 	if(W_step_3 < 0)
 	W_step_3 = SINE_TABLE_SZ;
 	//printf("debug 0000000");	
-}
+}*/
 void init_motor_gpio()
 {
 	//setting pin mode to output for motor 1 

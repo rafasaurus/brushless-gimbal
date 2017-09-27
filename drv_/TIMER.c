@@ -41,7 +41,9 @@ void setup_timer5(void)
 	//timer for motor 3
 	sbi (TCCR5B, CS50);//prescaler 256
 	sbi (TCCR5A, WGM50);
-	sbi (TCCR5A, WGM52);//8 bit phase correct PWM
+	//sbi (TCCR5A, WGM51);//8 bit phase correct PWM
+	//sbi (TCCR5A, WGM52);
+	//sbi (TCCR5A, WGM53);
 	//sbi (TCCR4A,COM4A0);
 	sbi (TCCR5A,COM5A1);
 	//sbi (TCCR4A,COM4B0);
@@ -109,7 +111,7 @@ ISR(TIMER1_COMPA_vect)//motor update interrupt routine
 {
 	PWM_update();
 	PWM_update_2();
-	PWM_update_3();
+	//PWM_update_3();
 }
 
 
