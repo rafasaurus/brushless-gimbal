@@ -25,10 +25,10 @@ double desired_angle_roll = 0;
 /*
 void Init_Pid_Roll_Vars()
 {
-	float pid_roll_const=0.118;
-	kp_roll=0.169*pid_roll_const;//0.115;//
-	ki_roll=0.00062*pid_roll_const;//0.00062
-	kd_roll=0.154*pid_roll_const;//.015;//0.0095;//
+	//float pid_roll_const=15;
+	kp_roll=0.02;//0.115;//
+	ki_roll=0.001;//0.00062
+	kd_roll=0.18;//.015;//0.0095;//
 }*/
 /*
 void Init_Pid_Roll_Vars()
@@ -56,23 +56,28 @@ void Init_Pid_Roll_Vars()
 //	ki_roll=0*pid_roll_const;//0.00062
 //	kd_roll=0.05*pid_roll_const;//.015;//0.0095;//
 //}
-/*
-void Init_Pid_Roll_Vars()//ugly came
+void Init_Pid_Roll_Vars()//23:28 table size 22*180
 {
 	double pid_roll_const=0.1;
-	kp_roll=12.5*pid_roll_const;//0.115;//609
-	ki_roll=0.0097*pid_roll_const;//.002*pid_roll_const;//0.00062
-	kd_roll=0.0010*pid_roll_const;//.015;//0.0095;//
-}*/
-
-//mariage with levon 4:27
-void Init_Pid_Roll_Vars()
-{
-	double pid_roll_const=0.1;
-	kp_roll=13*pid_roll_const;//0.115;//609  //14
-	ki_roll=0.00155*pid_roll_const;//.002*pid_roll_const;//0.00062
-	kd_roll=0.045*pid_roll_const;//.015;//0.0095;//
+	kp_roll=11.8*pid_roll_const;//0.115;//609
+	ki_roll=0.006*pid_roll_const;//.002*pid_roll_const;//0.00062
+	kd_roll=0.0119*pid_roll_const;//.015;//0.0095;//
 }
+//void Init_Pid_Roll_Vars()//23:25 //text document
+//{
+//double pid_roll_const=0.1;
+//kp_roll=11.3*pid_roll_const;//0.115;//609
+//ki_roll=0.0058*pid_roll_const;//.002*pid_roll_const;//0.00062
+//kd_roll=0.015*pid_roll_const;//.015;//0.0095;//
+//}
+
+////mariage with levon 4:27
+//void Init_Pid_Roll_Vars()
+//{
+//	kp_roll=1.1;//0.115;//
+//	ki_roll=0.0062;//0.00062
+//	kd_roll=0.00075;//.015;//0.0095;//
+//}
 //void Init_Pid_Roll_Vars()//levon 4:58
 //{
 //	double pid_roll_const=0.1;
@@ -115,10 +120,10 @@ double desired_angle_pitch = 0;
 
 void Init_Pid_Pitch_Vars()
 {
-	double pid_pitch_const=0.068;
-	kp_pitch=0.031*pid_pitch_const;//0.031;//609
-	ki_pitch=0.0005*pid_pitch_const;//0.0005
-	kd_pitch=0.141*pid_pitch_const;//.141;//0.0095;//
+	double pop = 0.0005;
+	kp_pitch=31*pop;//0.031;//609
+	ki_pitch=0.5*pop;//.0002;//0.0005
+	kd_pitch=141*pop;
 }
 /*------------------------PID init end------------------------*/
 

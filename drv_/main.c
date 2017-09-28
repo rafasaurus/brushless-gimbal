@@ -53,9 +53,11 @@ int main(void)
 	setup_timer1();
 	Enable_timer1_compare_interrupt();//motor 1
 	
-	U2_PWM=85;
-	V2_PWM=170;
-	W2_PWM=255;
+	uint8_t kok= 150;
+	uint8_t kok1=240;
+	U2_PWM=kok;
+	V2_PWM=kok1;
+	//W2_PWM=255;
 	Init_Pid_Roll_Vars();
 	Init_Pid_Pitch_Vars();
 	//OCR1A=127;
@@ -183,7 +185,7 @@ int main(void)
 			/*-------------------------Kalman--------------------------------*/		
 			kalman_angle_roll=getAngle(roll,gyroXrate,dt);
 			kalman_angle_pitch=getAngle_1(pitch,gyroYrate,dt);
-			
+			printSD("accel = ",roll);
 			printSD("kro = ",kalman_angle_roll);
 			//printSD("kpi = ",kalman_angle_pitch);
 			////printf("\n");
@@ -191,7 +193,7 @@ int main(void)
 			//printSD("pitch = ",pitch);	
 			
 			printSI("ir ",incr);
-			printSI("print ",1/kp_roll);
+			//printSI("print ",1/kp_roll);
 			//printSI("ir2 ",incr_2);
 			//double pop=  (uint8_t)(abs(PID_roll));
 			//printSD("pop= ",pop);
@@ -203,7 +205,7 @@ int main(void)
 			//printSI("ay=",accel_y );
 			//printSI("az=",accel_z);
 				
-			printSD("PID_roll ",PID_roll);
+			//printSD("PID_roll ",PID_roll);
 			
 			//printSD("PID_pitch ",PID_pitch);
 			printSD("pid_i ",pid_i_roll);
