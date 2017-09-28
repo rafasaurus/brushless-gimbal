@@ -1,5 +1,0 @@
-﻿  ConsoleApplication2.cpp
-c:\users\rafja\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\consoleapplication2.cpp(44): warning C4715: 'min': not all control paths return a value
-c:\users\rafja\documents\visual studio 2017\projects\consoleapplication2\consoleapplication2\consoleapplication2.cpp(50): warning C4715: 'max': not all control paths return a value
-  ConsoleApplication2.vcxproj -> c:\users\rafja\documents\visual studio 2017\Projects\ConsoleApplication2\Debug\ConsoleApplication2.exe
-  ConsoleApplication2.vcxproj -> c:\users\rafja\documents\visual studio 2017\Projects\ConsoleApplication2\Debug\ConsoleApplication2.pdb (Partial PDB)
