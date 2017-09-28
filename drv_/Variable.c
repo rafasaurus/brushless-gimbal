@@ -9,9 +9,9 @@ double PID_roll=0;
 double PID_pitch=0;
 /*---------------------------PID_INIT-------------------------*/
 double error_roll=0, previous_error_roll=0;
-double pid_p_roll=0;
+//double pid_p_roll=0;
 double pid_i_roll=0;
-double pid_d_roll=0;
+//double pid_d_roll=0;
 //------------------PID roll CONSTANTS-------------------
 //first time tweak values kp=0.5 kd=0.03 ki=0
 //seccond time tweak values kp=0.41 kd=0.007 ki=0
@@ -40,15 +40,29 @@ void Init_Pid_Roll_Vars()
 }*/
 
 
+/*
 void Init_Pid_Roll_Vars()
 {
 	double pid_roll_const=0.13;
 	kp_roll=0.709*pid_roll_const;//0.115;//609
 	ki_roll=0.00062*pid_roll_const;//0.00062
 	kd_roll=0.008*pid_roll_const;//.015;//0.0095;//
+}*/
+
+//void Init_Pid_Roll_Vars()
+//{
+//	double pid_roll_const=1;
+//	kp_roll=0.1*pid_roll_const;//0.115;//609
+//	ki_roll=0*pid_roll_const;//0.00062
+//	kd_roll=0.05*pid_roll_const;//.015;//0.0095;//
+//}
+void Init_Pid_Roll_Vars()
+{
+	double pid_roll_const=0.13;
+	kp_roll=6.5*pid_roll_const;//0.115;//609
+	ki_roll=0.0072*pid_roll_const;//.002*pid_roll_const;//0.00062
+	kd_roll=0.002*pid_roll_const;//.015;//0.0095;//
 }
-
-
 //pupush tver
 /*
 0.609*pid_roll_const;//0.115;//609
@@ -69,10 +83,11 @@ void Init_Pid_Roll_Vars()
 
 
 
-double error_pitch, previous_error_pitch;
-double pid_p_pitch=0;//should be zero
+//double error_pitch;
+double previous_error_pitch;
+//double pid_p_pitch=0;//should be zero
 double pid_i_pitch=0;
-double pid_d_pitch=0;
+//double pid_d_pitch=0;
 
 //------------------PID pitch CONSTANTS------------------
 double kp_pitch=0.3;//3.55

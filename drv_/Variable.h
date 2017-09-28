@@ -13,22 +13,22 @@ extern double PID_pitch;
 extern double kalman_angle_roll;
 extern double kalman_angle_pitch;
 /*---------------------------PID_INIT-------------------------*/
-extern double error_roll;
+//extern double error_roll;
 extern double previous_error_roll;
-extern double pid_p_roll;
+//extern double pid_p_roll;
 extern double pid_i_roll;
-extern double pid_d_roll;
+//extern double pid_d_roll;
 //------------------PID roll CONSTANTS-------------------
 extern double kp_roll;
 extern double ki_roll;
 extern double kd_roll;
 extern double desired_angle_roll;
 
-extern double error_pitch;
+//extern double error_pitch;
 extern double previous_error_pitch;
-extern double pid_p_pitch;
+//extern double pid_p_pitch;
 extern double pid_i_pitch;
-extern double pid_d_pitch;
+//extern double pid_d_pitch;
 //------------------PID pitch CONSTANTS------------------
 extern double kp_pitch;
 extern double ki_pitch;

@@ -184,12 +184,16 @@ int main(void)
 			kalman_angle_pitch=getAngle_1(pitch,gyroYrate,dt);
 			
 			printSD("kro = ",kalman_angle_roll);
-			printSD("kpi = ",kalman_angle_pitch);
+			//printSD("kpi = ",kalman_angle_pitch);
 			////printf("\n");
 			//printSD("roll = ",roll);
-			printSD("pitch = ",pitch);	
+			//printSD("pitch = ",pitch);	
+			
 			printSI("ir ",incr);
-			printSI("ir2 ",incr_2);
+			printSI("print ",1/kp_roll);
+			//printSI("ir2 ",incr_2);
+			//double pop=  (uint8_t)(abs(PID_roll));
+			//printSD("pop= ",pop);
 			//printSD("dt=",dt);
 			//printSI("gx=",gyro_x);	
 			//printSI("gy=",gyro_x);
@@ -198,10 +202,11 @@ int main(void)
 			//printSI("ay=",accel_y );
 			//printSI("az=",accel_z);
 				
-			//printSD("PID_roll ",PID_roll);
+			printSD("PID_roll ",PID_roll);
 			
 			//printSD("PID_pitch ",PID_pitch);
-			//printSD("pid_i ",pid_i_roll);
+			printSD("pid_i ",pid_i_roll);
+			
 			printf("\n");							
 			#endif //PRINT_RAW_DATA			
 		#endif //GYRO

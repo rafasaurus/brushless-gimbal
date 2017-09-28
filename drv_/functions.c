@@ -141,10 +141,11 @@ void PWM_update()//motor pwm update
 	if (abs(kalman_angle_roll)<0.1 || abs(kalman_angle_roll>75))
 	{
 		incr=0;
-		pid_i_roll=0;
+		//pid_i_roll=0;
 	}
 	else
 		if (kalman_angle_roll>0.1)
+		
 		{
 			//printf("yes");
 			incr = (uint8_t)(abs(PID_roll));
