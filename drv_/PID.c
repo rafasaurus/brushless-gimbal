@@ -24,7 +24,7 @@ double Compute_PID(double angle, double desired_angle,double *pid_i,double *prev
 	double pid_d = kd*((error - *previous_error)/dt);
 	*previous_error=error;
 	double PID_FINAL= pid_p + (*pid_i) + pid_d;
-	if (PID_FINAL<PID_MAX)
+	//if (PID_FINAL<PID_MAX)
 		return PID_FINAL;
-	else return PID_MAX;
+	//else return PID_MAX;
 }

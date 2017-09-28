@@ -155,12 +155,12 @@ void PWM_update()//motor pwm update
 			incr = -(uint8_t)(abs(PID_roll));
 			//printf("no");
 		}
-	U_PWM=pwmSin[U_step];
-	V_PWM=pwmSin[V_step];
-	W_PWM=pwmSin[W_step];
-	//U_PWM=85;
-	//V_PWM=170;
-	//W_PWM=255;
+	//U_PWM=pwmSin[U_step];
+	//V_PWM=pwmSin[V_step];
+	//W_PWM=pwmSin[W_step];
+	U_PWM=85;
+	V_PWM=170;
+	W_PWM=255;
 	U_step=U_step+incr;  //370 u -10
 	V_step=V_step+incr;
 	W_step=W_step+incr;
@@ -185,14 +185,16 @@ void PWM_update_2()//motor pwm update
 {
 	PID_pitch=Compute_PID(kalman_angle_pitch, 0 ,&pid_i_pitch,&previous_error_pitch,dt,kp_pitch,ki_pitch,kd_pitch);
 	//printSD("pid_pitch ",PID_pitch);
-	if (abs(kalman_angle_pitch)<0.1|| abs(kalman_angle_pitch>45))
+	if (abs(kalman_angle_pitch)<0.1|| abs(kalman_angle_pitch>75))//45
+	//if(0)
 	{
 		incr_2=0;
 		//pid_i_pitch=0;
 	}
 	else
-	//if (kalman_angle_pitch>0.1)
+	
 		if (kalman_angle_pitch>0.1)
+		//if(1)
 		{
 			incr_2=(uint8_t)(abs(PID_pitch));
 			//printSI("in ",incr_2);
@@ -203,13 +205,13 @@ void PWM_update_2()//motor pwm update
 			//printSI("in ",incr_2);
 			//printf("no");
 		}
-	//U1_PWM=pwmSin[U_step_2];
-	//V1_PWM=pwmSin[V_step_2];
-	//W1_PWM=pwmSin[W_step_2];
-	uint16_t pop=2400;
-	U1_PWM=pwmSin[pop];
-	V1_PWM=pwmSin[pop+V_step_predefine];
-	W1_PWM=pwmSin[pop+W_step_predefine];
+	U1_PWM=pwmSin[U_step_2];
+	V1_PWM=pwmSin[V_step_2];
+	W1_PWM=pwmSin[W_step_2];
+	//uint16_t pop=2400;
+	//U1_PWM=pwmSin[pop];
+	//V1_PWM=pwmSin[pop+V_step_predefine];
+	//W1_PWM=pwmSin[pop+W_step_predefine];
 	
 	U_step_2=U_step_2+incr_2;
 	V_step_2=V_step_2+incr_2;

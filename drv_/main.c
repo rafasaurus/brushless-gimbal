@@ -186,8 +186,8 @@ int main(void)
 			kalman_angle_roll=getAngle(roll,gyroXrate,dt);
 			kalman_angle_pitch=getAngle_1(pitch,gyroYrate,dt);
 			printSD("accel = ",roll);
-			printSD("kro = ",kalman_angle_roll);
-			//printSD("kpi = ",kalman_angle_pitch);
+			//printSD("kro = ",kalman_angle_roll);
+			printSD("kpi = ",kalman_angle_pitch);
 			////printf("\n");
 			//printSD("roll = ",roll);
 			//printSD("pitch = ",pitch);	
@@ -207,8 +207,8 @@ int main(void)
 				
 			//printSD("PID_roll ",PID_roll);
 			
-			//printSD("PID_pitch ",PID_pitch);
-			printSD("pid_i ",pid_i_roll);
+			printSD("PID_pitch ",PID_pitch);
+			//printSD("pid_i ",pid_i_roll);
 			
 			printf("\n");							
 			#endif //PRINT_RAW_DATA			

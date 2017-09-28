@@ -120,10 +120,10 @@ double desired_angle_pitch = 0;
 
 void Init_Pid_Pitch_Vars()
 {
-	double pop = 0.0005;
-	kp_pitch=31*pop;//0.031;//609
-	ki_pitch=0.5*pop;//.0002;//0.0005
-	kd_pitch=141*pop;
+	double pop = 0.1;
+	kp_pitch=10.5*pop;//0.031;//609
+	ki_pitch=0.21*pop;//.0002;//0.0005
+	kd_pitch=0.54*pop;
 }
 /*------------------------PID init end------------------------*/
 
