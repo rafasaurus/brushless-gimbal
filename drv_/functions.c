@@ -205,9 +205,11 @@ void PWM_update_2()//motor pwm update
 	//U1_PWM=pwmSin[U_step_2];
 	//V1_PWM=pwmSin[V_step_2];
 	//W1_PWM=pwmSin[W_step_2];
-	U1_PWM = 85;
-	V1_PWM = 170;
-	W1_PWM = 255;
+	uint16_t pop=1000;
+	U1_PWM=pwmSin[pop];
+	V1_PWM=pwmSin[pop+V_step_predefine];
+	W1_PWM=pwmSin[pop+W_step_predefine];
+	
 	U_step_2=U_step_2+incr_2;
 	V_step_2=V_step_2+incr_2;
 	W_step_2=W_step_2+incr_2;

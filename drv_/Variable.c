@@ -56,12 +56,29 @@ void Init_Pid_Roll_Vars()
 //	ki_roll=0*pid_roll_const;//0.00062
 //	kd_roll=0.05*pid_roll_const;//.015;//0.0095;//
 //}
+/*
+void Init_Pid_Roll_Vars()//ugly came
+{
+	double pid_roll_const=0.1;
+	kp_roll=12.5*pid_roll_const;//0.115;//609
+	ki_roll=0.0097*pid_roll_const;//.002*pid_roll_const;//0.00062
+	kd_roll=0.0010*pid_roll_const;//.015;//0.0095;//
+}*/
+
+/*//mariage with levon 4:27
 void Init_Pid_Roll_Vars()
 {
-	double pid_roll_const=0.13;
-	kp_roll=6.5*pid_roll_const;//0.115;//609
-	ki_roll=0.0072*pid_roll_const;//.002*pid_roll_const;//0.00062
-	kd_roll=0.002*pid_roll_const;//.015;//0.0095;//
+	double pid_roll_const=0.1;
+	kp_roll=10*pid_roll_const;//0.115;//609  //14
+	ki_roll=0.00055*pid_roll_const;//.002*pid_roll_const;//0.00062
+	kd_roll=0.2*pid_roll_const;//.015;//0.0095;//
+}*/
+void Init_Pid_Roll_Vars()
+{
+	double pid_roll_const=0.1;
+	kp_roll=15*pid_roll_const;//0.115;//609  //14
+	ki_roll=0.003*pid_roll_const;//.002*pid_roll_const;//0.00062
+	kd_roll=2.000000015*pid_roll_const;//.015;//0.0095;//
 }
 //pupush tver
 /*

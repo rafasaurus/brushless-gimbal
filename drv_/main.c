@@ -52,6 +52,7 @@ int main(void)
 	setup_timer5();//pwm for motor3
 	setup_timer1();
 	Enable_timer1_compare_interrupt();//motor 1
+	
 	U2_PWM=85;
 	V2_PWM=170;
 	W2_PWM=255;
