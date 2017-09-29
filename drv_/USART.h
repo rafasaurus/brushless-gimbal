@@ -11,4 +11,5 @@ void printDouble(double *value);
 void print16(int16_t *value);
 void print16ln(int16_t *value);
 void printSI(char c[20],int16_t intToPrint);//print string and integer
+void printSD(char c[20],double doubleToPrint);
 #endif

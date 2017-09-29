@@ -70,7 +70,6 @@
 		#define U_step_predefine 0
 		#define V_step_predefine (U_step_predefine+phase)
 		#define W_step_predefine (V_step_predefine+phase)
-		//#define SVPWM
 	#else
 		#define SINPRESCALER 3
 		#define SINE_TABLE_SZ 360
@@ -103,6 +102,5 @@
 	#define caliberation_wait_delay 5//in ms
 	#define THE_MAIN_OUTPUT kalman_angle_x
 	#define THE_MAIN_OUTPUT_2 kalman_angle_y
-	
 //	#define MOTOR_2_UPDATE
 #endif //DEFINES

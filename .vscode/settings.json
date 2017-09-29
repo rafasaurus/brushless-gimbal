@@ -1,6 +1,0 @@
-{
-    "files.associations": {
-        "kalman.h": "c",
-        "timer.h": "c"
-    }
-}
