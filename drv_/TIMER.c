@@ -38,17 +38,10 @@ void Enable_timer1_compare_interrupt(){
 /*-----------Timer 1-----------*/
 void setup_timer5(void)
 {
-	//timer for motor 3
-	sbi (TCCR5B, CS50);//prescaler 256
+	sbi (TCCR5B, CS50);
 	sbi (TCCR5A, WGM50);
-	//sbi (TCCR5A, WGM51);//8 bit phase correct PWM
-	//sbi (TCCR5A, WGM52);
-	//sbi (TCCR5A, WGM53);
-	//sbi (TCCR4A,COM4A0);
 	sbi (TCCR5A,COM5A1);
-	//sbi (TCCR4A,COM4B0);
 	sbi (TCCR5A,COM5B1);
-	//sbi (TCCR4A,COM4C0);
 	sbi (TCCR5A,COM5C1);
 }
 //void Enable_timer1_compare_interrupt(){

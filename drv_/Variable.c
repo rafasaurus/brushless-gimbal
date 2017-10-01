@@ -49,27 +49,30 @@ void Init_Pid_Roll_Vars()
 	kd_roll=0.008*pid_roll_const;//.015;//0.0095;//
 }*/
 
-//void Init_Pid_Roll_Vars()
-//{
-//	double pid_roll_const=1;
-//	kp_roll=0.1*pid_roll_const;//0.115;//609
-//	ki_roll=0*pid_roll_const;//0.00062
-//	kd_roll=0.05*pid_roll_const;//.015;//0.0095;//
-//}
-void Init_Pid_Roll_Vars()//23:28 table size 22*180
+
+/*
+void Init_Pid_Roll_Vars()//23:28 sep 28 table size 22*180
 {
 	double pid_roll_const=0.1;
 	kp_roll=11.8*pid_roll_const;//0.115;//609
 	ki_roll=0.006*pid_roll_const;//.002*pid_roll_const;//0.00062
 	kd_roll=0.0119*pid_roll_const;//.015;//0.0095;//
+}*/
+/*
+void Init_Pid_Roll_Vars()//23:25 sep 28 //text document  the most stable  
+{
+double pid_roll_const=0.1;
+kp_roll=11.3*pid_roll_const;//0.115;//609
+ki_roll=0.0058*pid_roll_const;//.002*pid_roll_const;//0.00062
+kd_roll=0.015*pid_roll_const;//.015;//0.0095;//
+}*/
+void Init_Pid_Roll_Vars()//23:25 sep 28 //text document  the most stable
+{
+	double pid_roll_const=0.1;
+	kp_roll=11.5*pid_roll_const;//0.115;//609
+	ki_roll=0.00685*pid_roll_const;//.002*pid_roll_const;//0.00062
+	kd_roll=0.01555*pid_roll_const;//.015;//0.0095;//
 }
-//void Init_Pid_Roll_Vars()//23:25 //text document
-//{
-//double pid_roll_const=0.1;
-//kp_roll=11.3*pid_roll_const;//0.115;//609
-//ki_roll=0.0058*pid_roll_const;//.002*pid_roll_const;//0.00062
-//kd_roll=0.015*pid_roll_const;//.015;//0.0095;//
-//}
 
 ////mariage with levon 4:27
 //void Init_Pid_Roll_Vars()
