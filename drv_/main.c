@@ -139,8 +139,8 @@ int main(void)
 			kalman_angle_pitch=getAngle_1(pitch,gyroYrate,dt);
 			/*------------------------Debug Print----------------------------*/
 			printSD("accel = ",roll);
-			//printSD("kro = ",kalman_angle_roll);
-			printSD("kpi = ",kalman_angle_pitch);
+			printSD("kro = ",kalman_angle_roll);
+			//printSD("kpi = ",kalman_angle_pitch);
 			////printf("\n");
 			//printSD("roll = ",roll);
 			//printSD("pitch = ",pitch);	

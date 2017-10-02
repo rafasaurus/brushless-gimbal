@@ -123,20 +123,28 @@ void PWM_update()//motor pwm update
 	//	//pid_i_roll=0;
 	//}
 	//else
-		if (kalman_angle_roll>0)
+	//PID_roll = map(PID_roll,0,1000,0,255);
+	if (abs(kalman_angle_roll)<44)
+	{
+		if (abs(PID_roll)>255)
+		PID_roll=255;
 		
+		if (kalman_angle_roll>0)
 		{
 			//printf("yes");
-			incr = (uint8_t)(abs(PID_roll/2));
+			incr = (uint8_t)(abs(PID_roll));
 		}
-		else 
+		else
 		{
-			incr = -(uint8_t)(abs(PID_roll/2));
+			incr = -(uint8_t)(abs(PID_roll));
 			//printf("no");
 		}
-	U_PWM=pwmSin[U_step];
-	V_PWM=pwmSin[V_step];
-	W_PWM=pwmSin[W_step];
+		U_PWM=pwmSin[U_step];
+		V_PWM=pwmSin[V_step];
+		W_PWM=pwmSin[W_step];
+	}
+	
+	
 	//U_PWM=85;
 	//V_PWM=170;
 	//W_PWM=255;
