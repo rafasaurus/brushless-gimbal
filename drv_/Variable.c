@@ -69,6 +69,11 @@ kd_roll=0.015*pid_roll_const;//.015;//0.0095;//
 void Init_Pid_Roll_Vars()//23:25 sep 28 //text document  the most stable
 {
 	double pid_roll_const=0.1;
+	//kp_roll=10.5*pid_roll_const;//0.115;//609
+	//ki_roll=0.0069*pid_roll_const;//.002*pid_roll_const;//0.00062
+	//kd_roll=0.09*pid_roll_const;//.015;//0.0095;//
+	//double pid_roll_const=0.1;
+
 	kp_roll=11.5*pid_roll_const;//0.115;//609
 	ki_roll=0.00685*pid_roll_const;//.002*pid_roll_const;//0.00062
 	kd_roll=0.01555*pid_roll_const;//.015;//0.0095;//

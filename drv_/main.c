@@ -51,9 +51,10 @@ int main(void)
 	setup_timer1();
 	Enable_timer1_compare_interrupt();//motor 1
 	
-	U2_PWM=150;
-	V2_PWM=240;
-	//W2_PWM=255;
+	U2_PWM=85-25;
+	V2_PWM=170-25;
+	W2_PWM=255-25;
+
 	Init_Pid_Roll_Vars();
 	Init_Pid_Pitch_Vars();
 	INT_MOTOR_SPEED=pwm_delay;
@@ -112,6 +113,9 @@ int main(void)
 	
     while (1) /*---------------------------while(1)---------------------------------*/
     {	
+		U2_PWM=85-30;
+		V2_PWM=170-30;
+		W2_PWM=255-30;
 		#ifdef GYRO
     		mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);//15us to do
 			gyro_x-=gyroX_calib;
@@ -141,7 +145,7 @@ int main(void)
 			//printSD("roll = ",roll);
 			//printSD("pitch = ",pitch);	
 			
-			printSI("ir ",incr);
+			//printSI("ir ",incr);
 			//printSI("print ",1/kp_roll);
 			//printSI("ir2 ",incr_2);
 			//double pop=  (uint8_t)(abs(PID_roll));
@@ -154,9 +158,9 @@ int main(void)
 			//printSI("ay=",accel_y );
 			//printSI("az=",accel_z);
 				
-			//printSD("PID_roll ",PID_roll);
+			printSD("PID_roll ",(uint8_t)PID_roll);
 			
-			printSD("PID_pitch ",PID_pitch);
+			//printSD("PID_pitch ",PID_pitch);
 			//printSD("pid_i ",pid_i_roll);
 			
 			printf("\n");									
