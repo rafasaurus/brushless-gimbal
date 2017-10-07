@@ -65,7 +65,7 @@
 	#define GENERATE_SIN
 	#ifdef GENERATE_SIN
 		#define SINE_TABLE_SZ 22*180
-		#define sinScale 127//this value is mid range value
+		#define sinScale 45//this value is mid range value
 		#define phase (SINE_TABLE_SZ/3)
 		#define U_step_predefine 0
 		#define V_step_predefine (U_step_predefine+phase)

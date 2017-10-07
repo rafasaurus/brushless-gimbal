@@ -68,15 +68,31 @@ kd_roll=0.015*pid_roll_const;//.015;//0.0095;//
 }*/
 void Init_Pid_Roll_Vars()//23:25 sep 28 //text document  the most stable
 {
-	double pid_roll_const=0.1;
-	//kp_roll=10.5*pid_roll_const;//0.115;//609
-	//ki_roll=0.0069*pid_roll_const;//.002*pid_roll_const;//0.00062
-	//kd_roll=0.09*pid_r	oll_const;//.015;//0.0095;//
-	//double pid_roll_const=0.1;
-
-	kp_roll=12.5*pid_roll_const;//0.115;//609
-	ki_roll=0.00685*pid_roll_const;//.002*pid_roll_const;//0.00062
-	kd_roll=0.01555*pid_roll_const;//.015;//0.0095;//
+	
+	/*double pid_roll_const=0.1;
+	kp_roll=10.5*pid_roll_const;//0.115;//609
+	ki_roll=0.0069*pid_roll_const;//.002*pid_roll_const;//0.00062
+	kd_roll=0.09*pid_roll_const;//.015;//0.0095;//*/
+	
+	
+	/*kp_roll=0.652;//0.115;//609
+	ki_roll=0.0047;//.002*pid_roll_const;//0.00062
+	kd_roll=0.0045;//.015;//0.0095;//*/
+	/*kp_roll=0.82;//0.115;//609
+	ki_roll=0.0047;//.002*pid_roll_const;//0.00062
+	kd_roll=0.0102;//.015;//0.0095;//*/
+	
+	
+	//levon call
+	/*kp_roll=1.15;//0.115;//609
+	ki_roll=0.00069;//.002*pid_roll_const;//0.00062
+	kd_roll=0.0009;//.015;//0.0095;//*/
+	//kp_roll=0.52;//0.115;//609
+	//ki_roll=0.0047;//.002*pid_roll_const;//0.00062
+	//kd_roll=0.0102;//.015;//0.0095;//
+	kp_roll=1.1;//0.115;//609
+	ki_roll=0.000045;//.00069;//.002*pid_roll_const;//0.00062
+	kd_roll=0.105;//.000009;//.015;//0.0095;//
 }
 
 ////mariage with levon 4:27
