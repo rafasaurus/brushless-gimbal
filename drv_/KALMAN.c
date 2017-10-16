@@ -1,5 +1,5 @@
 #include "KALMAN.h"
-
+//If you want to explore more see --> https://github.com/TKJElectronics/KalmanFilter
 float getAngle(float newAngle, float newRate, float dt) {
 	// KasBot V2  -  Kalman filter module - http://www.x-firm.com/?page_id=145
 	// Modified by Kristian Lauszus

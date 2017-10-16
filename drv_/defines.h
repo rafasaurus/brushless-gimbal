@@ -5,7 +5,6 @@
 	#define GYRO
 	//#define CALIBERATED_DATA
 	#define DRV8313
-	unsigned int pwm_delay;
 	int pwm_delay_2;
 	typedef int bool;
 	enum { false, true };

@@ -92,21 +92,8 @@ int W_step_3=W_step_predefine;
 		,111,115,118,121,125,128};
 	#endif
 #endif
-double min (double a,double b, double c)
-{
-	if (a<b && a<c) return a;
-	if (b<a && b<c) return b;
-	if (c<a && c<b) return c;
-	return a;
-}
-double max (double a,double b, double c)
-{	
-	if (a>b && a>c) return a;
-	if (b>a && b>c) return b;
-	if (c>a && c>b) return c;
-	return a;
-}
-void PWM_update()//motor pwm update
+
+void PWM_update()//motor 1
 {
 	PID_roll=Compute_PID(kalman_angle_roll, 0 , &pid_i_roll, &previous_error_roll,dt,kp_roll,ki_roll,kd_roll);
 	if (abs(kalman_angle_roll)<44)
@@ -146,7 +133,7 @@ void PWM_update()//motor pwm update
 	if(W_step < 0)
 	W_step=SINE_TABLE_SZ+W_step;
 }
-void PWM_update_2()//motor pwm update
+void PWM_update_2()//motor 2
 {
 	PID_pitch=Compute_PID(kalman_angle_pitch, 0 ,&pid_i_pitch,&previous_error_pitch,dt,kp_pitch,ki_pitch,kd_pitch);
 		if (kalman_angle_pitch>0)
@@ -185,7 +172,7 @@ void PWM_update_2()//motor pwm update
 	W_step_2=SINE_TABLE_SZ+W_step_2;
 }
 /*
-//----------------if you want to enable z-axis
+//----------------if you want to enable z-axis motor 3
 void PWM_update_3()
 {
 	//PID_roll=Compute_PID(kalman_angle_roll, 0 , &pid_i_roll, &previous_error_roll,dt,kp_roll,ki_roll,kd_roll);
