@@ -1,7 +1,6 @@
 #ifndef DEFINES
-	#define PID_MAX 100
 	#define DEFINES
-	/*******************global macros****************/
+	/*******************global macros******************/
 	//#define PRINT_RAW_DATA
 	#define GYRO
 	//#define CALIBERATED_DATA
@@ -50,26 +49,22 @@
 	#define FRACT_MAX (1000 >> 3)
 	
 	#define GENERATE_SIN
-	#ifdef GENERATE_SIN
-		#define SINE_TABLE_SZ 22*180
+	#ifdef GENERATE_SIN //this flag generated sin table
+		#define SINE_TABLE_SZ 22*180//sin table size
 		#define sinScale 45//this value is mid range value
 		#define phase (SINE_TABLE_SZ/3)
 		#define U_step_predefine 0
 		#define V_step_predefine (U_step_predefine+phase)
 		#define W_step_predefine (V_step_predefine+phase)
-	#else
+	#else//this flag does not generate sin table, u should write it manually in function.c file
 		#define SINPRESCALER 3
 		#define SINE_TABLE_SZ 360
-		#define sinScale 127//this value is mid range value
+		#define sinScale 127//this value is middle range value
 		#define phase (SINE_TABLE_SZ/3)
+		//sin phase prefefine values
 		#define U_step_predefine 0
 		#define V_step_predefine (U_step_predefine+phase)
-		#define W_step_predefine (V_step_predefine+phase)
-		
-		#define U1_step_predefine 0
-		#define V1_step_predefine (U_step_predefine+phase)
-		#define W1_step_predefine (V_step_predefine+phase)
-	
+		#define W_step_predefine (V_step_predefine+phase)	
 	#endif
 
 	//Your offsets:	-298	-2782	2134	59	114	311
@@ -87,7 +82,4 @@
 	//#define grZ  (gyro_z-=gyroZ_calib)
 	#define calibration_counter 4000
 	#define caliberation_wait_delay 5//in ms
-	#define THE_MAIN_OUTPUT kalman_angle_x
-	#define THE_MAIN_OUTPUT_2 kalman_angle_y
-//	#define MOTOR_2_UPDATE
 #endif //DEFINES

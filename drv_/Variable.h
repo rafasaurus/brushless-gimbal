@@ -2,7 +2,7 @@
  * Variable.h
  *
  * Created: 9/24/2017 10:55:14 AM
- *  Author: rafja
+ *  Author: rafa
  */ 
 #ifndef VARIABLE_H_
 #define VARIABLE_H_

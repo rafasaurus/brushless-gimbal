@@ -110,26 +110,22 @@ int main(void)
 	/*---------------------------while(1)---------------------------------*/
     while (1) 
     {	
-		U2_PWM=85-30;
-		V2_PWM=170-30;
-		W2_PWM=255-30;
 		#ifdef GYRO
     		mpu6050_getRawData(&accel_x,&accel_y,&accel_z,&gyro_x,&gyro_y,&gyro_z);//15us to do
 			gyro_x-=gyroX_calib;
 			gyro_y-=gyroY_calib;
 			gyro_z-=gyroZ_calib;
-			dt = ((double)(micros() - timer1))/1000000;
+			dt = ((double)(micros() - timer1))/1000000;//calculated time of while loop
 			timer1=micros();
 			double gyroXrate = gyro_x/65.5;// deg/s 
-			double gyroYrate = gyro_y/65.5;// deg/s
+			double gyroYrate = gyro_y/65.5;
 			//-------------------------------NEW accel-----------------
-			roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;
-			//double temporar_accel_x=accel_x/100;
 			double temporar_accel_y=accel_y/100;
 			double temporar_accel_z=accel_z/100;
 			double temporar_var=sqrt(temporar_accel_y*temporar_accel_y + temporar_accel_z*temporar_accel_z);
 			temporar_var*=100;
-			pitch = atan2(accel_x, temporar_var) * RAD_TO_DEG;			
+			pitch = atan2(accel_x, temporar_var) * RAD_TO_DEG;	
+			roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;		
 			/*-------------------------Kalman--------------------------------*/		
 			kalman_angle_roll=getAngle(roll,gyroXrate,dt);
 			kalman_angle_pitch=getAngle_1(pitch,gyroYrate,dt);
