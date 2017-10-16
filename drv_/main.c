@@ -26,7 +26,7 @@ unsigned char receiveData_[20];
 /*-----------------------------------start of main----------------------------------*/
 int main(void)
 {	
-	//predefines motor(s) steps , by 120 degree comutation
+	//predefines motor(s) phases, by 120 degree comutation, see defines.h
 	U_step=U_step_predefine;
 	V_step=V_step_predefine;
 	W_step=W_step_predefine;
@@ -34,7 +34,6 @@ int main(void)
 	V_step_2=V_step_predefine;
 	W_step_2=W_step_predefine;
 	cli();//disable interrupts
-	init_gpio();
 	init_motor_gpio();
 	#ifdef GYRO
 		i2c_init();
@@ -48,24 +47,22 @@ int main(void)
 	setup_timer5();//pwm for motor3
 	setup_timer1();
 	Enable_timer1_compare_interrupt();//motor 1
-	
 	U2_PWM=85-25;//motor 3
 	V2_PWM=170-25;
 	W2_PWM=255-25;
-
 	Init_Pid_Roll_Vars();
 	Init_Pid_Pitch_Vars();
 	MOTORS_INTERRUPT_SPEED=25000;//this is a motor(s) update interrupt 
-	unsigned long timer1=micros();
+	unsigned long timer1=micros();//for while loop timer
 	/*----------MPU6050 twi init---------*/
 	#ifdef GYRO
-		int16_t gyro_x;
+		int16_t gyro_x;//for reading gyro accel datas
 		int16_t gyro_y;
 		int16_t gyro_z;
 		int16_t accel_x;
 		int16_t accel_y;
 		int16_t accel_z;
-			#ifdef CALIBERATED_DATA
+			#ifdef CALIBERATED_DATA//enables auto calibration on start
 				int32_t gyroX_calib_=0;
 				int32_t gyroY_calib_=0;
 				int32_t gyroZ_calib_=0; 				

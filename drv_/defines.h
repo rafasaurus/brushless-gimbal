@@ -10,7 +10,7 @@
 	typedef int bool;
 	enum { false, true };
 	#define F_CPU 16000000UL
-	#define BAUD 250000
+	#define BAUD 250000UL
 	//#define BAUD 57600
 	#define MY_UBRR (F_CPU/16/BAUD-1)
 	
