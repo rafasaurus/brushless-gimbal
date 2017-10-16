@@ -1,4 +1,10 @@
 # Brushless Gimbal
-This code drives brushless motors with DRV8313 using AVR microcontroller, and mpu6050 IMU.
 
-This code is undere [MIT OPEN SOURCE LICENSE](/LICENSE)
+This software uses Kalman filter for data filtering of mpu6050 accelerometer
+and gyroscope using i2c(TWI) interface for communication.
+For controlling brushles DC motors software uses sinusoidal tables,
+this can be generated on start of the program, or precalculated in microsoft excel,
+or other software, see function.c file.
+The code also uses PID controller for each axis.
+
+This code is under [MIT OPEN SOURCE LICENSE](/LICENSE)
