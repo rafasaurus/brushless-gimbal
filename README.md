@@ -8,4 +8,6 @@ this can be generated at the beginning of the program, or precalculated in
 microsoft excel or other software. See function.c file.
 The code also uses PID controller for regulation of each axis speed.
 
+This project is made by using Atmel Studio IDE, you can use it for your convenience.
+
 This code is under [MIT OPEN SOURCE LICENSE](/LICENSE)
