@@ -6,7 +6,6 @@
 	#define GYRO
 	//#define CALIBERATED_DATA
 	#define DRV8313
-
 	unsigned int pwm_delay;
 	int pwm_delay_2;
 	typedef int bool;
@@ -23,34 +22,22 @@
 	
 	#define MPU6050_WRITE (0x68<<1) 
 	#define MPU6050_READ ((0x68<<1)|1)
-	
+	//motor 1 gpio using output compare timer 4	
 	#define U_PWM OCR4A
 	#define V_PWM OCR4B
 	#define W_PWM OCR4C
+	//motor 2 gpio using output compare timer 3
 	#define U1_PWM OCR3A//pins 2 3 5
 	#define V1_PWM OCR3B
 	#define W1_PWM OCR3C
+	//motor 3 gpio using output compare timer 5
 	#define U2_PWM OCR5A//pins 11 12 13
 	#define V2_PWM OCR5B
 	#define W2_PWM OCR5C
-	#define INT_MOTOR_SPEED OCR1A
-	//#define INT_MOTOR_SPEED2 OCR1A
 
+	#define MOTORS_INTERRUPT_SPEED OCR1A //using timer 1 output compare register
 	#define TIMER5_FREQ 250000//hz
-	#define TIMER5_TO_US(OCR_) ((F_CPU/(2*TIMER5_FREQ))-1)
-	//_delay_us();
-	//EN1 = LS_U	digital 7 PORTD ^= (1<<7);
-	//EN2 = LS_V	digital 8 PORTB ^=(1<<0);
-	//EN3 = LS_W 	digital 2 PORTD ^=(1<<2);
-	//#define LS_U_HIGH (PORTD|=(1<<7))
-	//#define LS_U_LOW (PORTD&=~(1<<7))
-	//
-	//#define LS_V_HIGH (PORTB|=(1<<0))
-	//#define LS_V_LOW (PORTB&=~(1<<0))
-	//
-	//#define LS_W_HIGH (PORTD|=(1<<2))
-	//#define LS_W_LOW (PORTD&=~(1<<2))
-	
+	#define TIMER5_TO_US(OCR_) ((F_CPU/(2*TIMER5_FREQ))-1)	
 	#define clockCyclesToMicroseconds(a) ( ((a) * 1000L) / (F_CPU / 1000L) )
 	#define MICROSECONDS_PER_TIMER0_OVERFLOW (clockCyclesToMicroseconds(64 * 256))
 	#define MILLIS_INC (MICROSECONDS_PER_TIMER0_OVERFLOW / 1000)

@@ -92,9 +92,6 @@ void getSinTable(uint16_t sinTableSize,uint8_t *pwmSin,uint16_t sineScale)
 		{
 			double x = i * (2 * pi) / sinTableSize;
 			pwmSin[i] = (sin(x) * sineScale) + sineScale;
-			//uint16_t reg=pwmSin[i];	
-			//print16(&reg);
-			printf("\n");
 		}
 }
 
@@ -115,42 +112,27 @@ double max (double a,double b, double c)
 void PWM_update()//motor pwm update
 {
 	PID_roll=Compute_PID(kalman_angle_roll, 0 , &pid_i_roll, &previous_error_roll,dt,kp_roll,ki_roll,kd_roll);
-
-	//if (abs(kalman_angle_roll)<0.1 || abs(kalman_angle_roll>75))
-	////if (0)
-	//{
-	//	incr=0;
-	//	//pid_i_roll=0;
-	//}
-	//else
-	//PID_roll = map(PID_roll,0,1000,0,255);
 	if (abs(kalman_angle_roll)<44)
 	{
 		uint16_t pwm_PID=25000;
-// 		if (abs(PID_roll)>255)
-// 		PID_roll=255;
-		//if (abs(kalman_angle_roll)<0.1)
-		//	pid_i_roll = 0;
+
 		if (kalman_angle_roll>0)
 		{
 			//printf("yes");
-			
 			incr = (uint8_t)(abs(PID_roll));
 			pwm_PID -=150*incr;
 		}
 		else
 		{
+			//printf("no");
 			incr = -(uint8_t)(abs(PID_roll));
 			pwm_PID -=-150*incr;
-			//printf("no");
 		}
 		U_PWM=pwmSin[U_step];
 		V_PWM=pwmSin[V_step];
 		W_PWM=pwmSin[W_step];
 		INT_MOTOR_SPEED=pwm_PID;
 	}
-	
-	
 	//U_PWM=85;
 	//V_PWM=170;
 	//W_PWM=255;
@@ -171,21 +153,11 @@ void PWM_update()//motor pwm update
 	W_step-=SINE_TABLE_SZ;
 	if(W_step < 0)
 	W_step=SINE_TABLE_SZ+W_step;
-	//printf("debug 0000000");
-
 }
 void PWM_update_2()//motor pwm update
 {
 	PID_pitch=Compute_PID(kalman_angle_pitch, 0 ,&pid_i_pitch,&previous_error_pitch,dt,kp_pitch,ki_pitch,kd_pitch);
-	//printSD("pid_pitch ",PID_pitch);
-	/*if (abs(kalman_angle_pitch)<0.1|| abs(kalman_angle_pitch>75))//45
-	//if(0)
-	{
-		incr_2=0;
-		//pid_i_pitch=0;
-	}
-	else*/
-	
+
 		if (kalman_angle_pitch>0)
 		//if(1)
 		{
@@ -228,6 +200,7 @@ void PWM_update_2()//motor pwm update
 	//printf("oopooo");
 }
 /*
+//if you want to enable z-axis
 void PWM_update_3()
 {
 	//PID_roll=Compute_PID(kalman_angle_roll, 0 , &pid_i_roll, &previous_error_roll,dt,kp_roll,ki_roll,kd_roll);
@@ -284,7 +257,7 @@ void init_motor_gpio()
 	sbi(DDRE,4);//digital 2 OC3B
 	sbi(DDRE,5);//digital 3 OC3C
 	sbi(DDRE,3);//digital 5 OC3A
-	
+		
 	//setting pin mode to output for motor 3
 	//timer5
 	sbi(DDRL,3);

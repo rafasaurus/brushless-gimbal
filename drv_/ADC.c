@@ -18,10 +18,8 @@ void ADC_Init()
 	//10 bit resolution
 	//enable a prescaler , which is 128 , so ADC clock is 125khz
 	//turn on the adc feature
-	
 	//start the first conversion
 	//enable the global interrupts
-	
 	//ADMUX  =(1<<ADLAR);//adlar is direction bit for ADCL , ADCH distribution 
 	ADMUX |= (1<<REFS0);
 	//sbi(ADMUX,MUX4);

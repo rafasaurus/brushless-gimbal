@@ -1,4 +1,4 @@
-//#define ENABLE_PID_LIB
+//check pwm_delay
 #include "Variable.h"
 #include "defines.h"
 #include "functions.h"
@@ -26,21 +26,19 @@ unsigned char receiveData_[20];
 /*-----------------------------------start of main----------------------------------*/
 int main(void)
 {	
+	//predefines motor(s) steps , by 120 degree comutation
 	U_step=U_step_predefine;
 	V_step=V_step_predefine;
 	W_step=W_step_predefine;
 	U_step_2=U_step_predefine;
 	V_step_2=V_step_predefine;
 	W_step_2=W_step_predefine;
-	incr=-1;
-	incr_2=-1;
-	pwm_delay=25000;//25000;
-	cli();
+	cli();//disable interrupts
 	init_gpio();
 	init_motor_gpio();
-		#ifdef GYRO
-			i2c_init();
-		#endif
+	#ifdef GYRO
+		i2c_init();
+	#endif
 	USART_Init(MY_UBRR);
 	uart_str = fdevopen(uart_putchar, NULL);
 	setup_timer0();
@@ -51,13 +49,13 @@ int main(void)
 	setup_timer1();
 	Enable_timer1_compare_interrupt();//motor 1
 	
-	U2_PWM=85-25;
+	U2_PWM=85-25;//motor 3
 	V2_PWM=170-25;
 	W2_PWM=255-25;
 
 	Init_Pid_Roll_Vars();
 	Init_Pid_Pitch_Vars();
-	INT_MOTOR_SPEED=pwm_delay;
+	MOTORS_INTERRUPT_SPEED=25000;//this is a motor(s) update interrupt 
 	unsigned long timer1=micros();
 	/*----------MPU6050 twi init---------*/
 	#ifdef GYRO
@@ -100,18 +98,17 @@ int main(void)
 		double compAngleX;
 		double compAngleY;
 	#endif  
-
 	/*---------------------------kalman_init----------------------*/
 	Kalman_init();
 	Kalman_init_1();
 	_delay_ms(100);
 	double roll  = atan2(accel_y, accel_z) * RAD_TO_DEG;
-	double pitch =  atan2(accel_x, sqrt(accel_y*accel_y + accel_z*accel_z)) * RAD_TO_DEG;// atan(-accel_x / sqrt(accel_y * accel_y + accel_z * accel_z)) * RAD_TO_DEG;
-	angle=0;
+	double pitch =  atan2(accel_x, sqrt(accel_y*accel_y + accel_z*accel_z)) * RAD_TO_DEG;
+	angle=0;//global angle for pi
 	angle_1=0;		
-	sei();
-	
-    while (1) /*---------------------------while(1)---------------------------------*/
+	sei();//enable interrupts
+	/*---------------------------while(1)---------------------------------*/
+    while (1) 
     {	
 		U2_PWM=85-30;
 		V2_PWM=170-30;
@@ -121,7 +118,6 @@ int main(void)
 			gyro_x-=gyroX_calib;
 			gyro_y-=gyroY_calib;
 			gyro_z-=gyroZ_calib;
-		
 			dt = ((double)(micros() - timer1))/1000000;
 			timer1=micros();
 			double gyroXrate = gyro_x/65.5;// deg/s 
@@ -138,33 +134,7 @@ int main(void)
 			kalman_angle_roll=getAngle(roll,gyroXrate,dt);
 			kalman_angle_pitch=getAngle_1(pitch,gyroYrate,dt);
 			/*------------------------Debug Print----------------------------*/
-			//printSD("accel = ",roll);
 			printSD("kro = ",kalman_angle_roll);
-			//printSD("kpi = ",kalman_angle_pitch);
-			////printf("\n");
-			//printSD("roll = ",roll);
-			//printSD("pitch = ",pitch);	
-			
-			//printSI("ir ",incr);
-			//printSI("print ",1/kp_roll);
-			//printSI("ir2 ",incr_2);
-			//double pop=  (uint8_t)(abs(PID_roll));
-			//printSD("pop= ",pop);
-			//printSD("dt=",dt);
-			//printSI("gx=",gyro_x);	
-			//printSI("gy=",gyro_x);
-			//printSI("gz=",gyro_x);
-			//printSI("ax=",accel_x);
-			//printSI("ay=",accel_y );
-			//printSI("az=",accel_z);
-			printSI("OCR ",OCR1A);	
-			printSI("incr ",(incr));
-			printSD("PID ", PID_roll);
-			
-			//printSD("PID_pitch ",PID_pitch);
-			//printSD("pid_i ",pid_i_roll);
-			
-			printf("\n");									
 		#endif //GYRO
 	}
 	return 0;
